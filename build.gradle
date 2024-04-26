@@ -1,6 +1,7 @@
 plugins {
     id 'java'
     id 'org.openjfx.javafxplugin' version '0.0.13'
+    id 'application'
 }
 
 javafx {
@@ -18,6 +19,10 @@ repositories {
 dependencies {
     testImplementation platform('org.junit:junit-bom:5.10.0')
     testImplementation 'org.junit.jupiter:junit-jupiter'
+}
+
+application {
+    mainClass = 'Game.Main'
 }
 
 test {
