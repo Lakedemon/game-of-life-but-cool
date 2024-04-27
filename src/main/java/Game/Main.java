@@ -30,8 +30,19 @@ public class Main extends Application {
         primaryStage.show();
 
         GameOfLife gameOfLife = new GameOfLife(width, height);
-        int[][] grid = gameOfLife.getGrid();
+        
+        // Start testing
+        SaveHandler saveHandler = new SaveHandler();
+        // For testing, save immediately after creation
+        // saveHandler.saveGrid(gameOfLife, "TestSave");
+        // 
+        // For testing, load immediately after creation 
+        // int[][] loadedGrid = saveHandler.loadGrid("TestSave");
+        // gameOfLife.setGrid(loadedGrid);
+        // End testing
 
+        int[][] grid = gameOfLife.getGrid();
+        
         AnimationTimer animationTimer = new AnimationTimer() {
             @Override
             public void handle(long l) {
@@ -39,7 +50,6 @@ public class Main extends Application {
                 fillCanvas(gc, width, height, grid, cell_size);
             }
         };
-
         animationTimer.start();
     }
 

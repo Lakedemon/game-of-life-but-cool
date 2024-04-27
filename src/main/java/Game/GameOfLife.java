@@ -5,6 +5,10 @@ public class GameOfLife {
         return grid;
     }
 
+    public void setGrid(int[][] grid) {
+        this.grid = grid;
+    }
+
     private int[][] grid;
     private final int gridWidth;
     private final int gridHeight;
