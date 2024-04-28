@@ -39,8 +39,21 @@ public class Main extends Application {
         primaryStage.show();
 
         // Init game of life
-        GameOfLife gameOfLife = new GameOfLife(width, height);
-        int[][] grid = gameOfLife.getGrid();
+        RuleBook ruleBook = new RuleBook();
+
+        int[] one = new int[]{1};
+        int[] zero = new int[]{0};
+        int[] any = new int[]{0, 1};
+
+        Rule ruleA = new Rule(cell -> cell.getValue() == 1, count -> count < 2, 0, one);
+        Rule ruleB = new Rule(cell -> cell.getValue() == 1, count -> count > 3, 0, one);
+        Rule ruleC = new Rule(cell -> cell.getValue() == 1, count -> count == 3, 1, zero);
+        ruleBook.addRule(ruleA);
+        ruleBook.addRule(ruleB);
+        ruleBook.addRule(ruleC);
+
+        GameOfLife gameOfLife = new GameOfLife(width, height, ruleBook);
+        Cell[][] grid = gameOfLife.getGrid();
 
         // Init handlers
         this.graphicsHandler = new GraphicsHandler(canvas);

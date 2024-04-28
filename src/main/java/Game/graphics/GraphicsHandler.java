@@ -1,5 +1,6 @@
 package Game.graphics;
 
+import Game.Cell;
 import Game.InputHandler;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
@@ -70,10 +71,10 @@ public class GraphicsHandler {
 
     }
 
-    public void fillGameCanvas(int width, int height, int[][] grid) {
+    public void fillGameCanvas(int width, int height, Cell[][] grid) {
         for (int i = 0; i < width; i++) {
             for (int j = 0; j < height; j++) {
-                if (grid[i][j] == 0) {
+                if (grid[i][j].getValue() == 0) {
                     gameGraphics.setFill(javafx.scene.paint.Color.BLACK);
                 } else {
                     gameGraphics.setFill(Color.WHITE);

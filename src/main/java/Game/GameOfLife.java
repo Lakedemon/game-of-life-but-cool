@@ -1,29 +1,32 @@
 package Game;
 
 public class GameOfLife {
-    public int[][] getGrid() {
+    public Cell[][] getGrid() {
         return grid;
     }
 
-    private int[][] grid;
+    private final Cell[][] grid;
     private final int gridWidth;
     private final int gridHeight;
+    private int CLEAR_VALUE = 0;
 
-    static int[][] neis = {
-            {-1, -1},
-            {-1, 0},
-            {-1, 1},
-            {0, -1},
-            {0, 1},
-            {1, -1},
-            {1, 0},
-            {1, 1}
-    };
+    private RuleBook ruleBook;
+
+    public GameOfLife(int gridWidth, int gridHeight, RuleBook ruleBook) {
+        this.gridWidth = gridWidth;
+        this.gridHeight = gridHeight;
+        this.ruleBook = ruleBook;
+
+        this.grid = new Cell[gridWidth][gridHeight];
+        initCellGrid(gridWidth, gridHeight, 0);
+
+        ranFill();
+    }
 
     public void clearBoard() {
         for (int i = 0; i < this.gridWidth; i++) {
             for (int j = 0; j < this.gridHeight; j++) {
-                grid[i][j] = 0;
+                grid[i][j].setValue(CLEAR_VALUE);
             }
         }
     }
@@ -35,7 +38,7 @@ public class GameOfLife {
                 int newY = y + j-width/2;
 
                 if (inBounds(newX, newY)) {
-                    grid[newY][newX] = white ? 1 : 0;
+                    grid[newY][newX].setValue(white ? 1 : 0);
                 }
             }
         }
@@ -49,7 +52,7 @@ public class GameOfLife {
         int err = dx - (radius << 1);
 
         while (x1 >= y1) {
-            attemptSetPixel(y + y1, x + x1, white ? 1 : 0);
+            attemptSetPixel(y + y1,x + x1, white ? 1 : 0);
             attemptSetPixel(y + x1,x + y1, white ? 1 : 0);
             attemptSetPixel(y + x1,x - y1, white ? 1 : 0);
             attemptSetPixel(y + y1,x - x1, white ? 1 : 0);
@@ -73,66 +76,51 @@ public class GameOfLife {
 
     private void attemptSetPixel(int x, int y, int val) {
         if (inBounds(x, y)) {
-            grid[x][y] = val;
+            grid[x][y].setValue(val);
         }
     }
 
-    public GameOfLife(int gridWidth, int gridHeight) {
-        this.gridWidth = gridWidth;
-        this.gridHeight = gridHeight;
+    private void initCellGrid(int gridWidth, int gridHeight, int value){
+        for(int i = 0; i < gridWidth; i++){
+            for(int j = 0; j < gridHeight; j++){
+                grid[i][j] = new Cell(value);
+            }
+        }
 
-        this.grid = new int[gridWidth][gridHeight];
-        ranFill();
+        for(int i = 0; i < gridWidth; i++){
+            for(int j = 0; j < gridHeight; j++){
+                Cell currentCell = grid[i % gridWidth][j % gridHeight];
+                currentCell.linkNeighbour(grid[properModulo(i - 1, gridWidth)] [j]                                 );
+                currentCell.linkNeighbour(grid[i]                                 [properModulo(j - 1, gridHeight)]);
+                currentCell.linkNeighbour(grid[properModulo(i - 1, gridWidth)] [properModulo(j - 1, gridHeight)]);
+                currentCell.linkNeighbour(grid[properModulo(i - 1, gridWidth)] [properModulo(j + 1, gridHeight)]);
+            }
+        }
     }
 
-    private void ranFill() {
+    int properModulo(int a, int b){
+        return (a + b) % b;
+    }
+
+    void ranFill(){
         for (int i = 0; i < gridWidth; i++) {
             for (int j = 0; j < gridHeight; j++) {
-                grid[i][j] = Math.random() >= 0.5 ? 1 : 0;
+                grid[i][j].setValue(Math.random() >= 0.5 ? 1 : 0);
             }
         }
     }
 
-    private int getNeighbours(int x, int y) {
-        int neighbours = 0;
-
-        for (int[] i : neis) {
-            int x1 = x + i[0];
-            int y1 = y + i[1];
-
-            if (inBounds(x1, y1)) {
-                if (grid[x1][y1] == 1) {
-                    neighbours++;
-                }
-            }
-        }
-
-        return neighbours;
-    }
-
-    public void stepGen() {
-
-        int[][] newGrid = new int[gridWidth][];
-        for (int i = 0; i < gridWidth; i++) {
-            newGrid[i] = grid[i].clone();
-        }
-
+    void stepGen(){
         for(int i = 0; i < gridWidth; i++) {
             for (int j = 0; j < gridHeight; j++) {
-                int neighbours = getNeighbours(i, j);
-
-                if (grid[i][j] == 1) {
-                    if (!(neighbours == 2 || neighbours == 3)) {
-                        newGrid[i][j] = 0;
-                    }
-                } else if (neighbours == 3) {
-                    newGrid[i][j] = 1;
-                }
+                ruleBook.applyRules(grid[i][j]);
             }
         }
 
         for (int i = 0; i < gridWidth; i++) {
-            grid[i] = newGrid[i].clone();
+            for (int j = 0; j < gridHeight; j++) {
+                grid[i][j].stepValue();
+            }
         }
     }
 
