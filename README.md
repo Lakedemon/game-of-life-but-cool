@@ -1,1 +1,0 @@
-The game of life - when does it end? Some may say at death. Others may disagree, depending on your belief. We, at team 5, believe the game of life never ends. As long as you make it your own. But it always starts with you.

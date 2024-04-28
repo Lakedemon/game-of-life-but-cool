@@ -48,3 +48,4 @@ public class Vector2 {
         return x < max_x && x >= min_x && y < max_y && y >= min_y;
     }
 }
+
