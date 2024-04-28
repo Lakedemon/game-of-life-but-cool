@@ -1,8 +1,7 @@
 package Game;
-
+import Game.graphics.GraphicsHandler;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
-import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -12,47 +11,53 @@ import javafx.stage.Stage;
 
 public class Main extends Application {
 
+    private GraphicsHandler graphicsHandler;
+    private InputHandler inputHandler;
+
+    public static final int CELL_SIZE = 2;
+
     @Override
     public void start(Stage primaryStage){
         int height = 300;
         int width = 300;
-        int cell_size = 2;
 
-        Canvas canvas = new Canvas(width * cell_size, height * cell_size);
+        // Init canvas
+        Canvas canvas = new Canvas(width * CELL_SIZE, height * CELL_SIZE);
         GraphicsContext gc = canvas.getGraphicsContext2D();
         gc.setFill(Color.BLACK);
 
+        // Register canvas to root
         StackPane root = new StackPane();
         root.getChildren().add(canvas);
-        Scene scene = new Scene(root, width * cell_size, height * cell_size);
-        primaryStage.setTitle("JavaFX test");
+
+        // Init scene
+        Scene scene = new Scene(root, width * CELL_SIZE, height * CELL_SIZE);
+
+        // Set window properties
+        primaryStage.setTitle("Game of life - but cool");
         primaryStage.setScene(scene);
         primaryStage.show();
 
+        // Init game of life
         GameOfLife gameOfLife = new GameOfLife(width, height);
         int[][] grid = gameOfLife.getGrid();
 
+        // Init handlers
+        this.graphicsHandler = new GraphicsHandler(canvas);
+        this.inputHandler = new InputHandler(gameOfLife, graphicsHandler);
+        this.graphicsHandler.initCustomCursor(scene, root, this.inputHandler.getBrush());
+        this.inputHandler.registerKeyHandlers(scene, canvas);
+
+        // Init main game of life loop
         AnimationTimer animationTimer = new AnimationTimer() {
             @Override
             public void handle(long l) {
                 gameOfLife.stepGen();
-                fillCanvas(gc, width, height, grid, cell_size);
+                graphicsHandler.fillGameCanvas(width, height, grid);
             }
         };
 
+        // Start main game of life loop
         animationTimer.start();
-    }
-
-    void fillCanvas(GraphicsContext gc, int width, int height, int[][] grid, int cell_size){
-        for (int i = 0; i < width; i++) {
-            for (int j = 0; j < height; j++) {
-                if (grid[i][j] == 0) {
-                    gc.setFill(Color.BLACK);
-                } else {
-                    gc.setFill(Color.WHITE);
-                }
-                gc.fillRect(j * cell_size, i * cell_size, cell_size, cell_size);
-            }
-        }
     }
 }
