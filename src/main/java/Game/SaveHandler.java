@@ -37,7 +37,7 @@ public class SaveHandler {
     }
 
     public void saveGrid(GameOfLife game, String identifier) {
-        int [][] grid = game.getGrid();
+        int[][] grid = game.getGridValues();
         // Define saveFile and put grid object in it under key 'grid'
         JSONObject saveFile = new JSONObject();
         saveFile.put("grid", new JSONArray(grid));

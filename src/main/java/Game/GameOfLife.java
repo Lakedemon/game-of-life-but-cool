@@ -127,6 +127,19 @@ public class GameOfLife {
         return x >= 0 && x < gridWidth && y >= 0 && y < gridHeight;
     }
 
+
+    public int[][] getGridValues() {
+        int[][] gridValues = new int[gridWidth][gridHeight];
+
+        for (int i = 0; i < gridWidth; i++) {
+            for (int j = 0; j < gridHeight; j++) {
+                gridValues[i][j] = grid[i][j].getValue();
+            }
+        }
+
+        return gridValues;
+    }
+
     public Cell[][] getGrid() {
         return grid;
     }
