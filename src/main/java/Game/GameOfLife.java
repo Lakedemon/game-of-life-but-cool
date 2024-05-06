@@ -3,11 +3,8 @@ package Game;
 import Game.rules.RuleBook;
 
 public class GameOfLife {
-    public Cell[][] getGrid() {
-        return grid;
-    }
-
     private final Cell[][] grid;
+
     private final int gridWidth;
     private final int gridHeight;
     private int CLEAR_VALUE = 0;
@@ -128,5 +125,18 @@ public class GameOfLife {
 
     private boolean inBounds(int x, int y) {
         return x >= 0 && x < gridWidth && y >= 0 && y < gridHeight;
+    }
+
+    public Cell[][] getGrid() {
+        return grid;
+    }
+
+    public void setGridValues(int[][] grid) {
+        for(int i = 0; i < gridWidth; i++) {
+            for (int j = 0; j < gridHeight; j++) {
+                this.grid[i][j].setValue(grid[i][j]);
+                this.grid[i][j].setNextValue(grid[i][j]);
+            }
+        }
     }
 }

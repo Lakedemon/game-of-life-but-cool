@@ -57,6 +57,16 @@ public class Main extends Application {
         GameOfLife gameOfLife = new GameOfLife(width, height, ruleBook);
         Cell[][] grid = gameOfLife.getGrid();
 
+        // Start testing
+        SaveHandler saveHandler = new SaveHandler();
+        // For testing, save immediately after creation
+        // saveHandler.saveGrid(gameOfLife, "TestSave");
+        //
+        // For testing, load immediately after creation
+        // int[][] loadedGrid = saveHandler.loadGrid("TestSave");
+        // gameOfLife.setGrid(loadedGrid);
+        // End testing
+
         // Init handlers
         this.graphicsHandler = new GraphicsHandler(canvas);
         this.inputHandler = new InputHandler(gameOfLife, graphicsHandler);
