@@ -17,6 +17,8 @@ public class GraphicsHandler {
     private final GraphicsContext gameGraphics;
     private final CursorGraphicsHandler cursorGraphics;
 
+    private final Color DEFAULT_LIGHT_COLOR = Color.WHITE;
+    private final Color DEFAULT_DARK_COLOR = Color.BLACK;
 
     public GraphicsHandler(Canvas gameOfLifeCanvas) {
         this.cursorGraphics = new CursorGraphicsHandler();
@@ -31,9 +33,9 @@ public class GraphicsHandler {
         for (int i = 0; i < width; i++) {
             for (int j = 0; j < height; j++) {
                 if (grid[i][j].getValue() == 0) {
-                    gameGraphics.setFill(javafx.scene.paint.Color.BLACK);
+                    gameGraphics.setFill(DEFAULT_DARK_COLOR);
                 } else {
-                    gameGraphics.setFill(Color.WHITE);
+                    gameGraphics.setFill(DEFAULT_LIGHT_COLOR);
                 }
                 gameGraphics.fillRect(j * CELL_SIZE, i * CELL_SIZE, CELL_SIZE, CELL_SIZE);
             }
