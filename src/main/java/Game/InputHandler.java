@@ -106,7 +106,7 @@ public class InputHandler {
         private CursorShape(boolean circular) {
             this.circular = circular;
         }
-    } // TODO: FIX
+    } // FIXED
 
     public class Brush {
 
