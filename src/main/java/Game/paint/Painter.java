@@ -4,6 +4,7 @@ import Game.GameOfLife;
 import Game.graphics.GraphicsHandler;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.input.ScrollEvent;
 
 public class Painter {
 
@@ -23,11 +24,13 @@ public class Painter {
         this.graphicsHandler = graphicsHandler;
     }
 
-    public void addBrushWidth(int amount) {
+    public void handleBrushResize(ScrollEvent event) {
         if (!paintMode) return;
 
-        this.brush.width += amount;
+        this.brush.width += (int) event.getDeltaY() / 10;
         this.brush.clampWidth();
+
+        graphicsHandler.getCursorGraphics().resizeCustomCursor(this.brush.width, event);
 
     }
 

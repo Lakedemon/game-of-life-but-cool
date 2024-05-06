@@ -45,29 +45,13 @@ public class GameOfLife {
         }
     }
 
-    public void setCircle(int centerX, int centerY, int radius, boolean white) {
-        int x = radius;
-        int y = 0;
-        int radiusError = 2 - x;
-
-        while (x+4 >= y) {
-            fillRow(centerX - x, centerX + x, centerY + y, white);
-            fillRow(centerX - x, centerX + x, centerY - y, white);
-
-            y++;
-
-            if (radiusError < 0) {
-                radiusError += 2 * y + 1;
-            } else {
-                x--;
-                radiusError += 2 * (y - x + 1);
+    public void setCircle(int x, int y, int radius, boolean white) {
+        for (int offsetX = -radius; offsetX < radius; offsetX++) {
+            for (int offsetY = -radius; offsetY < radius; offsetY++) {
+                if (Math.sqrt(Math.pow(offsetX, 2) + Math.pow(offsetY, 2)) <= radius) {
+                    attemptSetPixel(x + offsetX, y + offsetY, white ? 1 : 0);
+                }
             }
-        }
-    }
-
-    private void fillRow(int startX, int endX, int y, boolean white) {
-        for (int x = startX; x <= endX; x++) {
-            attemptSetPixel(x, y, white ? 1 : 0);
         }
     }
 

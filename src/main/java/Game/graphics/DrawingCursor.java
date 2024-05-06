@@ -85,9 +85,9 @@ public class DrawingCursor {
 
     }
 
-    public void reloadPosition(ScrollEvent evt) {
-        content.setLayoutX(evt.getX() - hotSpotX.get());
-        content.setLayoutY(evt.getY() - hotSpotY.get());
+    public void reloadPositionFromScroll(ScrollEvent event) {
+        content.setLayoutX(event.getX() - hotSpotX.get());
+        content.setLayoutY(event.getY() - hotSpotY.get());
     }
 
     public void setHotSpotX(int hotSpotX) {

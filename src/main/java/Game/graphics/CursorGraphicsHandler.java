@@ -25,12 +25,12 @@ public class CursorGraphicsHandler {
         this.cursorToggled = true;
     }
 
-    public void resizeCustomCursor(ScrollEvent scrollEvent, int newWidth) {
+    public void resizeCustomCursor(int newWidth, ScrollEvent event) {
         this.drawingCursor.setWidth(newWidth);
         this.drawingCursor.setHotSpotX(newWidth);
         this.drawingCursor.setHotSpotY(newWidth);
 
-        this.drawingCursor.reloadPosition(scrollEvent);
+        this.drawingCursor.reloadPositionFromScroll(event);
     }
 
     public void toggleCustomCursor() {
