@@ -61,7 +61,7 @@ public class Main extends Application {
         // Init handlers
         this.graphicsHandler = new GraphicsHandler(canvas);
         this.inputHandler = new InputHandler(gameOfLife, graphicsHandler);
-        this.graphicsHandler.initCustomCursor(scene, root, this.inputHandler.getBrush());
+        this.graphicsHandler.getCursorGraphics().initCustomCursor(scene, root, this.inputHandler.getBrush());
         this.inputHandler.registerKeyHandlers(scene, canvas);
 
         // Init main game of life loop

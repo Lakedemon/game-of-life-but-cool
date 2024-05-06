@@ -15,61 +15,16 @@ import static Game.Main.CELL_SIZE;
 public class GraphicsHandler {
 
     private final GraphicsContext gameGraphics;
+    private final CursorGraphicsHandler cursorGraphics;
 
-    private DrawingCursor drawingCursor;
-    private boolean cursorToggled;
 
     public GraphicsHandler(Canvas gameOfLifeCanvas) {
+        this.cursorGraphics = new CursorGraphicsHandler();
         this.gameGraphics = gameOfLifeCanvas.getGraphicsContext2D();
     }
 
-    public void initCustomCursor(Scene scene, Pane root, Brush brush) {
-        this.drawingCursor = new DrawingCursor(scene, root, brush.getWidth(), brush.getWidth());
-
-        if (brush.isCircular()) {
-            this.drawingCursor.makeCircle();
-        }
-        this.drawingCursor.setWidth(brush.getWidth());
-        this.drawingCursor.setColor(Color.AQUA);
-
-        this.drawingCursor.activate();
-        this.cursorToggled = true;
-    }
-
-    public void resizeCustomCursor(ScrollEvent scrollEvent, int newWidth) {
-        this.drawingCursor.setWidth(newWidth);
-        this.drawingCursor.setHotSpotX(newWidth);
-        this.drawingCursor.setHotSpotY(newWidth);
-
-        this.drawingCursor.reloadPosition(scrollEvent);
-    }
-
-    public void toggleCustomCursor() {
-        if (cursorToggled) {
-            this.drawingCursor.unRegister();
-            cursorToggled = false;
-        } else {
-            this.drawingCursor.reRegister();
-            cursorToggled = true;
-        }
-    }
-
-    public void setCursorShape(BrushShape cursorShape) {
-        int currentWidth = this.drawingCursor.getWidth();
-        Color currentColor = this.drawingCursor.getColor();
-
-        switch (cursorShape) {
-            case CIRCLE:
-                this.drawingCursor.makeCircle();
-                break;
-            case SQUARE:
-                this.drawingCursor.makeSquare();
-                break;
-        }
-
-        this.drawingCursor.setWidth(currentWidth);
-        this.drawingCursor.setColor(currentColor);
-
+    public CursorGraphicsHandler getCursorGraphics() {
+        return cursorGraphics;
     }
 
     public void fillGameCanvas(int width, int height, Cell[][] grid) {

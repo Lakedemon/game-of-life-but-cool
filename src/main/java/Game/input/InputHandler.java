@@ -47,7 +47,7 @@ public class InputHandler {
             this.brush.width += (int) e.getDeltaY() / 10;
             this.brush.clampWidth();
 
-            this.graphicsHandler.resizeCustomCursor(e, this.brush.width);
+            this.graphicsHandler.getCursorGraphics().resizeCustomCursor(e, this.brush.width);
         });
     }
 
@@ -82,13 +82,13 @@ public class InputHandler {
     private void handleToggleBrushType(KeyEvent keyEvent) {
         if (keyEvent.getCode() == TOGGLE_BRUSH_TYPE_BIND) {
             this.brush.shape = this.brush.shape.next();
-            this.graphicsHandler.setCursorShape(this.brush.shape);
+            this.graphicsHandler.getCursorGraphics().setCursorShape(this.brush.shape);
         }
     }
     private void handleTogglePaintMode(KeyEvent keyEvent) {
         if (keyEvent.getCode() == TOGGLE_PAINT_MODE_BIND) {
             this.paintMode = !this.paintMode;
-            this.graphicsHandler.toggleCustomCursor();
+            this.graphicsHandler.getCursorGraphics().toggleCustomCursor();
         }
     }
 
