@@ -5,6 +5,9 @@ import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseEvent;
+
+import java.beans.EventHandler;
 
 public class InputHandler {
 
@@ -34,17 +37,8 @@ public class InputHandler {
     }
 
     private void registerMouseButtons(Scene scene, Canvas canvas) {
-        scene.setOnMouseDragged(e -> {
-            if (!paintMode) return;
-
-            double x = (canvas.getTranslateX() + e.getX()) / graphicsHandler.getCellSize();
-            double y = (canvas.getTranslateY() + e.getY()) / graphicsHandler.getCellSize();
-
-            if (this.brush.shape.equals(CursorShape.CIRCLE))
-                gameOfLife.setCircle((int) x, (int) y, brush.width / 2, !e.isSecondaryButtonDown());
-            else if (this.brush.shape.equals(CursorShape.SQUARE))
-                gameOfLife.setSquare((int) x, (int) y, brush.width, !e.isSecondaryButtonDown());
-        });
+        scene.setOnMouseDragged(e -> paint(e, canvas));
+        scene.setOnMousePressed(e -> paint(e, canvas));
 
         scene.setOnScroll(e -> {
             if (!paintMode) return;
@@ -54,6 +48,18 @@ public class InputHandler {
 
             this.graphicsHandler.resizeCustomCursor(e, this.brush.width);
         });
+    }
+
+    private void paint(MouseEvent e, Canvas canvas) {
+        if (!paintMode) return;
+
+        double x = (canvas.getTranslateX() + e.getX()) / graphicsHandler.getCellSize();
+        double y = (canvas.getTranslateY() + e.getY()) / graphicsHandler.getCellSize();
+
+        if (this.brush.shape.equals(CursorShape.CIRCLE))
+            gameOfLife.setCircle((int) x, (int) y, brush.width / 2, !e.isSecondaryButtonDown());
+        else if (this.brush.shape.equals(CursorShape.SQUARE))
+            gameOfLife.setSquare((int) x, (int) y, brush.width, !e.isSecondaryButtonDown());
     }
 
     private void registerKeyboardBinds(Scene scene) {
