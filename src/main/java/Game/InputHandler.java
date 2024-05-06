@@ -1,6 +1,7 @@
 package Game;
 
 import Game.graphics.GraphicsHandler;
+import Game.paint.Brush;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.input.KeyCode;
@@ -114,34 +115,6 @@ public class InputHandler {
         }
     } // FIXED
 
-    public class Brush {
 
-        private final int MIN_WIDTH = 2, MAX_WIDTH = 50;
-
-        int width;
-        CursorShape shape;
-
-        public Brush(int width, CursorShape shape) {
-            this.width = width;
-            this.shape = shape;
-        }
-
-        public void clampWidth() {
-            if (this.width < MIN_WIDTH) {
-                this.width = MIN_WIDTH;
-            } else if (this.width > MAX_WIDTH) {
-                this.width = MAX_WIDTH;
-            }
-        }
-
-        public boolean isCircular() {
-            return this.shape.equals(CursorShape.CIRCLE);
-        }
-
-        public int getWidth() {
-            return this.width;
-        }
-
-    }
 
 }
