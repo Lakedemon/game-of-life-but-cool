@@ -1,5 +1,7 @@
 package Game;
 
+import Game.rules.RuleBook;
+
 public class GameOfLife {
     public Cell[][] getGrid() {
         return grid;
@@ -27,6 +29,7 @@ public class GameOfLife {
         for (int i = 0; i < this.gridWidth; i++) {
             for (int j = 0; j < this.gridHeight; j++) {
                 grid[i][j].setValue(CLEAR_VALUE);
+                grid[i][j].setNextValue(CLEAR_VALUE);
             }
         }
     }
@@ -97,7 +100,7 @@ public class GameOfLife {
         }
     }
 
-    int properModulo(int a, int b){
+    int properModulo(int a, int b) {
         return (a + b) % b;
     }
 

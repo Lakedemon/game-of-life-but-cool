@@ -1,4 +1,6 @@
-package Game;
+package Game.rules;
+
+import Game.Cell;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,7 +19,7 @@ public class RuleBook {
 
     public void applyRules(Cell cell){
         for (Rule rule : rules) {
-            rule.ApplyRule(cell);
+            rule.applyRule(cell);
         }
     }
 }
