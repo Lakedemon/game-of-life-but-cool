@@ -17,7 +17,7 @@ public class InputHandler {
 
     private final Brush brush;
     private final int DEFAULT_WIDTH = 20;
-    private final CursorShape DEFAULT_CURSOR_SHAPE = CursorShape.CIRCLE;
+    private final BrushShape DEFAULT_CURSOR_SHAPE = BrushShape.CIRCLE;
 
     private final KeyCode CLEAR_BOARD_BIND = KeyCode.SPACE;
     private final KeyCode TOGGLE_BRUSH_TYPE_BIND = KeyCode.T;
@@ -57,9 +57,9 @@ public class InputHandler {
         double x = (canvas.getTranslateX() + e.getX()) / graphicsHandler.getCellSize();
         double y = (canvas.getTranslateY() + e.getY()) / graphicsHandler.getCellSize();
 
-        if (this.brush.shape.equals(CursorShape.CIRCLE))
+        if (this.brush.shape.equals(BrushShape.CIRCLE))
             gameOfLife.setCircle((int) x, (int) y, brush.width / 2, !e.isSecondaryButtonDown());
-        else if (this.brush.shape.equals(CursorShape.SQUARE))
+        else if (this.brush.shape.equals(BrushShape.SQUARE))
             gameOfLife.setSquare((int) x, (int) y, brush.width, !e.isSecondaryButtonDown());
     }
 
@@ -96,12 +96,12 @@ public class InputHandler {
         return this.brush;
     }
 
-    public enum CursorShape {
+    public enum BrushShape {
         SQUARE(false),
         CIRCLE(true);
 
-        public CursorShape next() {
-            return CursorShape.values()[(this.ordinal() + 1) % CursorShape.values().length];
+        public BrushShape next() {
+            return BrushShape.values()[(this.ordinal() + 1) % BrushShape.values().length];
         }
 
         public boolean isCircular() {
@@ -110,10 +110,10 @@ public class InputHandler {
 
         private final boolean circular;
 
-        private CursorShape(boolean circular) {
+        private BrushShape(boolean circular) {
             this.circular = circular;
         }
-    } // FIXED
+    }
 
 
 

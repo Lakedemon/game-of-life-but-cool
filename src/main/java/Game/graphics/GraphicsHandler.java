@@ -54,7 +54,7 @@ public class GraphicsHandler {
         }
     }
 
-    public void setCursorShape(InputHandler.CursorShape cursorShape) {
+    public void setCursorShape(InputHandler.BrushShape cursorShape) {
         int currentWidth = this.drawingCursor.getWidth();
         Color currentColor = this.drawingCursor.getColor();
 

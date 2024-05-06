@@ -7,9 +7,9 @@ public class Brush {
     public final int MIN_WIDTH = 2, MAX_WIDTH = 50;
 
     public int width;
-    public InputHandler.CursorShape shape;
+    public InputHandler.BrushShape shape;
 
-    public Brush(int width, InputHandler.CursorShape shape) {
+    public Brush(int width, InputHandler.BrushShape shape) {
         this.width = width;
         this.shape = shape;
     }
@@ -23,7 +23,7 @@ public class Brush {
     }
 
     public boolean isCircular() {
-        return this.shape.equals(InputHandler.CursorShape.CIRCLE);
+        return this.shape.equals(InputHandler.BrushShape.CIRCLE);
     }
 
     public int getWidth() {
