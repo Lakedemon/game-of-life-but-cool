@@ -12,6 +12,9 @@ public class CursorGraphicsHandler {
     private DrawingCursor drawingCursor;
     private boolean cursorToggled;
 
+    private final Color cursorColor = Color.DARKRED;
+    private final double strokeWidth = 3;
+
     public void initCustomCursor(Scene scene, Pane root, Brush brush) {
         this.drawingCursor = new DrawingCursor(scene, root, brush.getWidth(), brush.getWidth());
 
@@ -19,7 +22,8 @@ public class CursorGraphicsHandler {
             this.drawingCursor.makeCircle();
         }
         this.drawingCursor.setWidth(brush.getWidth());
-        this.drawingCursor.setColor(Color.AQUA);
+        this.drawingCursor.setColor(cursorColor);
+        this.drawingCursor.setStrokeWidth(strokeWidth);
 
         this.drawingCursor.activate();
         this.cursorToggled = true;
@@ -46,6 +50,7 @@ public class CursorGraphicsHandler {
     public void setCursorShape(BrushShape cursorShape) {
         int currentWidth = this.drawingCursor.getWidth();
         Color currentColor = this.drawingCursor.getColor();
+        double currentStrokeWidth = this.drawingCursor.getStrokeWidth();
 
         switch (cursorShape) {
             case CIRCLE:
@@ -58,6 +63,7 @@ public class CursorGraphicsHandler {
 
         this.drawingCursor.setWidth(currentWidth);
         this.drawingCursor.setColor(currentColor);
+        this.drawingCursor.setStrokeWidth(currentStrokeWidth);
 
     }
 

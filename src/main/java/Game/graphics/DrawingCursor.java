@@ -31,9 +31,9 @@ public class DrawingCursor {
     private Scene scene;
     private Pane sceneRoot;
     private BorderPane content;
-    private EventHandler<MouseEvent> eventHandler1;
-    private EventHandler<MouseEvent> eventHandler2;
-    private EventHandler<MouseEvent> eventHandler3;
+    private EventHandler<MouseEvent> mouseEnterEventHandler;
+    private EventHandler<MouseEvent> mouseExitEventHandler;
+    private EventHandler<MouseEvent> mouseMoveEventHandler;
 
     public DrawingCursor(Scene scene, Pane sceneRoot, int hotspotX, int hotspotY) {
         this.scene = scene;
@@ -55,34 +55,43 @@ public class DrawingCursor {
 
         // Keep the Content on the top of Scene
         ObservableList<Node> observable = sceneRoot.getChildren();
-        observable.addListener((Observable osb) -> {
-            if (content.getParent() != null && observable.get(observable.size() - 1) != content) {
-                // move the cursor on the top
-                Platform.runLater(content::toFront);
-            }
-        });
+
+        addMoveToFrontListener(observable);
 
         if (!observable.contains(content))
             observable.add(content);
 
+        registerMouseActivity(observable);
+
+    }
+
+    private void addMoveToFrontListener(ObservableList<Node> observable) {
+        observable.addListener((Observable osb) -> {
+            if (content.getParent() != null && observable.getLast() != content) {
+                // move the cursor on the top
+                Platform.runLater(content::toFront);
+            }
+        });
+    }
+
+    private void registerMouseActivity(ObservableList<Node> observable) {
         // Add the event handlers (VERY UGLY)
-        eventHandler1 = evt -> {
+        mouseEnterEventHandler = evt -> {
             if (!sceneRoot.getChildren().contains(content))
                 observable.add(content);
         };
-        eventHandler2 = evt -> observable.remove(content);
+        mouseExitEventHandler = evt -> observable.remove(content);
 
-        eventHandler3 = evt -> {
+        mouseMoveEventHandler = evt -> {
             content.setLayoutX(evt.getX() - hotSpotX.get());
             content.setLayoutY(evt.getY() - hotSpotY.get());
         };
 
         // Ugly - refactor this later
-        scene.addEventFilter(MouseEvent.MOUSE_ENTERED, eventHandler1);
-        scene.addEventFilter(MouseEvent.MOUSE_EXITED, eventHandler2);
-        scene.addEventFilter(MouseEvent.MOUSE_MOVED, eventHandler3);
-        scene.addEventFilter(MouseEvent.MOUSE_DRAGGED, eventHandler3);
-
+        scene.addEventFilter(MouseEvent.MOUSE_ENTERED, mouseEnterEventHandler);
+        scene.addEventFilter(MouseEvent.MOUSE_EXITED, mouseExitEventHandler);
+        scene.addEventFilter(MouseEvent.MOUSE_MOVED, mouseMoveEventHandler);
+        scene.addEventFilter(MouseEvent.MOUSE_DRAGGED, mouseMoveEventHandler);
     }
 
     public void reloadPositionFromScroll(ScrollEvent event) {
@@ -96,6 +105,12 @@ public class DrawingCursor {
 
     public void setHotSpotY(int hotSpotY) {
         this.hotSpotY.set(hotSpotY);
+    }
+
+    public void setStrokeWidth(double width) {
+        if (this.content.getCenter() instanceof Shape shape) {
+            shape.setStrokeWidth(width);
+        }
     }
 
     public void makeCircle() {
@@ -117,6 +132,14 @@ public class DrawingCursor {
     public void setWidth(int width) {
         this.relativeWidth = width;
         updateWidthGraphics();
+    }
+
+    public double getStrokeWidth() {
+        if (this.content.getCenter() instanceof Shape shape) {
+            return shape.getStrokeWidth();
+        }
+
+        return -1;
     }
 
     private void updateWidthGraphics() {
@@ -149,9 +172,10 @@ public class DrawingCursor {
     public void unRegister() {
         if (scene != null) {
             sceneRoot.getChildren().remove(content);
-            scene.removeEventFilter(MouseEvent.MOUSE_ENTERED, eventHandler1);
-            scene.removeEventFilter(MouseEvent.MOUSE_EXITED, eventHandler2);
-            scene.removeEventFilter(MouseEvent.MOUSE_MOVED, eventHandler3);
+            scene.removeEventFilter(MouseEvent.MOUSE_ENTERED, mouseEnterEventHandler);
+            scene.removeEventFilter(MouseEvent.MOUSE_EXITED, mouseExitEventHandler);
+            scene.removeEventFilter(MouseEvent.MOUSE_MOVED, mouseMoveEventHandler);
+            scene.removeEventFilter(MouseEvent.MOUSE_DRAGGED, mouseMoveEventHandler);
         }
     }
 
