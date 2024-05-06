@@ -1,6 +1,5 @@
 package Game.graphics;
 
-import Game.InputHandler;
 import Game.paint.BrushShape;
 import javafx.application.Platform;
 import javafx.beans.Observable;

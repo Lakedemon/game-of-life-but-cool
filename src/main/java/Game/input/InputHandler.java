@@ -1,5 +1,6 @@
-package Game;
+package Game.input;
 
+import Game.GameOfLife;
 import Game.graphics.GraphicsHandler;
 import Game.paint.Brush;
 import Game.paint.BrushShape;

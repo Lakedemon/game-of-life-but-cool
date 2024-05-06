@@ -1,5 +1,6 @@
 package Game;
 import Game.graphics.GraphicsHandler;
+import Game.input.InputHandler;
 import Game.rules.Rule;
 import Game.rules.RuleBook;
 import javafx.animation.AnimationTimer;

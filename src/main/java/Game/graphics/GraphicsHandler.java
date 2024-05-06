@@ -1,7 +1,6 @@
 package Game.graphics;
 
 import Game.Cell;
-import Game.InputHandler;
 import Game.paint.Brush;
 import Game.paint.BrushShape;
 import javafx.scene.Scene;
