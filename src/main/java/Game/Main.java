@@ -1,6 +1,7 @@
 package Game;
 import Game.graphics.GraphicsHandler;
 import Game.input.InputHandler;
+import Game.paint.Painter;
 import Game.rules.Rule;
 import Game.rules.RuleBook;
 import javafx.animation.AnimationTimer;
@@ -60,8 +61,11 @@ public class Main extends Application {
 
         // Init handlers
         this.graphicsHandler = new GraphicsHandler(canvas);
-        this.inputHandler = new InputHandler(gameOfLife, graphicsHandler);
-        this.graphicsHandler.getCursorGraphics().initCustomCursor(scene, root, this.inputHandler.getBrush());
+
+        Painter painter = new Painter(gameOfLife, graphicsHandler);
+        this.inputHandler = new InputHandler(gameOfLife, new Painter(gameOfLife, graphicsHandler));
+
+        this.graphicsHandler.getCursorGraphics().initCustomCursor(scene, root, painter.getBrush());
         this.inputHandler.registerKeyHandlers(scene, canvas);
 
         // Init main game of life loop
