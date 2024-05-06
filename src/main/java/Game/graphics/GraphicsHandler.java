@@ -2,6 +2,7 @@ package Game.graphics;
 
 import Game.Cell;
 import Game.InputHandler;
+import Game.paint.Brush;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -22,7 +23,7 @@ public class GraphicsHandler {
         this.gameGraphics = gameOfLifeCanvas.getGraphicsContext2D();
     }
 
-    public void initCustomCursor(Scene scene, Pane root, InputHandler.Brush brush) {
+    public void initCustomCursor(Scene scene, Pane root, Brush brush) {
         this.drawingCursor = new DrawingCursor(scene, root, brush.getWidth(), brush.getWidth());
 
         if (brush.isCircular()) {
