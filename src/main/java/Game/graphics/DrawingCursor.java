@@ -1,6 +1,7 @@
 package Game.graphics;
 
 import Game.InputHandler;
+import Game.paint.BrushShape;
 import javafx.application.Platform;
 import javafx.beans.Observable;
 import javafx.beans.property.SimpleIntegerProperty;
@@ -26,7 +27,7 @@ public class DrawingCursor {
 
     private int relativeWidth;
     private Color color;
-    private InputHandler.CursorShape cursorShape;
+    private BrushShape cursorShape;
 
     private Scene scene;
     private Pane sceneRoot;
@@ -99,7 +100,7 @@ public class DrawingCursor {
     }
 
     public void makeCircle() {
-        this.cursorShape = InputHandler.CursorShape.CIRCLE;
+        this.cursorShape = BrushShape.CIRCLE;
 
         Circle circle = new Circle();
         circle.setFill(Color.TRANSPARENT);
@@ -107,7 +108,7 @@ public class DrawingCursor {
     }
 
     public void makeSquare() {
-        this.cursorShape = InputHandler.CursorShape.SQUARE;
+        this.cursorShape = BrushShape.SQUARE;
 
         Rectangle rectangle = new Rectangle();
         rectangle.setFill(Color.TRANSPARENT);
@@ -120,10 +121,10 @@ public class DrawingCursor {
     }
 
     private void updateWidthGraphics() {
-        if (this.cursorShape == InputHandler.CursorShape.CIRCLE) {
+        if (this.cursorShape == BrushShape.CIRCLE) {
             Circle circle = (Circle) this.content.getCenter();
             circle.setRadius((double) (this.relativeWidth / 2) * CELL_SIZE);
-        } else if (this.cursorShape == InputHandler.CursorShape.SQUARE) {
+        } else if (this.cursorShape == BrushShape.SQUARE) {
             Rectangle rectangle = (Rectangle) this.content.getCenter();
             rectangle.setWidth(this.relativeWidth * CELL_SIZE);
             rectangle.setHeight(this.relativeWidth * CELL_SIZE);

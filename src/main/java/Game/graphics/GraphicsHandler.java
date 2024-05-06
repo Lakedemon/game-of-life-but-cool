@@ -3,6 +3,7 @@ package Game.graphics;
 import Game.Cell;
 import Game.InputHandler;
 import Game.paint.Brush;
+import Game.paint.BrushShape;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -54,7 +55,7 @@ public class GraphicsHandler {
         }
     }
 
-    public void setCursorShape(InputHandler.BrushShape cursorShape) {
+    public void setCursorShape(BrushShape cursorShape) {
         int currentWidth = this.drawingCursor.getWidth();
         Color currentColor = this.drawingCursor.getColor();
 

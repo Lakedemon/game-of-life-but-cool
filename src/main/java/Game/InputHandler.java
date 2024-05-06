@@ -2,13 +2,12 @@ package Game;
 
 import Game.graphics.GraphicsHandler;
 import Game.paint.Brush;
+import Game.paint.BrushShape;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
-
-import java.beans.EventHandler;
 
 public class InputHandler {
 
@@ -17,7 +16,7 @@ public class InputHandler {
 
     private final Brush brush;
     private final int DEFAULT_WIDTH = 20;
-    private final BrushShape DEFAULT_CURSOR_SHAPE = BrushShape.CIRCLE;
+    private final BrushShape DEFAULT_BRUSH_SHAPE = BrushShape.CIRCLE;
 
     private final KeyCode CLEAR_BOARD_BIND = KeyCode.SPACE;
     private final KeyCode TOGGLE_BRUSH_TYPE_BIND = KeyCode.T;
@@ -29,7 +28,7 @@ public class InputHandler {
         this.gameOfLife = gameOfLife;
         this.graphicsHandler = graphicsHandler;
 
-        this.brush = new Brush(DEFAULT_WIDTH, DEFAULT_CURSOR_SHAPE);
+        this.brush = new Brush(DEFAULT_WIDTH, DEFAULT_BRUSH_SHAPE);
     }
 
     public void registerKeyHandlers(Scene scene, Canvas canvas) {
@@ -95,26 +94,5 @@ public class InputHandler {
     public Brush getBrush() {
         return this.brush;
     }
-
-    public enum BrushShape {
-        SQUARE(false),
-        CIRCLE(true);
-
-        public BrushShape next() {
-            return BrushShape.values()[(this.ordinal() + 1) % BrushShape.values().length];
-        }
-
-        public boolean isCircular() {
-            return this.circular;
-        }
-
-        private final boolean circular;
-
-        private BrushShape(boolean circular) {
-            this.circular = circular;
-        }
-    }
-
-
 
 }
