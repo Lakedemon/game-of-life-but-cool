@@ -13,22 +13,14 @@ import javafx.scene.input.MouseEvent;
 
 public class InputHandler {
 
-    private final GameOfLife gameOfLife;
     private final Painter painter;
-
-    private final KeyboardActions keyboardActions;
-    private final MouseActions mouseActions;
 
     private final KeyCode CLEAR_BOARD_BIND = KeyCode.SPACE;
     private final KeyCode TOGGLE_BRUSH_TYPE_BIND = KeyCode.T;
     private final KeyCode TOGGLE_PAINT_MODE_BIND = KeyCode.TAB;
 
-    public InputHandler(GameOfLife gameOfLife, Painter painter) {
-        this.gameOfLife = gameOfLife;
+    public InputHandler(Painter painter) {
         this.painter = painter;
-
-        this.keyboardActions = new KeyboardActions();
-        this.mouseActions = new MouseActions();
     }
 
     public void registerKeyHandlers(Scene scene, Canvas canvas) {

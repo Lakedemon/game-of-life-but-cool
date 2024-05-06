@@ -40,45 +40,41 @@ public class GameOfLife {
                 int newX = x + i-width/2;
                 int newY = y + j-width/2;
 
-                attemptSetPixel(newY, newX, white ? 1 : 0);
+                attemptSetPixel(newX, newY, white ? 1 : 0);
             }
         }
     }
 
-    public void setCircle(int x, int y, int radius, boolean white) {
-        int x1 = radius;
-        int y1 = 0;
-        int dx = 1;
-        int dy = 1;
-        int err = dx - (radius << 1);
+    public void setCircle(int centerX, int centerY, int radius, boolean white) {
+        int x = radius;
+        int y = 0;
+        int radiusError = 2 - x;
 
-        while (x1 >= y1) {
-            attemptSetPixel(y + y1,x + x1, white ? 1 : 0);
-            attemptSetPixel(y + x1,x + y1, white ? 1 : 0);
-            attemptSetPixel(y + x1,x - y1, white ? 1 : 0);
-            attemptSetPixel(y + y1,x - x1, white ? 1 : 0);
-            attemptSetPixel(y - y1,x - x1, white ? 1 : 0);
-            attemptSetPixel(y - x1,x - y1, white ? 1 : 0);
-            attemptSetPixel(y - x1,x + y1, white ? 1 : 0);
-            attemptSetPixel(y - y1,x + x1, white ? 1 : 0);
+        while (x+4 >= y) {
+            fillRow(centerX - x, centerX + x, centerY + y, white);
+            fillRow(centerX - x, centerX + x, centerY - y, white);
 
-            if (err <= 0) {
-                y1++;
-                err += dy;
-                dy += 2;
+            y++;
+
+            if (radiusError < 0) {
+                radiusError += 2 * y + 1;
+            } else {
+                x--;
+                radiusError += 2 * (y - x + 1);
             }
-            if (err > 0) {
-                x1--;
-                dx += 2;
-                err += dx - (radius << 1);
-            }
+        }
+    }
+
+    private void fillRow(int startX, int endX, int y, boolean white) {
+        for (int x = startX; x <= endX; x++) {
+            attemptSetPixel(x, y, white ? 1 : 0);
         }
     }
 
     private void attemptSetPixel(int x, int y, int val) {
         if (inBounds(x, y)) {
-            grid[x][y].setValue(val);
-            grid[x][y].setNextValue(val);
+            grid[y][x].setValue(val);
+            grid[y][x].setNextValue(val);
         }
     }
 

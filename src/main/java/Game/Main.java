@@ -63,7 +63,7 @@ public class Main extends Application {
         this.graphicsHandler = new GraphicsHandler(canvas);
 
         Painter painter = new Painter(gameOfLife, graphicsHandler);
-        this.inputHandler = new InputHandler(gameOfLife, new Painter(gameOfLife, graphicsHandler));
+        this.inputHandler = new InputHandler(new Painter(gameOfLife, graphicsHandler));
 
         this.graphicsHandler.getCursorGraphics().initCustomCursor(scene, root, painter.getBrush());
         this.inputHandler.registerKeyHandlers(scene, canvas);
