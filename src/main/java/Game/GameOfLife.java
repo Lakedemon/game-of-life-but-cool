@@ -37,9 +37,7 @@ public class GameOfLife {
                 int newX = x + i-width/2;
                 int newY = y + j-width/2;
 
-                if (inBounds(newX, newY)) {
-                    grid[newY][newX].setValue(white ? 1 : 0);
-                }
+                attemptSetPixel(newY, newX, white ? 1 : 0);
             }
         }
     }
@@ -77,6 +75,7 @@ public class GameOfLife {
     private void attemptSetPixel(int x, int y, int val) {
         if (inBounds(x, y)) {
             grid[x][y].setValue(val);
+            grid[x][y].setNextValue(val);
         }
     }
 

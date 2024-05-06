@@ -45,8 +45,8 @@ public class Main extends Application {
         int[] zero = new int[]{0};
         int[] any = new int[]{0, 1};
 
-        Rule ruleA = new Rule(cell -> cell.getValue() == 1, count -> count < 2, 0, one);
-        Rule ruleB = new Rule(cell -> cell.getValue() == 1, count -> count > 3, 0, one);
+        Rule ruleA = new Rule(cell -> cell.getValue() == 1, count -> count < 1, 0, one);
+        Rule ruleB = new Rule(cell -> cell.getValue() == 1, count -> count > 4, 0, one);
         Rule ruleC = new Rule(cell -> cell.getValue() == 1, count -> count == 3, 1, zero);
         ruleBook.addRule(ruleA);
         ruleBook.addRule(ruleB);
