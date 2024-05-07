@@ -1,5 +1,5 @@
 package Game;
-import Game.graphics.CursorGraphicsHandler;
+import Game.gameGraphics.CursorGraphicsHandler;
 import Game.input.InputHandler;
 import Game.paint.Painter;
 import Game.rules.Rule;

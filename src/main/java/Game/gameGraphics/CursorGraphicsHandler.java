@@ -1,4 +1,4 @@
-package Game.graphics;
+package Game.gameGraphics;
 
 import Game.paint.Brush;
 import Game.paint.BrushShape;

@@ -1,4 +1,4 @@
-package Game.graphics;
+package Game.gameGraphics;
 
 import static Game.Main.CELL_SIZE;
 
