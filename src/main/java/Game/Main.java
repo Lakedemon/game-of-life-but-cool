@@ -71,10 +71,20 @@ public class Main extends Application {
 
         // Init main game of life loop
         AnimationTimer animationTimer = new AnimationTimer() {
+            int count = 0;
+            long currentNs = System.nanoTime();
             @Override
             public void handle(long l) {
                 gameOfLife.stepGen();
                 guiHandler.getGameOfLifeGuiComponent().refreshGameOfLifeCanvas(grid);
+
+                if (System.nanoTime() - currentNs > 1000000000) {
+                    System.out.println("TPS/FPS: " + count);
+                    currentNs = System.nanoTime();
+                    count = 0;
+                }
+
+                count++;
             }
         };
 
