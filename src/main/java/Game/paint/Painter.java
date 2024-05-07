@@ -35,16 +35,16 @@ public class Painter {
 
     }
 
-    public void paint(MouseEvent e, Canvas canvas) {
+    public void paint(double x, double y, boolean remove) {
         if (!paintMode) return;
 
-        double x = (canvas.getTranslateX() + e.getX()) / Main.CELL_SIZE;
-        double y = (canvas.getTranslateY() + e.getY()) / Main.CELL_SIZE;
+        x /= Main.CELL_SIZE;
+        y /= Main.CELL_SIZE;
 
         if (this.brush.shape.equals(BrushShape.CIRCLE))
-            gameOfLife.setCircle((int) x, (int) y, brush.width / 2, !e.isSecondaryButtonDown());
+            gameOfLife.setCircle((int) x, (int) y, brush.width / 2, !remove);
         else if (this.brush.shape.equals(BrushShape.SQUARE))
-            gameOfLife.setSquare((int) x, (int) y, brush.width, !e.isSecondaryButtonDown());
+            gameOfLife.setSquare((int) x, (int) y, brush.width, !remove);
     }
 
     public void attemptClearBoard() {

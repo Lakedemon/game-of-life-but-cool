@@ -1,8 +1,12 @@
 package Game.input;
 
 import Game.paint.Painter;
+import Game.ui.GuiHandler;
+import Game.ui.impl.GameOfLifeGuiComponent;
+import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
+import javafx.scene.input.MouseEvent;
 
 import static Game.input.Keybindings.*;
 
@@ -14,21 +18,28 @@ public class InputHandler {
         this.painter = painter;
     }
 
-    public void registerKeyHandlers(Scene scene, Canvas canvas) {
-        registerMouseButtons(scene, canvas);
-        registerKeyboardBinds(scene);
+    public void registerKeyHandlers(GuiHandler guiHandler) {
+        Canvas gameOfLifeCanvas = (Canvas) guiHandler.getGameOfLifeGuiComponent().getDrawableElement();
+
+        registerGameOfLifeMouseButtons(gameOfLifeCanvas);
+        registerKeyboardBinds(gameOfLifeCanvas);
     }
 
-    private void registerMouseButtons(Scene scene, Canvas canvas) {
-        scene.setOnMouseDragged(e -> this.painter.paint(e, canvas));
-        scene.setOnMousePressed(e -> this.painter.paint(e, canvas));
+    private void registerGameOfLifeMouseButtons(final Canvas gameOfLifeCanvas) {
+        EventHandler<MouseEvent> paintHandler = generatePaintEventHandler();
 
-        scene.setOnScroll(painter::handleBrushResize);
+        gameOfLifeCanvas.setOnMouseDragged(paintHandler);
+        gameOfLifeCanvas.setOnMousePressed(paintHandler);
+
+        gameOfLifeCanvas.setOnScroll(painter::handleBrushResize);
     }
 
-    private void registerKeyboardBinds(Scene scene) {
-        scene.setOnKeyPressed(e -> {
+    private EventHandler<MouseEvent> generatePaintEventHandler() {
+        return e -> painter.paint(e.getX(), e.getY(), e.isSecondaryButtonDown());
+    }
 
+    private void registerKeyboardBinds(final Canvas gameOfLifeCanvas) {
+        gameOfLifeCanvas.setOnKeyPressed(e -> {
             if (e.getCode() == CLEAR_BOARD_BIND) {
                 painter.attemptClearBoard();
             } else if (e.getCode() == TOGGLE_BRUSH_TYPE_BIND) {
