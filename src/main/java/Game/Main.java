@@ -66,7 +66,7 @@ public class Main extends Application {
         Painter painter = new Painter(gameOfLife, cursorGraphics);
         this.inputHandler = new InputHandler(painter);
 
-        this.cursorGraphics.initCustomCursor(scene, root, painter.getBrush());
+        this.cursorGraphics.initCustomCursor(this.guiHandler.getGameOfLifeCanvas(), root, painter.getBrush());
         this.inputHandler.registerKeyHandlers(scene, this.guiHandler);
 
         // Init main game of life loop

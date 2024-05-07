@@ -3,8 +3,6 @@ package Game.paint;
 import Game.GameOfLife;
 import Game.Main;
 import Game.ui.cursor.CursorGraphicsHandler;
-import javafx.scene.canvas.Canvas;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 
 public class Painter {
@@ -57,8 +55,12 @@ public class Painter {
     }
 
     public void togglePaintMode() {
-        this.paintMode = !this.paintMode;
-        this.cursorGraphicsHandler.toggleCustomCursor();
+        setPaintMode(!paintMode);
+    }
+
+    public void setPaintMode(boolean paintMode) {
+        this.paintMode = paintMode;
+        this.cursorGraphicsHandler.setCustomCursorStatus(paintMode);
     }
 
     public Brush getBrush() {

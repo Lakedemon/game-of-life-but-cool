@@ -8,6 +8,7 @@ import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.canvas.Canvas;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.BorderPane;
@@ -28,15 +29,15 @@ public class DrawingCursor {
     private Color color;
     private BrushShape cursorShape;
 
-    private final Scene scene;
+    private final Canvas gameOfLifeCanvas;
     private final Pane sceneRoot;
     private final BorderPane content;
     private EventHandler<MouseEvent> mouseEnterEventHandler;
     private EventHandler<MouseEvent> mouseExitEventHandler;
     private EventHandler<MouseEvent> mouseMoveEventHandler;
 
-    public DrawingCursor(Scene scene, Pane sceneRoot, int hotspotX, int hotspotY) {
-        this.scene = scene;
+    public DrawingCursor(Canvas gameOfLifeCanvas, Pane sceneRoot, int hotspotX, int hotspotY) {
+        this.gameOfLifeCanvas = gameOfLifeCanvas;
         this.sceneRoot = sceneRoot;
         this.hotSpotX.set(hotspotX);
         this.hotSpotY.set(hotspotY);
@@ -54,7 +55,7 @@ public class DrawingCursor {
         content.setMouseTransparent(true);
 
         // Keep the Content on the top of Scene
-        ObservableList<Node> observable = sceneRoot.getChildren();
+        ObservableList<Node> observable = sceneRoot.getChildren(); // TODO: SPECIFY BETTER SCENE ROOT, IMPLEMENT MANUAL BRUSH TOGGLE
 
         addMoveToFrontListener(observable);
 
@@ -62,7 +63,6 @@ public class DrawingCursor {
             observable.add(content);
 
         registerMouseActivity(observable);
-
     }
 
     private void addMoveToFrontListener(ObservableList<Node> observable) {
@@ -87,11 +87,8 @@ public class DrawingCursor {
             content.setLayoutY(evt.getY() - hotSpotY.get());
         };
 
-        // Ugly - refactor this later
-        scene.addEventFilter(MouseEvent.MOUSE_ENTERED, mouseEnterEventHandler);
-        scene.addEventFilter(MouseEvent.MOUSE_EXITED, mouseExitEventHandler);
-        scene.addEventFilter(MouseEvent.MOUSE_MOVED, mouseMoveEventHandler);
-        scene.addEventFilter(MouseEvent.MOUSE_DRAGGED, mouseMoveEventHandler);
+        gameOfLifeCanvas.addEventFilter(MouseEvent.MOUSE_MOVED, mouseMoveEventHandler);
+        gameOfLifeCanvas.addEventFilter(MouseEvent.MOUSE_DRAGGED, mouseMoveEventHandler);
     }
 
     public void reloadPositionFromScroll(ScrollEvent event) {
@@ -170,17 +167,17 @@ public class DrawingCursor {
     }
 
     public void unRegister() {
-        if (scene != null) {
+        if (gameOfLifeCanvas != null) {
             sceneRoot.getChildren().remove(content);
-            scene.removeEventFilter(MouseEvent.MOUSE_ENTERED, mouseEnterEventHandler);
-            scene.removeEventFilter(MouseEvent.MOUSE_EXITED, mouseExitEventHandler);
-            scene.removeEventFilter(MouseEvent.MOUSE_MOVED, mouseMoveEventHandler);
-            scene.removeEventFilter(MouseEvent.MOUSE_DRAGGED, mouseMoveEventHandler);
+            gameOfLifeCanvas.removeEventFilter(MouseEvent.MOUSE_ENTERED, mouseEnterEventHandler);
+            gameOfLifeCanvas.removeEventFilter(MouseEvent.MOUSE_EXITED, mouseExitEventHandler);
+            gameOfLifeCanvas.removeEventFilter(MouseEvent.MOUSE_MOVED, mouseMoveEventHandler);
+            gameOfLifeCanvas.removeEventFilter(MouseEvent.MOUSE_DRAGGED, mouseMoveEventHandler);
         }
     }
 
     public void reRegister() {
-        if (scene != null)
+        if (gameOfLifeCanvas != null)
             activate();
     }
 
