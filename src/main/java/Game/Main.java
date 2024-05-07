@@ -1,10 +1,10 @@
 package Game;
-import Game.ui.gameGraphics.CursorGraphicsHandler;
 import Game.input.InputHandler;
 import Game.paint.Painter;
 import Game.rules.Rule;
 import Game.rules.RuleBook;
 import Game.ui.GuiHandler;
+import Game.ui.cursor.CursorGraphicsHandler;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.scene.Scene;

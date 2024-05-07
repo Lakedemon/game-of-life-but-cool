@@ -1,5 +1,7 @@
 package Game.ui.gameGraphics;
 
+import Game.ui.cursor.CursorGraphicsHandler;
+
 import static Game.Main.CELL_SIZE;
 
 public class GraphicsHandler {
