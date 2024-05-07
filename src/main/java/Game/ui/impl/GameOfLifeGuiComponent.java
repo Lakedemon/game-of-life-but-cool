@@ -12,18 +12,15 @@ import static Game.Main.CELL_SIZE;
 public class GameOfLifeGuiComponent extends GuiComponent {
 
     private final Canvas canvas;
-    private GraphicsContext gc;
-
-    private final int WIDTH, HEIGHT;
+    private final GraphicsContext gc;
 
     private final Color DEFAULT_LIGHT_COLOR = Color.WHITE;
     private final Color DEFAULT_DARK_COLOR = Color.BLACK;
 
     public GameOfLifeGuiComponent(double scale) {
-        this.WIDTH = (int) scale * CELL_SIZE;
-        this.HEIGHT = (int) scale * CELL_SIZE;
+        int width = (int) scale * CELL_SIZE, height = (int) scale * CELL_SIZE;
 
-        canvas = new Canvas(WIDTH, HEIGHT);
+        canvas = new Canvas(width, height);
         this.gc = canvas.getGraphicsContext2D();
         this.gc.setFill(DEFAULT_DARK_COLOR);
     }

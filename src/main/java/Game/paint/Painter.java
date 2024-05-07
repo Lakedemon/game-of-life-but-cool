@@ -9,12 +9,12 @@ import javafx.scene.input.ScrollEvent;
 
 public class Painter {
 
+    private static final int DEFAULT_WIDTH = 20;
+    private static final BrushShape DEFAULT_BRUSH_SHAPE = BrushShape.CIRCLE;
+
     private final GameOfLife gameOfLife;
     private final CursorGraphicsHandler cursorGraphicsHandler;
-
     private final Brush brush;
-    private final int DEFAULT_WIDTH = 20;
-    private final BrushShape DEFAULT_BRUSH_SHAPE = BrushShape.CIRCLE;
 
     private boolean paintMode = true;
 

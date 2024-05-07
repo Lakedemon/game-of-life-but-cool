@@ -13,7 +13,7 @@ public class CursorGraphicsHandler {
     private boolean cursorToggled;
 
     private final Color cursorColor = Color.DARKRED;
-    private final double strokeWidth = 3;
+    private static final double STROKE_WIDTH = 3;
 
     public void initCustomCursor(Scene scene, Pane root, Brush brush) {
         this.drawingCursor = new DrawingCursor(scene, root, brush.getWidth(), brush.getWidth());
@@ -23,7 +23,7 @@ public class CursorGraphicsHandler {
         }
         this.drawingCursor.setWidth(brush.getWidth());
         this.drawingCursor.setColor(cursorColor);
-        this.drawingCursor.setStrokeWidth(strokeWidth);
+        this.drawingCursor.setStrokeWidth(STROKE_WIDTH);
 
         this.drawingCursor.activate();
         this.cursorToggled = true;

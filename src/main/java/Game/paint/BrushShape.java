@@ -14,7 +14,7 @@ public enum BrushShape {
 
     private final boolean circular;
 
-    private BrushShape(boolean circular) {
+    BrushShape(boolean circular) {
         this.circular = circular;
     }
 }

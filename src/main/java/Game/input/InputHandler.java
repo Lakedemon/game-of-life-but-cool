@@ -4,13 +4,11 @@ import Game.paint.Painter;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 
-import static Game.input.Keybinds.*;
+import static Game.input.Keybindings.*;
 
 public class InputHandler {
 
     private final Painter painter;
-
-
 
     public InputHandler(Painter painter) {
         this.painter = painter;

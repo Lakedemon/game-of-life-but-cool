@@ -21,16 +21,16 @@ import static Game.Main.CELL_SIZE;
 
 public class DrawingCursor {
 
-    private SimpleIntegerProperty hotSpotX = new SimpleIntegerProperty();
-    private SimpleIntegerProperty hotSpotY = new SimpleIntegerProperty();
+    private final SimpleIntegerProperty hotSpotX = new SimpleIntegerProperty();
+    private final SimpleIntegerProperty hotSpotY = new SimpleIntegerProperty();
 
     private int relativeWidth;
     private Color color;
     private BrushShape cursorShape;
 
-    private Scene scene;
-    private Pane sceneRoot;
-    private BorderPane content;
+    private final Scene scene;
+    private final Pane sceneRoot;
+    private final BorderPane content;
     private EventHandler<MouseEvent> mouseEnterEventHandler;
     private EventHandler<MouseEvent> mouseExitEventHandler;
     private EventHandler<MouseEvent> mouseMoveEventHandler;
@@ -182,14 +182,6 @@ public class DrawingCursor {
     public void reRegister() {
         if (scene != null)
             activate();
-    }
-
-    public SimpleIntegerProperty hotSpotXProperty() {
-        return hotSpotX;
-    }
-
-    public SimpleIntegerProperty hotSpotYProperty() {
-        return hotSpotY;
     }
 
 }

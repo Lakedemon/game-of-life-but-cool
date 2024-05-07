@@ -2,7 +2,6 @@ package Game.ui;
 
 import Game.ui.impl.GameOfLifeGuiComponent;
 import Game.ui.impl.stack.HStackGuiComponent;
-import Game.ui.impl.stack.ZStackGuiComponent;
 import javafx.scene.Node;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
