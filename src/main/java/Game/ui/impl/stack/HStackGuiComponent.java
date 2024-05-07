@@ -13,7 +13,7 @@ public class HStackGuiComponent extends GuiComponent {
     public HStackGuiComponent(int spacing) {
         this.drawableElement = new HBox();
         this.drawableElement.setSpacing(spacing);
-        this.drawableElement.setBackground(Background.fill(Color.grayRgb(150)));
+        this.drawableElement.setBackground(Background.fill(Color.grayRgb(20)));
     }
 
     @Override

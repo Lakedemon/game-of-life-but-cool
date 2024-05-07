@@ -13,13 +13,12 @@ public class GuiHandler {
     private GameOfLifeGuiComponent gameOfLifeGuiComponent;
 
     public void initializeGuiComponents() {
-        this.root = new HStackGuiComponent(2);
+        this.root = new HStackGuiComponent(4);
 
         this.gameOfLifeGuiComponent = new GameOfLifeGuiComponent(300);
         Rectangle dummy = new Rectangle(600, 600);
         dummy.setFill(Color.BLUE);
         GuiComponent dummyComponent = new GuiComponent() {
-
             @Override
             public Node getDrawableElement() {
                 return dummy;
