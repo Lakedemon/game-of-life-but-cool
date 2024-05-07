@@ -1,4 +1,4 @@
-package Game.gameGraphics;
+package Game.ui.cursor;
 
 import Game.paint.BrushShape;
 import javafx.application.Platform;

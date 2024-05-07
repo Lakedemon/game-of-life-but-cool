@@ -2,7 +2,7 @@ package Game.paint;
 
 import Game.GameOfLife;
 import Game.Main;
-import Game.gameGraphics.CursorGraphicsHandler;
+import Game.ui.gameGraphics.CursorGraphicsHandler;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;

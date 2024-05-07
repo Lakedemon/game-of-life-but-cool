@@ -1,4 +1,4 @@
-package Game.gameGraphics;
+package Game.ui.cursor;
 
 import Game.paint.Brush;
 import Game.paint.BrushShape;
