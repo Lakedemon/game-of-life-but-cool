@@ -1,7 +1,6 @@
 package Game.ui.impl;
 
 import Game.Cell;
-import Game.Main;
 import Game.ui.GuiComponent;
 import javafx.scene.Node;
 import javafx.scene.canvas.Canvas;
@@ -15,18 +14,23 @@ public class GameOfLifeGuiComponent extends GuiComponent {
     private final Canvas canvas;
     private GraphicsContext gc;
 
+    private final int WIDTH, HEIGHT;
+
     private final Color DEFAULT_LIGHT_COLOR = Color.WHITE;
     private final Color DEFAULT_DARK_COLOR = Color.BLACK;
 
     public GameOfLifeGuiComponent(double scale) {
-        canvas = new Canvas(scale * Main.CELL_SIZE, scale * Main.CELL_SIZE);
+        this.WIDTH = (int) scale * CELL_SIZE;
+        this.HEIGHT = (int) scale * CELL_SIZE;
+
+        canvas = new Canvas(WIDTH, HEIGHT);
         this.gc = canvas.getGraphicsContext2D();
         this.gc.setFill(DEFAULT_DARK_COLOR);
     }
 
-    public void refreshGameOfLifeCanvas(int width, int height, Cell[][] grid) {
-        for (int i = 0; i < width; i++) {
-            for (int j = 0; j < height; j++) {
+    public void refreshGameOfLifeCanvas(Cell[][] grid) {
+        for (int i = 0; i < grid.length; i++) {
+            for (int j = 0; j < grid[i].length; j++) {
                 if (grid[i][j].getValue() == 0) {
                     gc.setFill(DEFAULT_DARK_COLOR);
                 } else {

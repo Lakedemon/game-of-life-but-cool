@@ -1,21 +1,15 @@
 package Game;
 import Game.graphics.CursorGraphicsHandler;
-import Game.graphics.GraphicsHandler;
 import Game.input.InputHandler;
 import Game.paint.Painter;
 import Game.rules.Rule;
 import Game.rules.RuleBook;
 import Game.ui.GuiHandler;
-import Game.ui.impl.GameOfLifeGuiComponent;
-import Game.ui.impl.ZStackGuiComponent;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
-import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.layout.StackPane;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 
 public class Main extends Application {
@@ -42,7 +36,7 @@ public class Main extends Application {
         StackPane root = new StackPane(this.guiHandler.getRoot().getDrawableElement());
 
         // Init scene
-        Scene scene = new Scene(root, width * CELL_SIZE, height * CELL_SIZE);
+        Scene scene = new Scene(root);
 
         // Set window properties
         primaryStage.setTitle("Game of life - but cool");
@@ -80,7 +74,7 @@ public class Main extends Application {
             @Override
             public void handle(long l) {
                 gameOfLife.stepGen();
-                guiHandler.getGameOfLifeGuiComponent().refreshGameOfLifeCanvas(width, height, grid);
+                guiHandler.getGameOfLifeGuiComponent().refreshGameOfLifeCanvas(grid);
             }
         };
 

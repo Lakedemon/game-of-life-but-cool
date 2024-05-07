@@ -1,4 +1,4 @@
-package Game.ui.impl;
+package Game.ui.impl.stack;
 
 import Game.ui.GuiComponent;
 import javafx.scene.Node;
