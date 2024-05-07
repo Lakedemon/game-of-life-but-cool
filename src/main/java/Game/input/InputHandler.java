@@ -2,7 +2,6 @@ package Game.input;
 
 import Game.paint.Painter;
 import Game.ui.GuiHandler;
-import Game.ui.impl.GameOfLifeGuiComponent;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
@@ -18,11 +17,11 @@ public class InputHandler {
         this.painter = painter;
     }
 
-    public void registerKeyHandlers(GuiHandler guiHandler) {
+    public void registerKeyHandlers(Scene scene, GuiHandler guiHandler) {
         Canvas gameOfLifeCanvas = (Canvas) guiHandler.getGameOfLifeGuiComponent().getDrawableElement();
 
         registerGameOfLifeMouseButtons(gameOfLifeCanvas);
-        registerKeyboardBinds(gameOfLifeCanvas);
+        registerKeyboardBinds(scene);
     }
 
     private void registerGameOfLifeMouseButtons(final Canvas gameOfLifeCanvas) {
@@ -38,8 +37,8 @@ public class InputHandler {
         return e -> painter.paint(e.getX(), e.getY(), e.isSecondaryButtonDown());
     }
 
-    private void registerKeyboardBinds(final Canvas gameOfLifeCanvas) {
-        gameOfLifeCanvas.setOnKeyPressed(e -> {
+    private void registerKeyboardBinds(final Scene scene) {
+        scene.setOnKeyPressed(e -> {
             if (e.getCode() == CLEAR_BOARD_BIND) {
                 painter.attemptClearBoard();
             } else if (e.getCode() == TOGGLE_BRUSH_TYPE_BIND) {
