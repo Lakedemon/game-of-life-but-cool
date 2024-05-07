@@ -1,9 +1,13 @@
 package Game;
+import Game.graphics.CursorGraphicsHandler;
 import Game.graphics.GraphicsHandler;
 import Game.input.InputHandler;
 import Game.paint.Painter;
 import Game.rules.Rule;
 import Game.rules.RuleBook;
+import Game.ui.GuiHandler;
+import Game.ui.impl.GameOfLifeGuiComponent;
+import Game.ui.impl.ZStackGuiComponent;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.scene.Scene;
@@ -11,28 +15,31 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 
 public class Main extends Application {
 
-    private GraphicsHandler graphicsHandler;
+    private CursorGraphicsHandler cursorGraphics;
     private InputHandler inputHandler;
+    private GuiHandler guiHandler;
 
     public static final int CELL_SIZE = 2;
 
     @Override
     public void start(Stage primaryStage){
+
         int height = 300;
         int width = 300;
 
+        this.guiHandler = new GuiHandler();
+        this.guiHandler.initializeGuiComponents();
         // Init canvas
-        Canvas canvas = new Canvas(width * CELL_SIZE, height * CELL_SIZE);
-        GraphicsContext gc = canvas.getGraphicsContext2D();
-        gc.setFill(Color.BLACK);
+
+        this.cursorGraphics = new CursorGraphicsHandler();
 
         // Register canvas to root
-        StackPane root = new StackPane();
-        root.getChildren().add(canvas);
+        StackPane root = new StackPane(this.guiHandler.getRoot().getDrawableElement());
 
         // Init scene
         Scene scene = new Scene(root, width * CELL_SIZE, height * CELL_SIZE);
@@ -40,6 +47,7 @@ public class Main extends Application {
         // Set window properties
         primaryStage.setTitle("Game of life - but cool");
         primaryStage.setScene(scene);
+        primaryStage.setResizable(false);
         primaryStage.show();
 
         // Init game of life
@@ -60,20 +68,19 @@ public class Main extends Application {
         Cell[][] grid = gameOfLife.getGrid();
 
         // Init handlers
-        this.graphicsHandler = new GraphicsHandler(canvas);
 
-        Painter painter = new Painter(gameOfLife, graphicsHandler);
-        this.inputHandler = new InputHandler(new Painter(gameOfLife, graphicsHandler));
+        Painter painter = new Painter(gameOfLife, cursorGraphics);
+        this.inputHandler = new InputHandler(painter);
 
-        this.graphicsHandler.getCursorGraphics().initCustomCursor(scene, root, painter.getBrush());
-        this.inputHandler.registerKeyHandlers(scene, canvas);
+        this.cursorGraphics.initCustomCursor(scene, root, painter.getBrush());
+        this.inputHandler.registerKeyHandlers(scene, (Canvas) this.guiHandler.getGameOfLifeGuiComponent().getDrawableElement());
 
         // Init main game of life loop
         AnimationTimer animationTimer = new AnimationTimer() {
             @Override
             public void handle(long l) {
                 gameOfLife.stepGen();
-                graphicsHandler.fillGameCanvas(width, height, grid);
+                guiHandler.getGameOfLifeGuiComponent().refreshGameOfLifeCanvas(width, height, grid);
             }
         };
 

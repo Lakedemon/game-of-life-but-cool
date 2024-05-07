@@ -1,7 +1,8 @@
 package Game.paint;
 
 import Game.GameOfLife;
-import Game.graphics.GraphicsHandler;
+import Game.Main;
+import Game.graphics.CursorGraphicsHandler;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
@@ -9,7 +10,7 @@ import javafx.scene.input.ScrollEvent;
 public class Painter {
 
     private final GameOfLife gameOfLife;
-    private final GraphicsHandler graphicsHandler;
+    private final CursorGraphicsHandler cursorGraphicsHandler;
 
     private final Brush brush;
     private final int DEFAULT_WIDTH = 20;
@@ -17,11 +18,11 @@ public class Painter {
 
     private boolean paintMode = true;
 
-    public Painter(GameOfLife gameOfLife, GraphicsHandler graphicsHandler) {
+    public Painter(GameOfLife gameOfLife, CursorGraphicsHandler cursorGraphicsHandler) {
         this.brush = new Brush(DEFAULT_WIDTH, DEFAULT_BRUSH_SHAPE);
 
         this.gameOfLife = gameOfLife;
-        this.graphicsHandler = graphicsHandler;
+        this.cursorGraphicsHandler = cursorGraphicsHandler;
     }
 
     public void handleBrushResize(ScrollEvent event) {
@@ -30,15 +31,15 @@ public class Painter {
         this.brush.width += (int) event.getDeltaY() / 10;
         this.brush.clampWidth();
 
-        graphicsHandler.getCursorGraphics().resizeCustomCursor(this.brush.width, event);
+        cursorGraphicsHandler.resizeCustomCursor(this.brush.width, event);
 
     }
 
     public void paint(MouseEvent e, Canvas canvas) {
         if (!paintMode) return;
 
-        double x = (canvas.getTranslateX() + e.getX()) / graphicsHandler.getCellSize();
-        double y = (canvas.getTranslateY() + e.getY()) / graphicsHandler.getCellSize();
+        double x = (canvas.getTranslateX() + e.getX()) / Main.CELL_SIZE;
+        double y = (canvas.getTranslateY() + e.getY()) / Main.CELL_SIZE;
 
         if (this.brush.shape.equals(BrushShape.CIRCLE))
             gameOfLife.setCircle((int) x, (int) y, brush.width / 2, !e.isSecondaryButtonDown());
@@ -52,12 +53,12 @@ public class Painter {
 
     public void attemptToggleBrushType() {
         this.brush.shape = this.brush.shape.next();
-        this.graphicsHandler.getCursorGraphics().setCursorShape(this.brush.shape);
+        this.cursorGraphicsHandler.setCursorShape(this.brush.shape);
     }
 
     public void togglePaintMode() {
         this.paintMode = !this.paintMode;
-        this.graphicsHandler.getCursorGraphics().toggleCustomCursor();
+        this.cursorGraphicsHandler.toggleCustomCursor();
     }
 
     public Brush getBrush() {
