@@ -2,7 +2,7 @@ package Game.input;
 
 import Game.paint.Painter;
 import Game.ui.GuiComponent;
-import Game.ui.GuiHandler;
+import Game.ui.GuiManager;
 import Game.ui.impl.GameOfLifeGuiComponent;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
@@ -27,8 +27,8 @@ public class InputHandler {
         this.painter = painter;
     }
 
-    public void registerKeyHandlers(Scene scene, GuiHandler guiHandler) {
-        GameOfLifeGuiComponent gameOfLifeComponent = guiHandler.getGameOfLifeGuiComponent();
+    public void registerKeyHandlers(Scene scene, GuiManager guiManager) {
+        GameOfLifeGuiComponent gameOfLifeComponent = guiManager.getGameOfLifeGuiComponent();
 
         registerGameOfLifeMouseButtons(gameOfLifeComponent);
         registerGameOfLifeKeyboardBinds(scene, gameOfLifeComponent);

@@ -3,7 +3,7 @@ import Game.input.InputHandler;
 import Game.paint.Painter;
 import Game.rules.Rule;
 import Game.rules.RuleBook;
-import Game.ui.GuiHandler;
+import Game.ui.GuiManager;
 import Game.ui.cursor.CursorGraphicsHandler;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
@@ -13,7 +13,7 @@ import javafx.stage.Stage;
 
 public class Main extends Application {
 
-    private GuiHandler guiHandler;
+    private GuiManager guiManager;
 
     public static final int CELL_SIZE = 2;
 
@@ -23,14 +23,14 @@ public class Main extends Application {
         int height = 300;
         int width = 300;
 
-        this.guiHandler = new GuiHandler();
-        this.guiHandler.initializeGuiComponents();
+        this.guiManager = new GuiManager();
+        this.guiManager.initializeGuiComponents();
         // Init canvas
 
         CursorGraphicsHandler cursorGraphics = new CursorGraphicsHandler();
 
         // Register canvas to root
-        StackPane root = new StackPane(this.guiHandler.getRoot().getDrawableElement());
+        StackPane root = new StackPane(this.guiManager.getRoot().getDrawableElement());
 
         // Init scene
         Scene scene = new Scene(root);
@@ -63,8 +63,8 @@ public class Main extends Application {
         Painter painter = new Painter(gameOfLife, cursorGraphics);
         InputHandler inputHandler = new InputHandler(painter);
 
-        cursorGraphics.initCustomCursor(this.guiHandler.getGameOfLifeCanvas(), (StackPane) this.guiHandler.getGameOfLifeGuiComponent().getDrawableElement(), painter.getBrush());
-        inputHandler.registerKeyHandlers(scene, this.guiHandler);
+        cursorGraphics.initCustomCursor(this.guiManager.getGameOfLifeCanvas(), (StackPane) this.guiManager.getGameOfLifeGuiComponent().getDrawableElement(), painter.getBrush());
+        inputHandler.registerKeyHandlers(scene, this.guiManager);
 
         // Init main game of life loop
         AnimationTimer animationTimer = new AnimationTimer() {
@@ -73,7 +73,7 @@ public class Main extends Application {
             @Override
             public void handle(long l) {
                 gameOfLife.stepGen();
-                guiHandler.getGameOfLifeGuiComponent().refreshGameOfLifeCanvas(grid);
+                guiManager.getGameOfLifeGuiComponent().refreshGameOfLifeCanvas(grid);
 
                 if (System.nanoTime() - currentNs > 1000000000) {
                     System.out.println("TPS/FPS: " + count);

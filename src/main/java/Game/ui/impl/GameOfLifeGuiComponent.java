@@ -16,8 +16,8 @@ public class GameOfLifeGuiComponent extends GuiComponent {
     private final GraphicsContext gc;
     private final StackPane parentPane;
 
-    private final Color DEFAULT_LIGHT_COLOR = Color.WHITE;
-    private final Color DEFAULT_DARK_COLOR = Color.BLACK;
+    private final Color DEFAULT_LIGHT_COLOR = Color.grayRgb(200);
+    private final Color DEFAULT_DARK_COLOR = Color.grayRgb(40);
 
     public GameOfLifeGuiComponent(double scale) {
         int width = (int) scale * CELL_SIZE, height = (int) scale * CELL_SIZE;
