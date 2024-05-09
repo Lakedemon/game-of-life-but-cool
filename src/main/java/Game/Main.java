@@ -8,7 +8,6 @@ import Game.ui.cursor.CursorGraphicsHandler;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.scene.Scene;
-import javafx.scene.canvas.Canvas;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
@@ -66,7 +65,7 @@ public class Main extends Application {
         Painter painter = new Painter(gameOfLife, cursorGraphics);
         this.inputHandler = new InputHandler(painter);
 
-        this.cursorGraphics.initCustomCursor(this.guiHandler.getGameOfLifeCanvas(), root, painter.getBrush());
+        this.cursorGraphics.initCustomCursor(this.guiHandler.getGameOfLifeCanvas(), (StackPane) this.guiHandler.getGameOfLifeGuiComponent().getDrawableElement(), painter.getBrush());
         this.inputHandler.registerKeyHandlers(scene, this.guiHandler);
 
         // Init main game of life loop

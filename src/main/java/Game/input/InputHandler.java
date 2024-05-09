@@ -35,7 +35,7 @@ public class InputHandler {
     }
 
     private void registerGameOfLifeMouseButtons(final GameOfLifeGuiComponent gameOfLifeComponent) {
-        Canvas gameOfLifeCanvas = (Canvas) gameOfLifeComponent.getDrawableElement();
+        Canvas gameOfLifeCanvas = gameOfLifeComponent.getCanvas();
         EventHandler<MouseEvent> paintHandler = generatePaintEventHandler();
 
         gameOfLifeCanvas.setOnMouseDragged(paintHandler);

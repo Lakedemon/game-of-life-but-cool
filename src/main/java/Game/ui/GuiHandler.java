@@ -4,10 +4,8 @@ import Game.ui.impl.GameOfLifeGuiComponent;
 import Game.ui.impl.stack.HStackGuiComponent;
 import Game.ui.impl.stack.RectangleComponent;
 import Game.ui.impl.stack.ZStackGuiComponent;
-import javafx.scene.Node;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
 
 public class GuiHandler {
 
@@ -39,6 +37,6 @@ public class GuiHandler {
     }
 
     public Canvas getGameOfLifeCanvas() {
-        return (Canvas) this.gameOfLifeGuiComponent.getDrawableElement();
+        return this.gameOfLifeGuiComponent.getCanvas();
     }
 }

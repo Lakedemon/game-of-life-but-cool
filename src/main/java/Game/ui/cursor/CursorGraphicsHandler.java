@@ -28,7 +28,6 @@ public class CursorGraphicsHandler {
 
         this.drawingCursor.activate();
         this.cursorToggled = true;
-
     }
 
     public void resizeCustomCursor(int newWidth, ScrollEvent event) {

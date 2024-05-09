@@ -5,6 +5,7 @@ import Game.ui.GuiComponent;
 import javafx.scene.Node;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 
 import static Game.Main.CELL_SIZE;
@@ -13,6 +14,7 @@ public class GameOfLifeGuiComponent extends GuiComponent {
 
     private final Canvas canvas;
     private final GraphicsContext gc;
+    private final StackPane parentPane;
 
     private final Color DEFAULT_LIGHT_COLOR = Color.WHITE;
     private final Color DEFAULT_DARK_COLOR = Color.BLACK;
@@ -20,9 +22,22 @@ public class GameOfLifeGuiComponent extends GuiComponent {
     public GameOfLifeGuiComponent(double scale) {
         int width = (int) scale * CELL_SIZE, height = (int) scale * CELL_SIZE;
 
+        this.parentPane = new StackPane();
         canvas = new Canvas(width, height);
+
         this.gc = canvas.getGraphicsContext2D();
         this.gc.setFill(DEFAULT_DARK_COLOR);
+
+        this.parentPane.getChildren().add(canvas);
+
+        this.parentPane.setMinHeight(canvas.getHeight());
+        this.parentPane.setMinWidth(canvas.getWidth());
+        this.parentPane.setMaxHeight(canvas.getHeight());
+        this.parentPane.setMaxWidth(canvas.getWidth());
+
+        System.out.println("Height: " + this.parentPane.getPrefHeight());
+        System.out.println("Width: " + this.parentPane.getPrefWidth());
+
     }
 
     public void refreshGameOfLifeCanvas(Cell[][] grid) {
@@ -38,8 +53,12 @@ public class GameOfLifeGuiComponent extends GuiComponent {
         }
     }
 
+    public Canvas getCanvas() {
+        return canvas;
+    }
+
     @Override
     public Node getDrawableElement() {
-        return canvas;
+        return this.parentPane;
     }
 }
