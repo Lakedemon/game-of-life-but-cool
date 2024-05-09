@@ -15,6 +15,8 @@ public class Painter {
     private final Brush brush;
 
     private boolean paintMode = true;
+    private boolean manuallyDisabled = false;
+    private boolean unfocused = false;
 
     public Painter(GameOfLife gameOfLife, CursorGraphicsHandler cursorGraphicsHandler) {
         this.brush = new Brush(DEFAULT_WIDTH, DEFAULT_BRUSH_SHAPE);
@@ -54,13 +56,27 @@ public class Painter {
         this.cursorGraphicsHandler.setCursorShape(this.brush.shape);
     }
 
-    public void togglePaintMode() {
-        setPaintMode(!paintMode);
+    public void togglePaintMode(boolean manually) {
+        setPaintMode(!paintMode, manually);
     }
 
-    public void setPaintMode(boolean paintMode) {
+    public void setPaintMode(boolean paintMode, boolean manually) {
+        if (manuallyDisabled && unfocused && !manually) {
+            return;
+        }
+
+        if (!paintMode && manually) {
+            manuallyDisabled = true;
+        } else if (paintMode && manually) {
+            manuallyDisabled = false;
+        }
+
         this.paintMode = paintMode;
         this.cursorGraphicsHandler.setCustomCursorStatus(paintMode);
+    }
+
+    public void setUnfocused(boolean unfocused) {
+        this.unfocused = unfocused;
     }
 
     public Brush getBrush() {

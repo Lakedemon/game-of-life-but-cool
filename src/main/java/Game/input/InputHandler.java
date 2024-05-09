@@ -43,11 +43,13 @@ public class InputHandler {
 
         gameOfLifeCanvas.addEventFilter(MouseEvent.MOUSE_ENTERED, e -> {
             mouseOver.add(gameOfLifeComponent);
-            painter.setPaintMode(true);
+            painter.setPaintMode(true, false);
+            painter.setUnfocused(false);
         });
         gameOfLifeCanvas.addEventFilter(MouseEvent.MOUSE_EXITED, e -> {
             mouseOver.remove(gameOfLifeComponent);
-            painter.setPaintMode(false);
+            painter.setPaintMode(false, false);
+            painter.setUnfocused(true);
         });
 
         gameOfLifeCanvas.setOnScroll(painter::handleBrushResize);
@@ -66,7 +68,7 @@ public class InputHandler {
             } else if (e.getCode() == TOGGLE_BRUSH_TYPE_BIND) {
                 painter.attemptToggleBrushType();
             } else if (e.getCode() == TOGGLE_PAINT_MODE_BIND) {
-                painter.togglePaintMode();
+                painter.togglePaintMode(true);
             }
         });
     }
