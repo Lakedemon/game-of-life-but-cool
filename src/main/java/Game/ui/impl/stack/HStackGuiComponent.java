@@ -17,10 +17,6 @@ public class HStackGuiComponent extends GuiComponent {
         this.drawableElement.setBackground(Background.fill(backgroundColor));
     }
 
-    public HStackGuiComponent() {
-        this.drawableElement = new HBox();
-    }
-
     @Override
     public void addChild(GuiComponent child) {
         super.addChild(child);

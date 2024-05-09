@@ -13,8 +13,6 @@ import javafx.stage.Stage;
 
 public class Main extends Application {
 
-    private CursorGraphicsHandler cursorGraphics;
-    private InputHandler inputHandler;
     private GuiHandler guiHandler;
 
     public static final int CELL_SIZE = 2;
@@ -29,7 +27,7 @@ public class Main extends Application {
         this.guiHandler.initializeGuiComponents();
         // Init canvas
 
-        this.cursorGraphics = new CursorGraphicsHandler();
+        CursorGraphicsHandler cursorGraphics = new CursorGraphicsHandler();
 
         // Register canvas to root
         StackPane root = new StackPane(this.guiHandler.getRoot().getDrawableElement());
@@ -63,10 +61,10 @@ public class Main extends Application {
         // Init handlers
 
         Painter painter = new Painter(gameOfLife, cursorGraphics);
-        this.inputHandler = new InputHandler(painter);
+        InputHandler inputHandler = new InputHandler(painter);
 
-        this.cursorGraphics.initCustomCursor(this.guiHandler.getGameOfLifeCanvas(), (StackPane) this.guiHandler.getGameOfLifeGuiComponent().getDrawableElement(), painter.getBrush());
-        this.inputHandler.registerKeyHandlers(scene, this.guiHandler);
+        cursorGraphics.initCustomCursor(this.guiHandler.getGameOfLifeCanvas(), (StackPane) this.guiHandler.getGameOfLifeGuiComponent().getDrawableElement(), painter.getBrush());
+        inputHandler.registerKeyHandlers(scene, this.guiHandler);
 
         // Init main game of life loop
         AnimationTimer animationTimer = new AnimationTimer() {

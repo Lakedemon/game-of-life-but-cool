@@ -36,7 +36,6 @@ public class DrawingCursor {
     private final BorderPane content;
     private EventHandler<MouseEvent> mouseEnterEventHandler;
     private EventHandler<MouseEvent> mouseExitEventHandler;
-    private EventHandler<MouseEvent> mouseMoveEventHandler;
 
     public DrawingCursor(Canvas gameOfLifeCanvas, Pane sceneRoot, int hotspotX, int hotspotY) {
         this.gameOfLifeCanvas = gameOfLifeCanvas;
@@ -65,7 +64,7 @@ public class DrawingCursor {
             observable.add(content);
 
         registerMouseActivity(observable);
-        if (!reActivate) registerMouseMoveActivity(observable);
+        if (!reActivate) registerMouseMoveActivity();
 
         this.updateCursorLocation();
     }
@@ -90,8 +89,8 @@ public class DrawingCursor {
 
     }
 
-    private void registerMouseMoveActivity(ObservableList<Node> observable) {
-        mouseMoveEventHandler = evt -> {
+    private void registerMouseMoveActivity() {
+        EventHandler<MouseEvent> mouseMoveEventHandler = evt -> {
             this.mouseX = (int) (evt.getX() - hotSpotX.get());
             this.mouseY = (int) (evt.getY() - hotSpotY.get());
 
@@ -187,9 +186,6 @@ public class DrawingCursor {
             sceneRoot.getChildren().remove(content);
             gameOfLifeCanvas.removeEventFilter(MouseEvent.MOUSE_ENTERED, mouseEnterEventHandler);
             gameOfLifeCanvas.removeEventFilter(MouseEvent.MOUSE_EXITED, mouseExitEventHandler);
-
-            // gameOfLifeCanvas.removeEventFilter(MouseEvent.MOUSE_MOVED, mouseMoveEventHandler);
-            // gameOfLifeCanvas.removeEventFilter(MouseEvent.MOUSE_DRAGGED, mouseMoveEventHandler);
         }
     }
 
