@@ -26,7 +26,7 @@ public class CursorGraphicsHandler {
         this.drawingCursor.setColor(cursorColor);
         this.drawingCursor.setStrokeWidth(STROKE_WIDTH);
 
-        this.drawingCursor.activate();
+        this.drawingCursor.activate(false);
         this.cursorToggled = true;
     }
 
