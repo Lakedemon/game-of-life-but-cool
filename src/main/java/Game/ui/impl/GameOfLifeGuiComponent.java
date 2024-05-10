@@ -34,7 +34,6 @@ public class GameOfLifeGuiComponent extends GuiComponent {
         this.parentPane.setMinWidth(canvas.getWidth());
         this.parentPane.setMaxHeight(canvas.getHeight());
         this.parentPane.setMaxWidth(canvas.getWidth());
-
     }
 
     public void refreshGameOfLifeCanvas(Cell[][] grid) {

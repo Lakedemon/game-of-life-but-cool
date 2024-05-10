@@ -6,8 +6,8 @@ public abstract class ClickableGuiComponent extends GuiComponent {
 
     private ClickEvent clickEventHandler;
 
-    public ClickableGuiComponent() {
-        setOnClick(e -> {});
+    public ClickableGuiComponent(ClickEvent eventHandler) {
+        setOnClick(eventHandler);
     }
 
     public void setOnClick(ClickEvent eventHandler) {

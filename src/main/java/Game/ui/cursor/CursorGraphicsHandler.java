@@ -68,4 +68,8 @@ public class CursorGraphicsHandler {
 
     }
 
+    public void reloadCursorPosition(int x, int y) {
+        this.drawingCursor.setContentLocation(x, y);
+    }
+
 }

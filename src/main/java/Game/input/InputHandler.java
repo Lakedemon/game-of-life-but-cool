@@ -4,13 +4,18 @@ import Game.paint.Painter;
 import Game.ui.GuiComponent;
 import Game.ui.GuiManager;
 import Game.ui.impl.GameOfLifeGuiComponent;
+import Game.ui.impl.stack.ZStackGuiComponent;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.StackPane;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.Stack;
 
 import static Game.input.Keybindings.*;
 
@@ -30,8 +35,39 @@ public class InputHandler {
     public void registerKeyHandlers(Scene scene, GuiManager guiManager) {
         GameOfLifeGuiComponent gameOfLifeComponent = guiManager.getGameOfLifeGuiComponent();
 
+        registerMenuMouseButtons(scene, guiManager);
         registerGameOfLifeMouseButtons(gameOfLifeComponent);
-        registerGameOfLifeKeyboardBinds(scene, gameOfLifeComponent);
+
+        scene.setOnKeyPressed(e -> {
+            handleMenuKeyboardBindings(e, guiManager);
+            handleGameOfLifeKeyboardBindings(e, gameOfLifeComponent);
+        });
+    }
+
+    private void registerMenuMouseButtons(Scene scene, GuiManager guiManager) {
+        ZStackGuiComponent collapsableMenu = guiManager.getCollapsableMenu();
+        StackPane stackPane = collapsableMenu.getPaneElement();
+
+        stackPane.addEventFilter(MouseEvent.MOUSE_ENTERED, e -> {
+            mouseOver.add(collapsableMenu);
+            System.out.println("Mouse entered");
+        });
+        stackPane.addEventFilter(MouseEvent.MOUSE_EXITED, e -> {
+            mouseOver.remove(collapsableMenu);
+            System.out.println("Mouse exited");
+        });
+
+        scene.addEventFilter(MouseEvent.MOUSE_PRESSED, e -> {
+            if (!mouseOver.contains(collapsableMenu)) {
+                guiManager.toggleCollapsableMenu(false);
+            }
+        });
+    }
+
+    private void handleMenuKeyboardBindings(KeyEvent keyEvent, GuiManager guiManager) {
+        if (keyEvent.getCode() == ESCAPE_MENU_BIND) {
+            guiManager.toggleCollapsableMenu(false);
+        }
     }
 
     private void registerGameOfLifeMouseButtons(final GameOfLifeGuiComponent gameOfLifeComponent) {
@@ -45,6 +81,7 @@ public class InputHandler {
             mouseOver.add(gameOfLifeComponent);
             painter.setPaintMode(true, false);
             painter.setUnfocused(false);
+            painter.reloadCursorGraphics(e);
         });
         gameOfLifeCanvas.addEventFilter(MouseEvent.MOUSE_EXITED, e -> {
             mouseOver.remove(gameOfLifeComponent);
@@ -59,18 +96,16 @@ public class InputHandler {
         return e -> painter.paint(e.getX(), e.getY(), e.isSecondaryButtonDown());
     }
 
-    private void registerGameOfLifeKeyboardBinds(final Scene scene, final GameOfLifeGuiComponent gameOfLifeComponent) {
-        scene.setOnKeyPressed(e -> {
-            if (!this.mouseOver.contains(gameOfLifeComponent)) return;
+    private void handleGameOfLifeKeyboardBindings(final KeyEvent keyEvent, final GameOfLifeGuiComponent gameOfLifeComponent) {
+        if (!this.mouseOver.contains(gameOfLifeComponent)) return;
 
-            if (e.getCode() == CLEAR_BOARD_BIND) {
-                painter.attemptClearBoard();
-            } else if (e.getCode() == TOGGLE_BRUSH_TYPE_BIND) {
-                painter.attemptToggleBrushType();
-            } else if (e.getCode() == TOGGLE_PAINT_MODE_BIND) {
-                painter.togglePaintMode(true);
-            }
-        });
+        if (keyEvent.getCode() == CLEAR_BOARD_BIND) {
+            painter.attemptClearBoard();
+        } else if (keyEvent.getCode() == TOGGLE_BRUSH_TYPE_BIND) {
+            painter.attemptToggleBrushType();
+        } else if (keyEvent.getCode() == TOGGLE_PAINT_MODE_BIND) {
+            painter.togglePaintMode(true);
+        }
     }
 
 }

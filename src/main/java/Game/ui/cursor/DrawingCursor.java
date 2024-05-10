@@ -91,8 +91,8 @@ public class DrawingCursor {
 
     private void registerMouseMoveActivity() {
         EventHandler<MouseEvent> mouseMoveEventHandler = evt -> {
-            this.mouseX = (int) (evt.getX() - hotSpotX.get());
-            this.mouseY = (int) (evt.getY() - hotSpotY.get());
+            this.mouseX = (int) (evt.getX());
+            this.mouseY = (int) (evt.getY());
 
             updateCursorLocation();
         };
@@ -106,9 +106,13 @@ public class DrawingCursor {
         content.setLayoutY(event.getY() - hotSpotY.get());
     }
 
-    private void updateCursorLocation() {
-        content.setLayoutX(this.mouseX);
-        content.setLayoutY(this.mouseY);
+    void setContentLocation(int x, int y) {
+        content.setLayoutX(x - hotSpotX.get());
+        content.setLayoutY(y - hotSpotY.get());
+    }
+
+    void updateCursorLocation() {
+        setContentLocation(mouseX, mouseY);
     }
 
     public void setHotSpotX(int hotSpotX) {

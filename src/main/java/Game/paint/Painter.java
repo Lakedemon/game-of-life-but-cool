@@ -3,6 +3,7 @@ package Game.paint;
 import Game.GameOfLife;
 import Game.Main;
 import Game.ui.cursor.CursorGraphicsHandler;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 
 public class Painter {
@@ -73,6 +74,10 @@ public class Painter {
 
         this.paintMode = paintMode;
         this.cursorGraphicsHandler.setCustomCursorStatus(paintMode);
+    }
+
+    public void reloadCursorGraphics(MouseEvent e) {
+        this.cursorGraphicsHandler.reloadCursorPosition((int) e.getX(), (int) e.getY());
     }
 
     public void setUnfocused(boolean unfocused) {

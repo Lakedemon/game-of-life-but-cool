@@ -21,6 +21,10 @@ public abstract class GuiComponent {
         children.add(child);
     }
 
+    public boolean removeChild(GuiComponent child) {
+        return children.remove(child);
+    }
+
     public abstract Node getDrawableElement();
 
     @Override
