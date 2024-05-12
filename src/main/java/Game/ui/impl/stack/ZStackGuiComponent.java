@@ -32,12 +32,12 @@ public class ZStackGuiComponent extends GuiComponent {
 
     @Override
     public int getWidth() {
-        return (int) this.drawableElement.getWidth();
+        return this.width;
     }
 
     @Override
     public int getHeight() {
-        return (int) this.drawableElement.getHeight();
+        return this.height;
     }
 
     public StackPane getPaneElement() {
