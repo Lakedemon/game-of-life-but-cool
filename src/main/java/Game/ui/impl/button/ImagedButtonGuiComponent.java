@@ -17,8 +17,12 @@ public class ImagedButtonGuiComponent extends ClickableGuiComponent implements C
     private final StackPane drawableElement;
     private final ImageView imageView;
 
+    private final int width, height;
+
     public ImagedButtonGuiComponent(Image image, int width, int height, Color backgroundColor, Color strokeColor, int arc, int strokeWidth, ClickEvent eventHandler) {
         super(eventHandler);
+        this.width = width;
+        this.height = height;
 
         this.drawableElement = new StackPane();
         this.drawableElement.setMinWidth(width);
@@ -41,6 +45,16 @@ public class ImagedButtonGuiComponent extends ClickableGuiComponent implements C
         this.drawableElement.getChildren().add(this.imageView);
 
         super.registerClicks();
+    }
+
+    @Override
+    public int getWidth() {
+        return this.width;
+    }
+
+    @Override
+    public int getHeight() {
+        return this.height;
     }
 
     @Override

@@ -8,12 +8,19 @@ import javafx.scene.layout.StackPane;
 public class ZStackGuiComponent extends GuiComponent {
 
     private final StackPane drawableElement;
+    private final int width, height;
+
 
     public ZStackGuiComponent() {
         this.drawableElement = new StackPane();
+        this.width = 0;
+        this.height = 0;
     }
 
     public ZStackGuiComponent(int width, int height) {
+        this.width = width;
+        this.height = height;
+
         this.drawableElement = new StackPane();
 
         this.drawableElement.setMinWidth(width);
@@ -21,6 +28,16 @@ public class ZStackGuiComponent extends GuiComponent {
 
         this.drawableElement.setMaxWidth(width);
         this.drawableElement.setMaxHeight(height);
+    }
+
+    @Override
+    public int getWidth() {
+        return (int) this.drawableElement.getWidth();
+    }
+
+    @Override
+    public int getHeight() {
+        return (int) this.drawableElement.getHeight();
     }
 
     public StackPane getPaneElement() {

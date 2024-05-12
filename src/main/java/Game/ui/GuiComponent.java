@@ -25,6 +25,9 @@ public abstract class GuiComponent {
         return children.remove(child);
     }
 
+    public abstract int getWidth();
+    public abstract int getHeight();
+
     public abstract Node getDrawableElement();
 
     @Override

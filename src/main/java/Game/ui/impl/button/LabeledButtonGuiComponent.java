@@ -12,9 +12,12 @@ import javafx.scene.text.Font;
 public class LabeledButtonGuiComponent extends ClickableGuiComponent {
 
     private final StackPane drawableElement;
+    private final int width, height;
 
     public LabeledButtonGuiComponent(String label, Font font, Color textColor, int width, int height, Color fillColor, Color strokeColor, int arc, int strokeWidth, ClickEvent eventHandler) {
         super(eventHandler);
+        this.width = width;
+        this.height = height;
 
         this.drawableElement = new StackPane();
         this.drawableElement.setMinWidth(width);
@@ -38,6 +41,16 @@ public class LabeledButtonGuiComponent extends ClickableGuiComponent {
         this.drawableElement.getChildren().add(labelNode);
 
         super.registerClicks();
+    }
+
+    @Override
+    public int getWidth() {
+        return this.width;
+    }
+
+    @Override
+    public int getHeight() {
+        return this.height;
     }
 
     @Override

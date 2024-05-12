@@ -1,10 +1,11 @@
 package Game.ui;
 
 import static Game.file.StaticFileHandler.*;
+
+import Game.ui.animations.impl.SlideAnimation;
 import Game.ui.clicking.ClickEvent;
 import Game.ui.impl.GameOfLifeGuiComponent;
 import Game.ui.impl.button.ImagedButtonGuiComponent;
-import Game.ui.impl.image.ImageGuiComponent;
 import Game.ui.impl.LabelGuiComponent;
 import Game.ui.impl.button.LabeledButtonGuiComponent;
 import Game.ui.impl.stack.HStackGuiComponent;
@@ -124,8 +125,8 @@ public class GuiManager {
         VStackGuiComponent volumesComponent = new VStackGuiComponent(4, settingsBG);
         volumesComponent.setAlignment(Pos.CENTER);
 
-        LabelGuiComponent volumeComponent1 = new LabelGuiComponent("SFX Volume:   ------o---         ", 20, 18, "Helvetica", Color.WHITE);
-        LabelGuiComponent volumeComponent2 = new LabelGuiComponent("Music Volume: ------o---         ", 20, 18, "Helvetica", Color.WHITE);
+        LabelGuiComponent volumeComponent1 = new LabelGuiComponent("SFX Volume:   ------o---         ", 20, "Helvetica", Color.WHITE);
+        LabelGuiComponent volumeComponent2 = new LabelGuiComponent("Music Volume: ------o---         ", 20, "Helvetica", Color.WHITE);
         volumesComponent.addChild(volumeComponent1);
         volumesComponent.addChild(volumeComponent2);
 
@@ -141,9 +142,17 @@ public class GuiManager {
         if (toggled && !collapsableMenuToggled) {
             ((StackPane)this.root.getDrawableElement()).setAlignment(Pos.CENTER_LEFT);
             this.root.addChild(this.collapsableMenu);
+
+            SlideAnimation slideAnimation = new SlideAnimation(SlideAnimation.Direction.LEFT, 1000);
+            slideAnimation.perform(collapsableMenu, true);
+
             this.collapsableMenuToggled = true;
         } else if (!toggled && collapsableMenuToggled) {
             ((StackPane)this.root.getDrawableElement()).setAlignment(Pos.CENTER);
+
+            SlideAnimation slideAnimation = new SlideAnimation(SlideAnimation.Direction.LEFT, 1000);
+            slideAnimation.perform(collapsableMenu, false);
+
             this.root.removeChild(this.collapsableMenu);
             this.collapsableMenuToggled = false;
         }
@@ -154,7 +163,9 @@ public class GuiManager {
         ZStackGuiComponent menu = new ZStackGuiComponent(700, 450);
         RectangleGuiComponent background = new RectangleGuiComponent(663, 663, bgColor);
         background.setStroke(2, ACCENT.deriveColor(0, 1, 1, 0.8));
-
+        System.out.println("--- Collapsable menu ---");
+        System.out.println("width: " + menu.getWidth() + ", height: " + menu.getHeight());
+        System.out.println("------------------------");
         menu.addChild(background);
 
         return menu;

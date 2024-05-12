@@ -15,10 +15,14 @@ public class HStackGuiComponent extends GuiComponent {
     private final Region offsetElement;
     private final int spacing;
 
+    private final int width, height;
+
     public HStackGuiComponent(int spacing, Color backgroundColor, int width, int height, int offset) {
         this.drawableElement = new HBox();
         this.offsetElement = new Region();
         this.spacing = spacing;
+        this.width = width;
+        this.height = height;
 
         this.drawableElement.setBackground(Background.fill(backgroundColor));
 
@@ -38,6 +42,8 @@ public class HStackGuiComponent extends GuiComponent {
         this.drawableElement = new HBox();
         this.offsetElement = new Region();
         this.spacing = spacing;
+        this.width = 0;
+        this.height = 0;
 
         this.drawableElement.setBackground(Background.fill(backgroundColor));
 
@@ -59,6 +65,16 @@ public class HStackGuiComponent extends GuiComponent {
         spacing.setMaxWidth(this.spacing);
 
         this.drawableElement.getChildren().add(spacing);
+    }
+
+    @Override
+    public int getWidth() {
+        return this.width;
+    }
+
+    @Override
+    public int getHeight() {
+        return this.height;
     }
 
     @Override

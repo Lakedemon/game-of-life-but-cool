@@ -13,16 +13,31 @@ public class LabelGuiComponent extends GuiComponent {
 
     private final Label drawableElement;
 
-    public LabelGuiComponent(String label, int height, int fontSize, String fontFamily, Color color) {
+    private final int width, height;
+
+    public LabelGuiComponent(String label, int fontSize, String fontFamily, Color color) {
         Font font = Font.font(fontFamily, FontWeight.LIGHT, fontSize);
         this.drawableElement = new Label(label);
+
         this.drawableElement.setFont(font);
         this.drawableElement.setTextFill(color);
-        this.drawableElement.setMinHeight(height);
-        this.drawableElement.setMaxHeight(height);
 
+        drawableElement.setMinHeight(Region.USE_PREF_SIZE);
         drawableElement.setMinWidth(Region.USE_PREF_SIZE);
 
+        this.width = (int) drawableElement.getMinWidth();
+        this.height = (int) drawableElement.getMinHeight();
+
+    }
+
+    @Override
+    public int getWidth() {
+        return this.width;
+    }
+
+    @Override
+    public int getHeight() {
+        return this.height;
     }
 
     @Override

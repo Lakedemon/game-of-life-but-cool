@@ -12,14 +12,20 @@ public class VStackGuiComponent extends GuiComponent {
 
     private final VBox drawableElement;
 
+    private final int width, height;
+
     public VStackGuiComponent(int spacing, Color backgroundColor) {
         this.drawableElement = new VBox();
+        this.width = 0;
+        this.height = 0;
         this.drawableElement.setSpacing(spacing);
         this.drawableElement.setBackground(Background.fill(backgroundColor));
     }
 
     public VStackGuiComponent(int spacing, Color backgroundColor, int width, int height) {
         this.drawableElement = new VBox();
+        this.width = width;
+        this.height = height;
         this.drawableElement.setSpacing(spacing);
         this.drawableElement.setBackground(Background.fill(backgroundColor));
 
@@ -34,6 +40,16 @@ public class VStackGuiComponent extends GuiComponent {
     public void addChild(GuiComponent child) {
         super.addChild(child);
         this.drawableElement.getChildren().add(child.getDrawableElement());
+    }
+
+    @Override
+    public int getWidth() {
+        return this.width;
+    }
+
+    @Override
+    public int getHeight() {
+        return this.height;
     }
 
     @Override

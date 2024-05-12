@@ -19,11 +19,14 @@ public class GameOfLifeGuiComponent extends GuiComponent {
     private final Color DEFAULT_LIGHT_COLOR = Color.grayRgb(200);
     private final Color DEFAULT_DARK_COLOR = Color.grayRgb(40);
 
+    private final int width, height;
+
     public GameOfLifeGuiComponent(double scale) {
-        int width = (int) scale * CELL_SIZE, height = (int) scale * CELL_SIZE;
+        this.width = (int) scale * CELL_SIZE;
+        this.height = (int) scale * CELL_SIZE;
 
         this.parentPane = new StackPane();
-        canvas = new Canvas(width, height);
+        canvas = new Canvas(this.width, this.height);
 
         this.gc = canvas.getGraphicsContext2D();
         this.gc.setFill(DEFAULT_DARK_COLOR);
@@ -51,6 +54,16 @@ public class GameOfLifeGuiComponent extends GuiComponent {
 
     public Canvas getCanvas() {
         return canvas;
+    }
+
+    @Override
+    public int getWidth() {
+        return this.width;
+    }
+
+    @Override
+    public int getHeight() {
+        return this.height;
     }
 
     @Override

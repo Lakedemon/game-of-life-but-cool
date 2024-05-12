@@ -22,13 +22,22 @@ public class ImageGuiComponent extends ClickableGuiComponent implements Changeab
     public ImageGuiComponent(Image image, ClickEvent eventHandler) {
         super(eventHandler);
         this.drawableElement = new ImageView(image);
-
         super.registerClicks();
     }
 
     @Override
     public void maskBlackPixels(Color color) {
         this.drawableElement.setImage(this.getMaskedImage(this.drawableElement.getImage(), color));
+    }
+
+    @Override
+    public int getWidth() {
+        return (int) drawableElement.getFitWidth();
+    }
+
+    @Override
+    public int getHeight() {
+        return (int) drawableElement.getFitHeight();
     }
 
     @Override
