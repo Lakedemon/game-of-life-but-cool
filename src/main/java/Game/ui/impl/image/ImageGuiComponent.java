@@ -1,16 +1,14 @@
-package Game.ui.impl;
+package Game.ui.impl.image;
 
 import Game.ui.clicking.ClickEvent;
 import Game.ui.clicking.ClickableGuiComponent;
 import javafx.scene.Node;
-import javafx.scene.effect.ColorAdjust;
 import javafx.scene.image.*;
 import javafx.scene.paint.Color;
 
-import javax.swing.plaf.ColorUIResource;
 import java.io.InputStream;
 
-public class ImageGuiComponent extends ClickableGuiComponent {
+public class ImageGuiComponent extends ClickableGuiComponent implements ChangeableImageComponent {
 
     private final ImageView drawableElement;
 
@@ -28,28 +26,9 @@ public class ImageGuiComponent extends ClickableGuiComponent {
         super.registerClicks();
     }
 
-    public void changeBlackPixels(Color color) {
-        Image originalImage = drawableElement.getImage();
-        int width = (int) originalImage.getWidth();
-        int height = (int) originalImage.getHeight();
-        WritableImage newImage = new WritableImage(width, height);
-
-        PixelReader pixelReader = originalImage.getPixelReader();
-        PixelWriter pixelWriter = newImage.getPixelWriter();
-
-        for (int y = 0; y < height; y++) {
-            for (int x = 0; x < width; x++) {
-                Color pixelColor = pixelReader.getColor(x, y);
-
-                if (pixelColor.equals(Color.BLACK)) {
-                    pixelWriter.setColor(x, y, color);
-                } else {
-                    pixelWriter.setColor(x, y, pixelColor);
-                }
-            }
-        }
-
-        this.drawableElement.setImage(newImage);
+    @Override
+    public void maskBlackPixels(Color color) {
+        this.drawableElement.setImage(this.getMaskedImage(this.drawableElement.getImage(), color));
     }
 
     @Override

@@ -3,9 +3,10 @@ package Game.ui;
 import static Game.file.StaticFileHandler.*;
 import Game.ui.clicking.ClickEvent;
 import Game.ui.impl.GameOfLifeGuiComponent;
-import Game.ui.impl.ImageGuiComponent;
+import Game.ui.impl.button.ImagedButtonGuiComponent;
+import Game.ui.impl.image.ImageGuiComponent;
 import Game.ui.impl.LabelGuiComponent;
-import Game.ui.impl.LabeledButtonGuiComponent;
+import Game.ui.impl.button.LabeledButtonGuiComponent;
 import Game.ui.impl.stack.HStackGuiComponent;
 import Game.ui.impl.shape.RectangleGuiComponent;
 import Game.ui.impl.stack.VStackGuiComponent;
@@ -49,7 +50,7 @@ public class GuiManager {
 
         VStackGuiComponent settingsMenuButtonSide = new VStackGuiComponent(0, BG_COLOR, 50, 663);
 
-        Optional<ImageGuiComponent> optionalSettingsMenuButton = initializeSettingsMenuButton();
+        Optional<ImagedButtonGuiComponent> optionalSettingsMenuButton = initializeSettingsMenuButton();
 
         if (optionalSettingsMenuButton.isPresent()) {
             settingsMenuButtonSide.addChild(optionalSettingsMenuButton.get());
@@ -77,7 +78,7 @@ public class GuiManager {
             });
     }
 
-    private Optional<ImageGuiComponent> initializeSettingsMenuButton() {
+    private Optional<ImagedButtonGuiComponent> initializeSettingsMenuButton() {
         ClickEvent eventHandler = e -> {
              System.out.println("Toggling menu");
              this.toggleCollapsableMenu(true);
@@ -89,8 +90,12 @@ public class GuiManager {
             return Optional.empty();
         }
 
-        ImageGuiComponent component = ImageGuiComponent.fromInputStream(optionalImageInput.get(), 60, 60, true, eventHandler);
-        component.changeBlackPixels(ACCENT);
+        ImagedButtonGuiComponent component = ImagedButtonGuiComponent.fromInputStream(
+                optionalImageInput.get(), 45, 45, true, BG_COLOR, ACCENT, 1, 10, eventHandler
+        );
+
+        component.maskBlackPixels(ACCENT);
+
         return Optional.of(component);
     }
 

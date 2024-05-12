@@ -1,4 +1,4 @@
-package Game.ui.impl;
+package Game.ui.impl.button;
 
 import Game.ui.clicking.ClickEvent;
 import Game.ui.clicking.ClickableGuiComponent;
