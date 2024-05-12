@@ -2,13 +2,18 @@ package Game.ui;
 
 import Game.ui.cursor.CursorGraphicsHandler;
 import Game.ui.impl.GameOfLifeGuiComponent;
+import Game.ui.impl.LabelGuiComponent;
+import Game.ui.impl.LabeledButtonGuiComponent;
 import Game.ui.impl.stack.HStackGuiComponent;
 import Game.ui.impl.shape.RectangleGuiComponent;
 import Game.ui.impl.stack.VStackGuiComponent;
 import Game.ui.impl.stack.ZStackGuiComponent;
 import javafx.geometry.Pos;
 import javafx.scene.canvas.Canvas;
+import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 
 public class GuiManager {
 
@@ -20,6 +25,7 @@ public class GuiManager {
     private boolean collapsableMenuToggled = false;
 
     private final Color BG_COLOR = Color.grayRgb(30);
+    private final Color ACCENT = Color.web("#4d62ff", 0.7);
 
     public void initializeGuiComponents() {
         this.collapsableMenu = initializeCollapsableMenu();
@@ -34,16 +40,28 @@ public class GuiManager {
         HStackGuiComponent settingsComponent = new HStackGuiComponent(60, settingsBG, 600, 60, 30);
         settingsComponent.setAlignment(Pos.CENTER_LEFT);
 
-        VStackGuiComponent saveGridComponent = new VStackGuiComponent(4, settingsBG);
-        saveGridComponent.setAlignment(Pos.CENTER);
-        saveGridComponent.addChild(new RectangleGuiComponent(120, 20, Color.BLUE));
-        saveGridComponent.addChild(new RectangleGuiComponent(120, 20, Color.BLUE));
-        settingsComponent.addChild(saveGridComponent);
+        VStackGuiComponent gridOperationsPanel = new VStackGuiComponent(4, settingsBG);
+        gridOperationsPanel.setAlignment(Pos.CENTER);
+
+        Font gridOperationsFont = Font.font("Helvetica", FontWeight.NORMAL, 18);
+        LabeledButtonGuiComponent saveGridButton = new LabeledButtonGuiComponent("Save Grid", gridOperationsFont, Color.WHITE, 120, 25,
+                settingsBG, ACCENT, 5, 1, e -> System.out.println("Saving grid"));
+        LabeledButtonGuiComponent loadGridButton = new LabeledButtonGuiComponent("Load Grid", gridOperationsFont, Color.WHITE, 120, 25,
+                settingsBG, ACCENT, 5, 1, e -> System.out.println("Loading grid"));
+
+        gridOperationsPanel.addChild(saveGridButton);
+        gridOperationsPanel.addChild(loadGridButton);
+
+        settingsComponent.addChild(gridOperationsPanel);
 
         VStackGuiComponent volumesComponent = new VStackGuiComponent(4, settingsBG);
         volumesComponent.setAlignment(Pos.CENTER);
-        volumesComponent.addChild(new RectangleGuiComponent(260, 20, Color.GREEN));
-        volumesComponent.addChild(new RectangleGuiComponent(260, 20, Color.GREEN));
+
+        LabelGuiComponent volumeComponent1 = new LabelGuiComponent("SFX Volume:   ------o---         ", 20, 18, "Helvetica", Color.WHITE);
+        LabelGuiComponent volumeComponent2 = new LabelGuiComponent("Music Volume: ------o---         ", 20, 18, "Helvetica", Color.WHITE);
+        volumesComponent.addChild(volumeComponent1);
+        volumesComponent.addChild(volumeComponent2);
+
         settingsComponent.addChild(volumesComponent);
 
         RectangleGuiComponent exitComponent = new RectangleGuiComponent(44, 44, Color.RED);
@@ -78,22 +96,23 @@ public class GuiManager {
 
     public void toggleCollapsableMenu(boolean toggled) {
         if (toggled && !collapsableMenuToggled) {
+            ((StackPane)this.root.getDrawableElement()).setAlignment(Pos.CENTER_LEFT);
             this.root.addChild(this.collapsableMenu);
             this.collapsableMenuToggled = true;
         } else if (!toggled && collapsableMenuToggled) {
+            ((StackPane)this.root.getDrawableElement()).setAlignment(Pos.CENTER);
             this.root.removeChild(this.collapsableMenu);
             this.collapsableMenuToggled = false;
         }
     }
 
     private ZStackGuiComponent initializeCollapsableMenu() {
-        Color bgColor = BG_COLOR.deriveColor(0, 0, 2, 0.95);
-        ZStackGuiComponent menu = new ZStackGuiComponent(663, 663);
+        Color bgColor = BG_COLOR.deriveColor(0, 0, 1.4, 0.95);
+        ZStackGuiComponent menu = new ZStackGuiComponent(700, 450);
         RectangleGuiComponent background = new RectangleGuiComponent(663, 663, bgColor);
-        background.setStroke(2, Color.WHITE.deriveColor(0, 0, 1, 0.95));
+        background.setStroke(2, ACCENT.deriveColor(0, 1, 1, 0.8));
 
         menu.addChild(background);
-        menu.setAlignment(Pos.CENTER_LEFT);
 
         return menu;
     }
