@@ -24,7 +24,7 @@ public class Main extends Application {
         int width = 300;
         CursorGraphicsHandler cursorGraphics = new CursorGraphicsHandler();
 
-        this.guiManager = new GuiManager(cursorGraphics);
+        this.guiManager = new GuiManager();
         this.guiManager.initializeGuiComponents();
         // Init canvas
 

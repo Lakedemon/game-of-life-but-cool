@@ -1,7 +1,9 @@
 package Game.ui;
 
-import Game.ui.cursor.CursorGraphicsHandler;
+import static Game.file.StaticFileHandler.*;
+import Game.ui.clicking.ClickEvent;
 import Game.ui.impl.GameOfLifeGuiComponent;
+import Game.ui.impl.ImageGuiComponent;
 import Game.ui.impl.LabelGuiComponent;
 import Game.ui.impl.LabeledButtonGuiComponent;
 import Game.ui.impl.stack.HStackGuiComponent;
@@ -15,11 +17,13 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 
+import java.io.InputStream;
+import java.util.Optional;
+
 public class GuiManager {
 
     private GuiComponent root;
     private GameOfLifeGuiComponent gameOfLifeGuiComponent;
-    private final CursorGraphicsHandler cursorGraphicsHandler;
 
     private ZStackGuiComponent collapsableMenu;
     private boolean collapsableMenuToggled = false;
@@ -35,8 +39,66 @@ public class GuiManager {
         HStackGuiComponent mainPanel = new HStackGuiComponent(5, BG_COLOR, 0);
         VStackGuiComponent gamePanel = new VStackGuiComponent(3, BG_COLOR);
         this.gameOfLifeGuiComponent = new GameOfLifeGuiComponent(300);
+        gamePanel.addChild(gameOfLifeGuiComponent);
 
         Color settingsBG = BG_COLOR.deriveColor(0, 0, 1.3, 1);
+        HStackGuiComponent settingsComponent = this.initializeSettingsComponent(settingsBG);
+
+        gamePanel.addChild(settingsComponent);
+        gamePanel.setAlignment(Pos.CENTER_LEFT);
+
+        VStackGuiComponent settingsMenuButtonSide = new VStackGuiComponent(0, BG_COLOR, 50, 663);
+
+        Optional<ImageGuiComponent> optionalSettingsMenuButton = initializeSettingsMenuButton();
+
+        if (optionalSettingsMenuButton.isPresent()) {
+            settingsMenuButtonSide.addChild(optionalSettingsMenuButton.get());
+            mainPanel.addChild(settingsMenuButtonSide);
+        } else {
+            settingsMenuButtonSide.addChild(initializeBackupSettingsMenuButton());
+            mainPanel.addChild(settingsMenuButtonSide);
+        }
+
+        mainPanel.addChild(gamePanel);
+        mainPanel.addChild(new RectangleGuiComponent(450, 663, BG_COLOR.deriveColor(0, 0, 0.9, 1)));
+
+        mainPanel.setAlignment(Pos.CENTER);
+
+        this.root = new ZStackGuiComponent();
+        this.root.addChild(backgroundComponent);
+        this.root.addChild(mainPanel);
+    }
+
+    private RectangleGuiComponent initializeBackupSettingsMenuButton() {
+        return new RectangleGuiComponent(50, 50, Color.DARKCYAN,
+            e -> {
+                System.out.println("Toggling menu");
+                this.toggleCollapsableMenu(true);
+            });
+    }
+
+    private Optional<ImageGuiComponent> initializeSettingsMenuButton() {
+        ClickEvent eventHandler = e -> {
+             System.out.println("Toggling menu");
+             this.toggleCollapsableMenu(true);
+        };
+
+        Optional<InputStream> optionalImageInput = getImageInputStream(SETTINGS_MENU_IMG_RESOURCE_PATH);
+        if (optionalImageInput.isEmpty()) {
+            System.out.println("ERROR: Failed to load settings menu button.");
+            return Optional.empty();
+        }
+
+        ImageGuiComponent component = ImageGuiComponent.fromInputStream(optionalImageInput.get(), 60, 60, true, eventHandler);
+        component.changeBlackPixels(ACCENT);
+        return Optional.of(component);
+    }
+
+    public ZStackGuiComponent getCollapsableMenu() {
+        return collapsableMenu;
+    }
+
+    public HStackGuiComponent initializeSettingsComponent(Color settingsBG) {
         HStackGuiComponent settingsComponent = new HStackGuiComponent(60, settingsBG, 600, 60, 30);
         settingsComponent.setAlignment(Pos.CENTER_LEFT);
 
@@ -67,31 +129,7 @@ public class GuiManager {
         RectangleGuiComponent exitComponent = new RectangleGuiComponent(44, 44, Color.RED);
         settingsComponent.addChild(exitComponent);
 
-        gamePanel.addChild(gameOfLifeGuiComponent);
-        gamePanel.addChild(settingsComponent);
-        gamePanel.setAlignment(Pos.CENTER_LEFT);
-
-        VStackGuiComponent settingsMenuButtonSide = new VStackGuiComponent(0, BG_COLOR, 50, 663);
-        RectangleGuiComponent settingsMenuButton = new RectangleGuiComponent(50, 50, Color.DARKCYAN,
-                e -> {
-                    System.out.println("Toggling menu");
-                    this.toggleCollapsableMenu(true);
-                });
-
-        settingsMenuButtonSide.addChild(settingsMenuButton);
-        mainPanel.addChild(settingsMenuButtonSide);
-        mainPanel.addChild(gamePanel);
-        mainPanel.addChild(new RectangleGuiComponent(450, 663, BG_COLOR.deriveColor(0, 0, 0.9, 1)));
-
-        mainPanel.setAlignment(Pos.CENTER);
-
-        this.root = new ZStackGuiComponent();
-        this.root.addChild(backgroundComponent);
-        this.root.addChild(mainPanel);
-    }
-
-    public ZStackGuiComponent getCollapsableMenu() {
-        return collapsableMenu;
+        return settingsComponent;
     }
 
     public void toggleCollapsableMenu(boolean toggled) {
@@ -123,10 +161,6 @@ public class GuiManager {
 
     public GuiComponent getRoot() {
         return root;
-    }
-
-    public GuiManager(CursorGraphicsHandler cursorGraphicsHandler) {
-        this.cursorGraphicsHandler = cursorGraphicsHandler;
     }
 
     public Canvas getGameOfLifeCanvas() {
