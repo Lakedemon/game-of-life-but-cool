@@ -1,16 +1,11 @@
 package Game.rules;
 
 import Game.Cell;
+import Game.rules.Comparators.IntComparator;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
-
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.function.Function;
-import java.util.function.Predicate;
 
 public class Rule {
     private final IntegerProperty affectedState = new SimpleIntegerProperty();

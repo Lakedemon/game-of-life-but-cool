@@ -1,18 +1,22 @@
 package Game.rules;
 
 import Game.MyComboBox;
+import Game.rules.Comparators.IntComparators;
 import javafx.scene.control.Label;
 import javafx.scene.control.Spinner;
 import javafx.scene.layout.FlowPane;
 
 public class RuleHolder extends FlowPane {
+    private final Rule associatedRule;
+
     public RuleHolder(Rule associatedRule) {
         super();
+        this.associatedRule = associatedRule;
 
         // Creating UI controls
         Label label1 = new Label("If cell of value:");
         Label label2 = new Label("has:");
-        Label label3 = new Label("cells of value:");
+        Label label3 = new Label("neighbours of value:");
         Label label4 = new Label("then set the cell value to:");
 
         Spinner<Integer> affectedState = createSpinner(0, 100, associatedRule.getAffectedState());
@@ -54,5 +58,9 @@ public class RuleHolder extends FlowPane {
     private void setStyle(){
         setStyle("-fx-background-color: #f0f0f0; -fx-border-color: black; -fx-border-width: 2; -fx-border-style: solid;");
         setHgap(2);
+    }
+
+    public Rule getAssociatedRule() {
+        return associatedRule;
     }
 }

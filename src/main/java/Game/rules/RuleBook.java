@@ -26,4 +26,8 @@ public class RuleBook {
             rule.applyRule(cell);
         }
     }
+
+    public List<Rule> getRules() {
+        return rules;
+    }
 }

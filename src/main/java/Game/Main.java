@@ -1,6 +1,7 @@
 package Game;
 import Game.graphics.GraphicsHandler;
 import Game.rules.*;
+import Game.rules.Comparators.IntComparators;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.scene.Scene;
@@ -9,10 +10,6 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.scene.layout.*;
-
-import java.util.*;
-import java.util.function.IntFunction;
-import java.util.function.Predicate;
 
 public class Main extends Application {
 
@@ -48,12 +45,8 @@ public class Main extends Application {
         Cell[][] grid = gameOfLife.getGrid();
 
         //Rules
-        VBox ruleBox = new VBox(5);
-
+        RulePane ruleBox = new RulePane(gameOfLife.getRuleBook(), 5);
         root.setLeft(ruleBox);
-        ruleBox.getChildren().add(new RuleHolder(gameOfLife.getRuleBook().getRule(0)));
-        ruleBox.getChildren().add(new RuleHolder(gameOfLife.getRuleBook().getRule(1)));
-        ruleBox.getChildren().add(new RuleHolder(gameOfLife.getRuleBook().getRule(2)));
 
         // Init handlers
         this.graphicsHandler = new GraphicsHandler(canvas);
@@ -77,12 +70,9 @@ public class Main extends Application {
     private static GameOfLife getGameOfLife(int width, int height) {
         RuleBook ruleBook = new RuleBook();
 
-        Rule ruleA = new Rule(1, 1, 2, 0, IntComparators.LESS_THAN);
-        Rule ruleB = new Rule(1, 1, 3, 0, IntComparators.GREATER_THAN);
-        Rule ruleC = new Rule(0, 1, 3, 1, IntComparators.EQUAL_TO);
-        ruleBook.addRule(ruleA);
-        ruleBook.addRule(ruleB);
-        ruleBook.addRule(ruleC);
+        ruleBook.addRule(new Rule(1, 1, 2, 0, IntComparators.LESS_THAN));
+        ruleBook.addRule(new Rule(1, 1, 3, 0, IntComparators.GREATER_THAN));
+        ruleBook.addRule(new Rule(0, 1, 3, 1, IntComparators.EQUAL_TO));
 
         return new GameOfLife(width, height, ruleBook);
     }
