@@ -5,13 +5,9 @@ import Game.ui.animations.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.beans.property.SimpleIntegerProperty;
+import javafx.geometry.Bounds;
 import javafx.scene.Node;
-import javafx.scene.control.Label;
-import javafx.scene.shape.Circle;
-import javafx.scene.shape.Rectangle;
-import javafx.scene.shape.Shape;
 import javafx.util.Duration;
-import org.w3c.dom.css.Rect;
 
 public class SlideAnimation extends Animation {
 
@@ -55,11 +51,13 @@ public class SlideAnimation extends Animation {
     }
 
     private void setElementCoordinates(GuiComponent component, double x, double y) {
-        component.getDrawableElement().setLayoutX(x);
-        component.getDrawableElement().setLayoutY(y);
+        component.getDrawableElement().setTranslateX(x);
+        component.getDrawableElement().setTranslateY(y);
     }
 
     private int calculateBeginX(GuiComponent component) {
+        Bounds boundsInScene = component.getDrawableElement().localToScene(component.getDrawableElement().getBoundsInLocal());
+        double currentX = boundsInScene.getMinX();
         if (!direction.isHorizontal()) {
             return (int) component.getDrawableElement().getLayoutX();
         }
