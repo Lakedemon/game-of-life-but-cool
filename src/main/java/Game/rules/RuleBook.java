@@ -17,6 +17,10 @@ public class RuleBook {
         rules.add(newPosition, rule);
     }
 
+    public Rule getRule(int position) {
+        return rules.get(position);
+    }
+
     public void applyRules(Cell cell){
         for (Rule rule : rules) {
             rule.applyRule(cell);

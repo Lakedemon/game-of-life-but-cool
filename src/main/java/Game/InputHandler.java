@@ -16,6 +16,7 @@ public class InputHandler {
     private final CursorShape DEFAULT_CURSOR_SHAPE = CursorShape.CIRCLE;
 
     private final KeyCode CLEAR_BOARD_BIND = KeyCode.SPACE;
+    private final KeyCode RANDOM_BOARD_BIND = KeyCode.R;
     private final KeyCode TOGGLE_BRUSH_TYPE_BIND = KeyCode.T;
     private final KeyCode TOGGLE_PAINT_MODE_BIND = KeyCode.TAB;
 
@@ -62,6 +63,7 @@ public class InputHandler {
 
             if (paintMode) {
                 handleClearBoard(e);
+                handleResetBoard(e);
                 handleToggleBrushType(e);
             }
         });
@@ -70,6 +72,11 @@ public class InputHandler {
     private void handleClearBoard(KeyEvent e) {
         if (e.getCode() == CLEAR_BOARD_BIND) {
             gameOfLife.clearBoard();
+        }
+    }
+    private void handleResetBoard(KeyEvent e){
+        if (e.getCode() == RANDOM_BOARD_BIND) {
+            gameOfLife.ranFill();
         }
     }
     private void handleToggleBrushType(KeyEvent keyEvent) {

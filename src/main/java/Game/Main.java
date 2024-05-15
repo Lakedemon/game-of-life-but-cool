@@ -1,15 +1,18 @@
 package Game;
 import Game.graphics.GraphicsHandler;
-import Game.rules.Rule;
-import Game.rules.RuleBook;
+import Game.rules.*;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+import javafx.scene.layout.*;
+
+import java.util.*;
+import java.util.function.IntFunction;
+import java.util.function.Predicate;
 
 public class Main extends Application {
 
@@ -29,11 +32,11 @@ public class Main extends Application {
         gc.setFill(Color.BLACK);
 
         // Register canvas to root
-        StackPane root = new StackPane();
-        root.getChildren().add(canvas);
+        BorderPane root = new BorderPane();
+        root.setCenter(canvas);
 
         // Init scene
-        Scene scene = new Scene(root, width * CELL_SIZE, height * CELL_SIZE);
+        Scene scene = new Scene(root, width * CELL_SIZE + 400, height * CELL_SIZE);
 
         // Set window properties
         primaryStage.setTitle("Game of life - but cool");
@@ -41,27 +44,22 @@ public class Main extends Application {
         primaryStage.show();
 
         // Init game of life
-        RuleBook ruleBook = new RuleBook();
-
-        int[] one = new int[]{1};
-        int[] zero = new int[]{0};
-        int[] any = new int[]{0, 1};
-
-        Rule ruleA = new Rule(cell -> cell.getValue() == 1, count -> count < 2, 0, one);
-        Rule ruleB = new Rule(cell -> cell.getValue() == 1, count -> count > 3, 0, one);
-        Rule ruleC = new Rule(cell -> cell.getValue() == 1, count -> count == 3, 1, zero);
-        ruleBook.addRule(ruleA);
-        ruleBook.addRule(ruleB);
-        ruleBook.addRule(ruleC);
-
-        GameOfLife gameOfLife = new GameOfLife(width, height, ruleBook);
+        GameOfLife gameOfLife = getGameOfLife(width, height);
         Cell[][] grid = gameOfLife.getGrid();
+
+        //Rules
+        VBox ruleBox = new VBox(5);
+
+        root.setLeft(ruleBox);
+        ruleBox.getChildren().add(new RuleHolder(gameOfLife.getRuleBook().getRule(0)));
+        ruleBox.getChildren().add(new RuleHolder(gameOfLife.getRuleBook().getRule(1)));
+        ruleBox.getChildren().add(new RuleHolder(gameOfLife.getRuleBook().getRule(2)));
 
         // Init handlers
         this.graphicsHandler = new GraphicsHandler(canvas);
-        this.inputHandler = new InputHandler(gameOfLife, graphicsHandler);
-        this.graphicsHandler.initCustomCursor(scene, root, this.inputHandler.getBrush());
-        this.inputHandler.registerKeyHandlers(scene, canvas);
+        //this.inputHandler = new InputHandler(gameOfLife, graphicsHandler);
+        //this.graphicsHandler.initCustomCursor(scene, root, this.inputHandler.getBrush());
+        //this.inputHandler.registerKeyHandlers(scene, canvas);
 
         // Init main game of life loop
         AnimationTimer animationTimer = new AnimationTimer() {
@@ -75,4 +73,18 @@ public class Main extends Application {
         // Start main game of life loop
         animationTimer.start();
     }
+
+    private static GameOfLife getGameOfLife(int width, int height) {
+        RuleBook ruleBook = new RuleBook();
+
+        Rule ruleA = new Rule(1, 1, 2, 0, IntComparators.LESS_THAN);
+        Rule ruleB = new Rule(1, 1, 3, 0, IntComparators.GREATER_THAN);
+        Rule ruleC = new Rule(0, 1, 3, 1, IntComparators.EQUAL_TO);
+        ruleBook.addRule(ruleA);
+        ruleBook.addRule(ruleB);
+        ruleBook.addRule(ruleC);
+
+        return new GameOfLife(width, height, ruleBook);
+    }
 }
+
