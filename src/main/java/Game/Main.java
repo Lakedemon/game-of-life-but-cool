@@ -28,7 +28,6 @@ public class Main extends Application {
         this.guiManager.initializeGuiComponents();
         // Init canvas
 
-
         // Register canvas to root
         StackPane root = new StackPane(this.guiManager.getRoot().getDrawableElement());
 

@@ -57,7 +57,6 @@ public class SlideAnimation extends Animation {
 
     private int calculateBeginX(GuiComponent component) {
         Bounds boundsInScene = component.getDrawableElement().localToScene(component.getDrawableElement().getBoundsInLocal());
-        double currentX = boundsInScene.getMinX();
         if (!direction.isHorizontal()) {
             return (int) component.getDrawableElement().getLayoutX();
         }
@@ -65,7 +64,7 @@ public class SlideAnimation extends Animation {
         Node node = component.getDrawableElement();
         if (this.direction == Direction.LEFT) {
             System.out.println("layout width: " + node.getLayoutBounds().getWidth());
-            return (int) -node.getLayoutBounds().getWidth();
+            return (int) -boundsInScene.getWidth();
         } else if (this.direction == Direction.RIGHT) {
             return (int) node.getScene().getWidth();
         }

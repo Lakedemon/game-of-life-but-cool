@@ -4,7 +4,6 @@ import Game.ui.GuiComponent;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.layout.Background;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 

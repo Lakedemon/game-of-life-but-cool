@@ -132,7 +132,7 @@ public class GuiManager {
 
         settingsComponent.addChild(volumesComponent);
 
-        RectangleGuiComponent exitComponent = new RectangleGuiComponent(44, 44, Color.RED);
+        RectangleGuiComponent exitComponent = new RectangleGuiComponent(44, 44, Color.RED, (e) -> System.exit(0));
         settingsComponent.addChild(exitComponent);
 
         return settingsComponent;
