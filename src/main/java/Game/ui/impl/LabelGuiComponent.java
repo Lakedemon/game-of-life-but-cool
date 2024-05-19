@@ -1,6 +1,7 @@
 package Game.ui.impl;
 
 import Game.ui.GuiComponent;
+import javafx.beans.property.StringProperty;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
@@ -27,7 +28,24 @@ public class LabelGuiComponent extends GuiComponent {
 
         this.width = (int) drawableElement.getMinWidth();
         this.height = (int) drawableElement.getMinHeight();
+    }
 
+    public LabelGuiComponent(StringProperty stringProperty, int fontSize, String fontFamily, Color color) {
+        Font font = Font.font(fontFamily, FontWeight.LIGHT, fontSize);
+        this.drawableElement = new Label(stringProperty.get());
+
+        stringProperty.addListener((observable, oldValue, newValue) -> {
+            drawableElement.setText(newValue);
+        });
+
+        this.drawableElement.setFont(font);
+        this.drawableElement.setTextFill(color);
+
+        drawableElement.setMinHeight(Region.USE_PREF_SIZE);
+        drawableElement.setMinWidth(Region.USE_PREF_SIZE);
+
+        this.width = (int) drawableElement.getMinWidth();
+        this.height = (int) drawableElement.getMinHeight();
     }
 
     @Override

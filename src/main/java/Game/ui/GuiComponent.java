@@ -25,6 +25,18 @@ public abstract class GuiComponent {
         return children.remove(child);
     }
 
+    public void setChild(int index, GuiComponent child) {
+        children.set(index, child);
+    }
+
+    public int getNumberOfChildren() {
+        return children.size();
+    }
+
+    public GuiComponent getLastChild() {
+        return children.getLast();
+    }
+
     public abstract int getWidth();
     public abstract int getHeight();
 

@@ -38,6 +38,11 @@ public class RectangleGuiComponent extends ClickableGuiComponent {
         super.registerClicks();
     }
 
+    public void setRadius(int radius) {
+        this.drawableElement.setArcHeight(radius);
+        this.drawableElement.setArcWidth(radius);
+    }
+
     public void setStroke(int width, Color color) {
         this.drawableElement.setStrokeWidth(width);
         this.drawableElement.setStroke(color);
@@ -45,12 +50,12 @@ public class RectangleGuiComponent extends ClickableGuiComponent {
 
     @Override
     public int getWidth() {
-        return 0;
+        return width;
     }
 
     @Override
     public int getHeight() {
-        return 0;
+        return height;
     }
 
     @Override

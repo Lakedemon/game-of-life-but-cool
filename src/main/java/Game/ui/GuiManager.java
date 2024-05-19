@@ -6,6 +6,7 @@ import Game.ui.animations.Animation;
 import Game.ui.animations.impl.SlideAnimation;
 import Game.ui.clicking.ClickEvent;
 import Game.ui.impl.GameOfLifeGuiComponent;
+import Game.ui.impl.StructureSelectGuiComponent;
 import Game.ui.impl.button.ImagedButtonGuiComponent;
 import Game.ui.impl.LabelGuiComponent;
 import Game.ui.impl.button.LabeledButtonGuiComponent;
@@ -32,6 +33,8 @@ public class GuiManager {
     private ZStackGuiComponent collapsableMenu;
     private boolean collapsableMenuToggled = false;
     private SlideAnimation slideAnimation;
+
+    private VStackGuiComponent rightMenu;
 
     private final Color BG_COLOR = Color.grayRgb(30);
     private final Color SETTINGS_BG = BG_COLOR.deriveColor(0, 0, 1.3, 1);
@@ -66,13 +69,38 @@ public class GuiManager {
         }
 
         mainPanel.addChild(gamePanel);
-        mainPanel.addChild(new RectangleGuiComponent(450, 663, BG_COLOR.deriveColor(0, 0, 0.9, 1)));
 
+        Color rightBgColor = BG_COLOR.deriveColor(0, 0, 0.9, 1);
+        ZStackGuiComponent rightComponent = new ZStackGuiComponent(450, 663);
+        RectangleGuiComponent rightBackground = new RectangleGuiComponent(450, 663, rightBgColor);
+        this.rightMenu = initializeRightMenu(rightBgColor);
+
+        rightComponent.addChild(rightBackground);
+        rightComponent.addChild(rightMenu);
+        this.rightMenu.setAlignment(Pos.TOP_CENTER);
+
+        mainPanel.addChild(rightComponent);
         mainPanel.setAlignment(Pos.CENTER);
 
         this.root = new ZStackGuiComponent();
         this.root.addChild(backgroundComponent);
         this.root.addChild(mainPanel);
+    }
+
+    private VStackGuiComponent initializeRightMenu(Color bgColor) {
+        VStackGuiComponent root = new VStackGuiComponent(10, bgColor);
+        LabelGuiComponent title = new LabelGuiComponent("Structures", 50, "Helvetica", Color.WHITE);
+
+        StructureSelectGuiComponent structureSelectGuiComponent = new StructureSelectGuiComponent(300, 380, bgColor, this);
+
+        root.addChild(title);
+        root.addChild(structureSelectGuiComponent);
+        root.setAlignment(Pos.TOP_CENTER);
+        return root;
+    }
+
+    public VStackGuiComponent getRightMenu() {
+        return this.rightMenu;
     }
 
     private RectangleGuiComponent initializeBackupSettingsMenuButton() {
