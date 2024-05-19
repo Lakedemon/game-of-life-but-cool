@@ -9,6 +9,7 @@ import Game.ui.impl.GameOfLifeGuiComponent;
 import Game.ui.impl.button.ImagedButtonGuiComponent;
 import Game.ui.impl.LabelGuiComponent;
 import Game.ui.impl.button.LabeledButtonGuiComponent;
+import Game.ui.impl.slider.SliderGuiComponent;
 import Game.ui.impl.stack.HStackGuiComponent;
 import Game.ui.impl.shape.RectangleGuiComponent;
 import Game.ui.impl.stack.VStackGuiComponent;
@@ -33,6 +34,7 @@ public class GuiManager {
     private SlideAnimation slideAnimation;
 
     private final Color BG_COLOR = Color.grayRgb(30);
+    private final Color SETTINGS_BG = BG_COLOR.deriveColor(0, 0, 1.3, 1);
     private final Color ACCENT = Color.web("#4d62ff", 0.7);
 
     public void initializeGuiComponents() {
@@ -46,8 +48,7 @@ public class GuiManager {
         this.gameOfLifeGuiComponent = new GameOfLifeGuiComponent(300);
         gamePanel.addChild(gameOfLifeGuiComponent);
 
-        Color settingsBG = BG_COLOR.deriveColor(0, 0, 1.3, 1);
-        HStackGuiComponent settingsComponent = this.initializeSettingsComponent(settingsBG);
+        HStackGuiComponent settingsComponent = this.initializeSettingsComponent(SETTINGS_BG);
 
         gamePanel.addChild(settingsComponent);
         gamePanel.setAlignment(Pos.CENTER_LEFT);
@@ -125,20 +126,45 @@ public class GuiManager {
 
         settingsComponent.addChild(gridOperationsPanel);
 
-        VStackGuiComponent volumesComponent = new VStackGuiComponent(4, settingsBG);
-        volumesComponent.setAlignment(Pos.CENTER);
-
-        LabelGuiComponent volumeComponent1 = new LabelGuiComponent("SFX Volume:   ------o---         ", 20, "Helvetica", Color.WHITE);
-        LabelGuiComponent volumeComponent2 = new LabelGuiComponent("Music Volume: ------o---         ", 20, "Helvetica", Color.WHITE);
-        volumesComponent.addChild(volumeComponent1);
-        volumesComponent.addChild(volumeComponent2);
-
+        HStackGuiComponent volumesComponent = initializeVolumesSection();
         settingsComponent.addChild(volumesComponent);
 
         RectangleGuiComponent exitComponent = new RectangleGuiComponent(44, 44, Color.RED, (e) -> System.exit(0));
         settingsComponent.addChild(exitComponent);
 
         return settingsComponent;
+    }
+
+    private HStackGuiComponent initializeVolumesSection() {
+        HStackGuiComponent volumesSection = new HStackGuiComponent(10, SETTINGS_BG, 5);
+        VStackGuiComponent labels = new VStackGuiComponent(0, SETTINGS_BG);
+        VStackGuiComponent sliders = new VStackGuiComponent(14, SETTINGS_BG);
+        sliders.setAlignment(Pos.CENTER_LEFT);
+        labels.setAlignment(Pos.CENTER_RIGHT);
+
+
+        LabelGuiComponent sfxVolumeLabel = new LabelGuiComponent("SFX Volume:", 20, "Helvetica", Color.WHITE);
+        SliderGuiComponent sfxVolumeSlider = new SliderGuiComponent(0, 100, 75, 100, (o,  n) -> {
+            System.out.println("Set sfx volume to " + n);
+        });
+
+        LabelGuiComponent musicVolumeLabel = new LabelGuiComponent("Music Volume:", 20, "Helvetica", Color.WHITE);
+        SliderGuiComponent musicVolumeSlider = new SliderGuiComponent(0, 100, 75, 100, (o,  n) -> {
+            System.out.println("Set music volume to " + n);
+        });
+
+        labels.addChild(sfxVolumeLabel);
+        labels.addChild(musicVolumeLabel);
+
+        //sliders.addChild(new RectangleGuiComponent(3, 10, SETTINGS_BG));
+        sliders.addChild(sfxVolumeSlider);
+        //sliders.addChild(new RectangleGuiComponent(3, 15, SETTINGS_BG));
+        sliders.addChild(musicVolumeSlider);
+
+        volumesSection.addChild(labels);
+        volumesSection.addChild(sliders);
+
+        return volumesSection;
     }
 
     public void toggleCollapsableMenu(boolean toggled) {
