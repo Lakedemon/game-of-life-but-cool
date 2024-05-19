@@ -4,6 +4,6 @@ import Game.ui.GuiComponent;
 
 public abstract class Animation {
 
-    public abstract void perform(GuiComponent component, boolean in);
+    public abstract void perform(boolean in, GuiComponent root);
 
 }

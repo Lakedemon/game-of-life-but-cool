@@ -13,41 +13,53 @@ public class SlideAnimation extends Animation {
 
     private final Direction direction;
     private final int durationMs;
+    private final GuiComponent component;
 
-    public SlideAnimation(Direction outwardsDirection, int durationMs) {
+    final int beginX, beginY, endX, endY;
+
+    public SlideAnimation(Direction outwardsDirection, GuiComponent component, int durationMs) {
         this.direction = outwardsDirection;
         this.durationMs = durationMs;
+        this.component = component;
+
+        this.beginX = calculateBeginX(component);
+        this.beginY = calculateBeginY(component);
+        this.endX = calculateEndX(component);
+        this.endY = calculateEndY(component);
     }
 
     @Override
-    public void perform(GuiComponent component, boolean in) {
-        final int beginX = calculateBeginX(component);
-        final int endX = calculateEndX(component);
-        final int beginY = calculateBeginY(component);
-        final int endY = calculateEndY(component);
-
-        System.out.println("begin x: "+ beginX);
-        System.out.println("end x: "+ endX);
-        System.out.println("begin y: "+ beginY);
-        System.out.println("end y: "+ endY);
+    public void perform(boolean in, GuiComponent root) {
+        if (in) root.addChild(component);
 
         SimpleIntegerProperty toTravelXProperty = new SimpleIntegerProperty(in ? endX - beginX : beginX - endX);
         SimpleIntegerProperty toTravelYProperty = new SimpleIntegerProperty(in ? endY - beginY : beginY - endY);
-        SimpleIntegerProperty currentFrameProperty = new SimpleIntegerProperty(0);
 
+        Timeline timeline = getTimeline(in, toTravelXProperty, toTravelYProperty);
+        timeline.setCycleCount(this.durationMs);
+        timeline.play();
+
+        KeyFrame endKeyframe = new KeyFrame(Duration.millis(durationMs), e -> {
+            if (in)
+                setElementCoordinates(component, endX, endY);
+            else
+                root.removeChild(component);
+        });
+        Timeline timeline2 = new Timeline(endKeyframe);
+        timeline2.setCycleCount(1);
+        timeline2.play();
+    }
+
+    private Timeline getTimeline(boolean in, SimpleIntegerProperty toTravelXProperty, SimpleIntegerProperty toTravelYProperty) {
+        SimpleIntegerProperty currentFrameProperty = new SimpleIntegerProperty(0);
         KeyFrame onMsChange = new KeyFrame(Duration.millis(1), e -> {
-            double newXCoordinate = beginX + ((double) toTravelXProperty.get() / durationMs) * currentFrameProperty.get();
-            double newYCoordinate = beginY + ((double) toTravelYProperty.get() / durationMs) * currentFrameProperty.get();
+            double newXCoordinate = (in ? beginX : endX) + ((double) toTravelXProperty.get() / durationMs) * currentFrameProperty.get();
+            double newYCoordinate = (in ? beginY : endY) + ((double) toTravelYProperty.get() / durationMs) * currentFrameProperty.get();
             setElementCoordinates(component, newXCoordinate, newYCoordinate);
             currentFrameProperty.set(currentFrameProperty.getValue() + 1);
-            System.out.println("Set to: (" +newXCoordinate +", "+newYCoordinate+")" );
         });
 
-        Timeline timeline = new Timeline(onMsChange);
-        timeline.setCycleCount(this.durationMs);
-        //timeline.play();
-
-        setElementCoordinates(component, endX, endY);
+        return new Timeline(onMsChange);
     }
 
     private void setElementCoordinates(GuiComponent component, double x, double y) {
@@ -58,41 +70,43 @@ public class SlideAnimation extends Animation {
     private int calculateBeginX(GuiComponent component) {
         Bounds boundsInScene = component.getDrawableElement().localToScene(component.getDrawableElement().getBoundsInLocal());
         if (!direction.isHorizontal()) {
-            return (int) component.getDrawableElement().getLayoutX();
+            return (int) boundsInScene.getMinX();
         }
 
         Node node = component.getDrawableElement();
         if (this.direction == Direction.LEFT) {
-            System.out.println("layout width: " + node.getLayoutBounds().getWidth());
             return (int) -boundsInScene.getWidth();
         } else if (this.direction == Direction.RIGHT) {
             return (int) node.getScene().getWidth();
         }
 
-        return (int) component.getDrawableElement().getLayoutX();
+        return (int) boundsInScene.getMinX();
     }
 
     private int calculateBeginY(GuiComponent component) {
+        Bounds boundsInScene = component.getDrawableElement().localToScene(component.getDrawableElement().getBoundsInLocal());
         if (!direction.isVertical()) {
-            return (int) component.getDrawableElement().getLayoutY();
+            return (int) boundsInScene.getMinY();
         }
 
         Node node = component.getDrawableElement();
         if (this.direction == Direction.UP) {
-            return (int) -node.getLayoutBounds().getHeight();
+            return (int) -boundsInScene.getHeight();
         } else if (this.direction == Direction.DOWN) {
             return (int) node.getScene().getHeight();
         }
 
-        return (int) component.getDrawableElement().getLayoutY();
+        return (int) boundsInScene.getMinY();
     }
 
     private int calculateEndX(GuiComponent component) {
-        return (int) component.getDrawableElement().getLayoutX();
+        Bounds boundsInScene = component.getDrawableElement().localToScene(component.getDrawableElement().getBoundsInLocal());
+        return (int) boundsInScene.getMinX();
     }
 
     private int calculateEndY(GuiComponent component) {
-        return (int) component.getDrawableElement().getLayoutY();
+        Bounds boundsInScene = component.getDrawableElement().localToScene(component.getDrawableElement().getBoundsInLocal());
+        return (int) boundsInScene.getMinY();
     }
 
     public enum Direction {

@@ -29,12 +29,15 @@ public class GuiManager {
 
     private ZStackGuiComponent collapsableMenu;
     private boolean collapsableMenuToggled = false;
+    private SlideAnimation slideAnimation;
 
     private final Color BG_COLOR = Color.grayRgb(30);
     private final Color ACCENT = Color.web("#4d62ff", 0.7);
 
+
     public void initializeGuiComponents() {
         this.collapsableMenu = initializeCollapsableMenu();
+        this.slideAnimation = new SlideAnimation(SlideAnimation.Direction.LEFT, collapsableMenu, 1000);
 
         RectangleGuiComponent backgroundComponent = new RectangleGuiComponent(1150, 700, BG_COLOR);
 
@@ -141,19 +144,15 @@ public class GuiManager {
     public void toggleCollapsableMenu(boolean toggled) {
         if (toggled && !collapsableMenuToggled) {
             ((StackPane)this.root.getDrawableElement()).setAlignment(Pos.CENTER_LEFT);
-            this.root.addChild(this.collapsableMenu);
 
-            SlideAnimation slideAnimation = new SlideAnimation(SlideAnimation.Direction.LEFT, 1000);
-            slideAnimation.perform(collapsableMenu, true);
+            slideAnimation.perform(true, this.root);
 
             this.collapsableMenuToggled = true;
         } else if (!toggled && collapsableMenuToggled) {
-            ((StackPane)this.root.getDrawableElement()).setAlignment(Pos.CENTER);
+            ((StackPane)this.root.getDrawableElement()).setAlignment(Pos.CENTER_LEFT);
 
-            SlideAnimation slideAnimation = new SlideAnimation(SlideAnimation.Direction.LEFT, 1000);
-            slideAnimation.perform(collapsableMenu, false);
+            slideAnimation.perform(false, this.root);
 
-            this.root.removeChild(this.collapsableMenu);
             this.collapsableMenuToggled = false;
         }
     }
