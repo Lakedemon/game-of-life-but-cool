@@ -17,7 +17,8 @@ public class SlideAnimation extends Animation {
 
     final int beginX, beginY, endX, endY;
 
-    public SlideAnimation(Direction outwardsDirection, GuiComponent component, int durationMs) {
+    public SlideAnimation(Direction outwardsDirection, GuiComponent component, int durationMs, Easing easing) {
+        super(easing);
         this.direction = outwardsDirection;
         this.durationMs = durationMs;
         this.component = component;
@@ -53,8 +54,10 @@ public class SlideAnimation extends Animation {
     private Timeline getTimeline(boolean in, SimpleIntegerProperty toTravelXProperty, SimpleIntegerProperty toTravelYProperty) {
         SimpleIntegerProperty currentFrameProperty = new SimpleIntegerProperty(0);
         KeyFrame onMsChange = new KeyFrame(Duration.millis(1), e -> {
-            double newXCoordinate = (in ? beginX : endX) + ((double) toTravelXProperty.get() / durationMs) * currentFrameProperty.get();
-            double newYCoordinate = (in ? beginY : endY) + ((double) toTravelYProperty.get() / durationMs) * currentFrameProperty.get();
+            double t = this.easing.calculateEasedT(currentFrameProperty.get(), durationMs);
+
+            double newXCoordinate = (in ? beginX : endX) + ((double) toTravelXProperty.get()) * t;
+            double newYCoordinate = (in ? beginY : endY) + ((double) toTravelYProperty.get()) * t;
             setElementCoordinates(component, newXCoordinate, newYCoordinate);
             currentFrameProperty.set(currentFrameProperty.getValue() + 1);
         });

@@ -2,6 +2,7 @@ package Game.ui;
 
 import static Game.file.StaticFileHandler.*;
 
+import Game.ui.animations.Animation;
 import Game.ui.animations.impl.SlideAnimation;
 import Game.ui.clicking.ClickEvent;
 import Game.ui.impl.GameOfLifeGuiComponent;
@@ -34,10 +35,9 @@ public class GuiManager {
     private final Color BG_COLOR = Color.grayRgb(30);
     private final Color ACCENT = Color.web("#4d62ff", 0.7);
 
-
     public void initializeGuiComponents() {
         this.collapsableMenu = initializeCollapsableMenu();
-        this.slideAnimation = new SlideAnimation(SlideAnimation.Direction.LEFT, collapsableMenu, 1000);
+        this.slideAnimation = new SlideAnimation(SlideAnimation.Direction.LEFT, collapsableMenu, 700, Animation.Easing.CUBIC_EASE_OUT);
 
         RectangleGuiComponent backgroundComponent = new RectangleGuiComponent(1150, 700, BG_COLOR);
 
