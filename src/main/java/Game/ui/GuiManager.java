@@ -36,9 +36,9 @@ public class GuiManager {
 
     private VStackGuiComponent rightMenu;
 
-    private final Color BG_COLOR = Color.grayRgb(30);
-    private final Color SETTINGS_BG = BG_COLOR.deriveColor(0, 0, 1.3, 1);
-    private final Color ACCENT = Color.web("#4d62ff", 0.7);
+    public static final Color BG_COLOR = Color.grayRgb(30);
+    public static final Color SETTINGS_BG = BG_COLOR.deriveColor(0, 0, 1.3, 1);
+    public static final Color ACCENT = Color.web("#4d62ff", 0.7);
 
     public void initializeGuiComponents() {
         this.collapsableMenu = initializeCollapsableMenu();

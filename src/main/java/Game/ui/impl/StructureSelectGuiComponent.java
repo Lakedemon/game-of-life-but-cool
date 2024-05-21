@@ -2,6 +2,7 @@ package Game.ui.impl;
 
 import Game.ui.GuiComponent;
 import Game.ui.GuiManager;
+import Game.ui.clicking.ClickEvent;
 import Game.ui.impl.button.ImagedButtonGuiComponent;
 import Game.ui.impl.shape.RectangleGuiComponent;
 import Game.ui.impl.stack.HStackGuiComponent;
@@ -11,10 +12,15 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 
+import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Optional;
+
+import static Game.file.StaticFileHandler.*;
 
 public class StructureSelectGuiComponent extends GuiComponent {
 
@@ -51,15 +57,14 @@ public class StructureSelectGuiComponent extends GuiComponent {
 
         this.itemWidth = Math.min(pageWidth - MIN_SIDE_ROOM*2 - HORIZONTAL_SPACING * (ITEMS_PER_ROW-1), pageHeight - MIN_TB_ROOM*2 - VERTICAL_SPACING*(ROWS_PER_PAGE - 1));
         this.pageElements = new ArrayList<>();
-        makeRoom();
-
-        this.addChild(this.pageElements.getFirst());
-        this.addChild(initializePager());
 
         // TEmp
         for (int i = 0; i < 21; i++) {
             addElement();
         }
+
+        this.addChild(this.pageElements.getFirst());
+        this.addChild(initializePager());
     }
 
     @Override
@@ -75,19 +80,57 @@ public class StructureSelectGuiComponent extends GuiComponent {
     }
 
     private HStackGuiComponent initializePager() {
-        HStackGuiComponent pager = new HStackGuiComponent(10, backgroundColor, 200, 20, 0);
-        pager.addChild(ImagedButtonGuiComponent.fromUrl("https://www.iconexperience.com/_img/v_collection_png/256x256/shadow/arrow_left_green.png", 20, 20, true, backgroundColor, Color.GREEN, 2, 6, e -> {
-            this.goToPage(selectedPageIndex.get() - 1);
-        }));
+        HStackGuiComponent pager = new HStackGuiComponent(20, backgroundColor, 200, 20, 10);
+
+        // Left button
+        Optional<ImagedButtonGuiComponent> leftButton = initializeLeftPageButton();
+        leftButton.ifPresent(pager::addChild);
+
+        // Text
         StringProperty text = new SimpleStringProperty("Page " + (selectedPageIndex.intValue()+1) + " / " + pageElements.size());
-        selectedPageIndex.addListener((observable, oldValue, newValue) -> {
-            text.set("Page " + (newValue.intValue() + 1) + " / " + pageElements.size());
-        });
+        selectedPageIndex.addListener((observable, oldValue, newValue) -> text.set("Page " + (newValue.intValue() + 1) + " / " + pageElements.size()));
         pager.addChild(new LabelGuiComponent(text, 30, "Helvetica", Color.WHITE));
-        pager.addChild(ImagedButtonGuiComponent.fromUrl("https://icons.iconarchive.com/icons/custom-icon-design/flat-cute-arrows/256/Arrow-Right-1-icon.png", 20, 20, true, backgroundColor, Color.GREEN, 2, 6, e -> {
-            this.goToPage(selectedPageIndex.get() + 1);
-        }));
+
+        // Right button
+        Optional<ImagedButtonGuiComponent> rightButton = initializeRightPageButton();
+        rightButton.ifPresent(pager::addChild);
+
+        pager.setAlignment(Pos.CENTER);
+
         return pager;
+    }
+
+    private Optional<ImagedButtonGuiComponent> initializeLeftPageButton() {
+        ClickEvent leftClick  = e -> {
+            if (selectedPageIndex.get() > 0 && selectedPageIndex.get() < pageElements.size())
+                this.goToPage(selectedPageIndex.get() - 1);
+        };
+
+        return getImagedButtonGuiComponent(leftClick, LEFT_ARROW_IMG_RESOURCE_PATH);
+    }
+
+    private Optional<ImagedButtonGuiComponent> initializeRightPageButton() {
+        ClickEvent rightClick  = e -> {
+            if (selectedPageIndex.get() >= 0 && selectedPageIndex.get() < pageElements.size() - 1)
+                this.goToPage(selectedPageIndex.get() + 1);
+        };
+
+        return getImagedButtonGuiComponent(rightClick, RIGHT_ARROW_IMG_RESOURCE_PATH);
+    }
+
+    private Optional<ImagedButtonGuiComponent> getImagedButtonGuiComponent(ClickEvent leftClick, String rightArrowImgResourcePath) {
+        Optional<InputStream> rightArrowStream = getImageInputStream(rightArrowImgResourcePath);
+        if (rightArrowStream.isEmpty()) {
+            System.out.println("ERROR: Failed to load settings menu button.");
+            return Optional.empty();
+        }
+
+        ImagedButtonGuiComponent component = ImagedButtonGuiComponent.fromInputStream(
+                rightArrowStream.get(), 45, 45, true, GuiManager.BG_COLOR, GuiManager.ACCENT, 1, 10, leftClick
+        );
+
+        component.maskBlackPixels(GuiManager.ACCENT);
+        return Optional.of(component);
     }
 
     public void addElement(/* Element element */) {
