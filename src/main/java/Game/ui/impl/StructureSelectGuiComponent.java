@@ -20,8 +20,8 @@ public class StructureSelectGuiComponent extends GuiComponent {
 
     // Setup
     private final int ITEMS_PER_ROW = 2, ROWS_PER_PAGE = 3;
-    private final int HORIZONTAL_SPACING = 7, MIN_SIDE_ROOM = 50;
-    private final int VERTICAL_SPACING = 7, MIN_TB_ROOM = 100;
+    private final int HORIZONTAL_SPACING = 7, MIN_SIDE_ROOM = 20;
+    private final int VERTICAL_SPACING = 7, MIN_TB_ROOM = 175;
 
     // Automated
     private final int PAGE_HEIGHT, PAGE_WIDTH;
@@ -38,12 +38,18 @@ public class StructureSelectGuiComponent extends GuiComponent {
     public StructureSelectGuiComponent(int pageWidth, int pageHeight, Color backgroundColor, GuiManager guiManager) {
         this.selectedPageIndex = new SimpleIntegerProperty(0);
         this.drawableElement = new VBox();
+        this.drawableElement.setAlignment(Pos.BOTTOM_CENTER);
+        this.drawableElement.setMaxHeight(pageHeight);
+        this.drawableElement.setMaxWidth(pageWidth);
+        this.drawableElement.setMinHeight(pageHeight);
+        this.drawableElement.setMinWidth(pageWidth);
+
         this.guiManager = guiManager;
         this.PAGE_WIDTH = pageWidth;
         this.PAGE_HEIGHT = pageHeight;
         this.backgroundColor = backgroundColor;
 
-        this.itemWidth = Math.min(pageWidth - MIN_SIDE_ROOM*2 - HORIZONTAL_SPACING*ITEMS_PER_ROW, pageHeight - MIN_TB_ROOM*2 - VERTICAL_SPACING*ROWS_PER_PAGE);
+        this.itemWidth = Math.min(pageWidth - MIN_SIDE_ROOM*2 - HORIZONTAL_SPACING * (ITEMS_PER_ROW-1), pageHeight - MIN_TB_ROOM*2 - VERTICAL_SPACING*(ROWS_PER_PAGE - 1));
         this.pageElements = new ArrayList<>();
         makeRoom();
 
@@ -51,7 +57,7 @@ public class StructureSelectGuiComponent extends GuiComponent {
         this.addChild(initializePager());
 
         // TEmp
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 21; i++) {
             addElement();
         }
     }
@@ -81,8 +87,6 @@ public class StructureSelectGuiComponent extends GuiComponent {
         pager.addChild(ImagedButtonGuiComponent.fromUrl("https://icons.iconarchive.com/icons/custom-icon-design/flat-cute-arrows/256/Arrow-Right-1-icon.png", 20, 20, true, backgroundColor, Color.GREEN, 2, 6, e -> {
             this.goToPage(selectedPageIndex.get() + 1);
         }));
-
-        pager.setAlignment(Pos.BASELINE_CENTER);
         return pager;
     }
 
@@ -122,7 +126,7 @@ public class StructureSelectGuiComponent extends GuiComponent {
     }
 
     private void createNewPage() {
-        VStackGuiComponent newComp = new VStackGuiComponent(HORIZONTAL_SPACING, backgroundColor);
+        VStackGuiComponent newComp = new VStackGuiComponent(HORIZONTAL_SPACING, backgroundColor, this.PAGE_WIDTH, this.PAGE_HEIGHT);
         newComp.setAlignment(Pos.CENTER_LEFT);
         pageElements.add(newComp);
     }

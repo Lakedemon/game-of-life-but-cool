@@ -91,7 +91,7 @@ public class GuiManager {
         VStackGuiComponent root = new VStackGuiComponent(10, bgColor);
         LabelGuiComponent title = new LabelGuiComponent("Structures", 50, "Helvetica", Color.WHITE);
 
-        StructureSelectGuiComponent structureSelectGuiComponent = new StructureSelectGuiComponent(300, 380, bgColor, this);
+        StructureSelectGuiComponent structureSelectGuiComponent = new StructureSelectGuiComponent(300, 500, bgColor, this);
 
         root.addChild(title);
         root.addChild(structureSelectGuiComponent);
