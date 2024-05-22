@@ -31,10 +31,16 @@ public class GuiManager {
     private GameOfLifeGuiComponent gameOfLifeGuiComponent;
 
     private ZStackGuiComponent collapsableMenu;
-    private boolean collapsableMenuToggled = false;
-    private SlideAnimation slideAnimation;
+    public boolean collapsableMenuToggled = false;
+    private SlideAnimation leftSlideAnimation;
+    private SlideAnimation rightSlideAnimation;
 
+    private HStackGuiComponent mainPanel;
+    private ZStackGuiComponent rightComponent;
     private VStackGuiComponent rightMenu;
+
+    public static final int STAGE_WIDTH = 1150;
+    public static final int STAGE_HEIGHT = 700;
 
     public static final Color BG_COLOR = Color.grayRgb(30);
     public static final Color SETTINGS_BG = BG_COLOR.deriveColor(0, 0, 1.3, 1);
@@ -42,11 +48,9 @@ public class GuiManager {
 
     public void initializeGuiComponents() {
         this.collapsableMenu = initializeCollapsableMenu();
-        this.slideAnimation = new SlideAnimation(SlideAnimation.Direction.LEFT, collapsableMenu, 700, Animation.Easing.CUBIC_EASE_OUT);
-
         RectangleGuiComponent backgroundComponent = new RectangleGuiComponent(1150, 700, BG_COLOR);
 
-        HStackGuiComponent mainPanel = new HStackGuiComponent(5, BG_COLOR, 0);
+        this.mainPanel = new HStackGuiComponent(5, BG_COLOR, 0);
         VStackGuiComponent gamePanel = new VStackGuiComponent(3, BG_COLOR);
         this.gameOfLifeGuiComponent = new GameOfLifeGuiComponent(300);
         gamePanel.addChild(gameOfLifeGuiComponent);
@@ -62,16 +66,16 @@ public class GuiManager {
 
         if (optionalSettingsMenuButton.isPresent()) {
             settingsMenuButtonSide.addChild(optionalSettingsMenuButton.get());
-            mainPanel.addChild(settingsMenuButtonSide);
+            this.mainPanel.addChild(settingsMenuButtonSide);
         } else {
             settingsMenuButtonSide.addChild(initializeBackupSettingsMenuButton());
-            mainPanel.addChild(settingsMenuButtonSide);
+            this.mainPanel.addChild(settingsMenuButtonSide);
         }
 
-        mainPanel.addChild(gamePanel);
+        this.mainPanel.addChild(gamePanel);
 
         Color rightBgColor = BG_COLOR.deriveColor(0, 0, 0.9, 1);
-        ZStackGuiComponent rightComponent = new ZStackGuiComponent(450, 663);
+        this.rightComponent = new ZStackGuiComponent(450, 663);
         RectangleGuiComponent rightBackground = new RectangleGuiComponent(450, 663, rightBgColor);
         this.rightMenu = initializeRightMenu(rightBgColor);
 
@@ -79,19 +83,24 @@ public class GuiManager {
         rightComponent.addChild(rightMenu);
         this.rightMenu.setAlignment(Pos.TOP_CENTER);
 
-        mainPanel.addChild(rightComponent);
-        mainPanel.setAlignment(Pos.CENTER);
+        this.mainPanel.addChild(rightComponent);
+        this.mainPanel.setAlignment(Pos.CENTER);
 
         this.root = new ZStackGuiComponent();
         this.root.addChild(backgroundComponent);
         this.root.addChild(mainPanel);
     }
 
+    public void initializeAnimations() {
+        this.leftSlideAnimation = new SlideAnimation(SlideAnimation.Direction.LEFT, collapsableMenu, 700, Animation.Easing.CUBIC_EASE_OUT);
+        this.rightSlideAnimation = new SlideAnimation(SlideAnimation.Direction.RIGHT, this.rightComponent, 700, Animation.Easing.CUBIC_EASE_OUT);
+    }
+
     private VStackGuiComponent initializeRightMenu(Color bgColor) {
-        VStackGuiComponent root = new VStackGuiComponent(10, bgColor);
+        VStackGuiComponent root = new VStackGuiComponent(10, bgColor, 300, 550);
         LabelGuiComponent title = new LabelGuiComponent("Structures", 50, "Helvetica", Color.WHITE);
 
-        StructureSelectGuiComponent structureSelectGuiComponent = new StructureSelectGuiComponent(300, 500, bgColor, this);
+        StructureSelectGuiComponent structureSelectGuiComponent = new StructureSelectGuiComponent(300, 450, bgColor, this);
 
         root.addChild(title);
         root.addChild(structureSelectGuiComponent);
@@ -111,10 +120,24 @@ public class GuiManager {
             });
     }
 
+    public void toggleRightMenu() {
+        if (collapsableMenuToggled) {
+            if (!this.mainPanel.hasChild(this.rightComponent))
+                this.mainPanel.addChild(this.rightComponent);
+            this.rightSlideAnimation.perform(true, this.mainPanel);
+            collapsableMenuToggled = false;
+            return;
+        }
+
+        this.rightSlideAnimation.perform(false, this.mainPanel);
+        collapsableMenuToggled = true;
+    }
+
     private Optional<ImagedButtonGuiComponent> initializeSettingsMenuButton() {
         ClickEvent eventHandler = e -> {
              System.out.println("Toggling menu");
              this.toggleCollapsableMenu(true);
+             this.toggleRightMenu();
         };
 
         Optional<InputStream> optionalImageInput = getImageInputStream(SETTINGS_MENU_IMG_RESOURCE_PATH);
@@ -184,9 +207,7 @@ public class GuiManager {
         labels.addChild(sfxVolumeLabel);
         labels.addChild(musicVolumeLabel);
 
-        //sliders.addChild(new RectangleGuiComponent(3, 10, SETTINGS_BG));
         sliders.addChild(sfxVolumeSlider);
-        //sliders.addChild(new RectangleGuiComponent(3, 15, SETTINGS_BG));
         sliders.addChild(musicVolumeSlider);
 
         volumesSection.addChild(labels);
@@ -199,13 +220,14 @@ public class GuiManager {
         if (toggled && !collapsableMenuToggled) {
             ((StackPane)this.root.getDrawableElement()).setAlignment(Pos.CENTER_LEFT);
 
-            slideAnimation.perform(true, this.root);
+            this.root.addChild(this.collapsableMenu);
+            leftSlideAnimation.perform(true, this.root);
 
             this.collapsableMenuToggled = true;
         } else if (!toggled && collapsableMenuToggled) {
             ((StackPane)this.root.getDrawableElement()).setAlignment(Pos.CENTER_LEFT);
 
-            slideAnimation.perform(false, this.root);
+            leftSlideAnimation.perform(false, this.root);
 
             this.collapsableMenuToggled = false;
         }

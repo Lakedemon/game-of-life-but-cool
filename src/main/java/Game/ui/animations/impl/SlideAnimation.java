@@ -1,6 +1,7 @@
 package Game.ui.animations.impl;
 
 import Game.ui.GuiComponent;
+import Game.ui.GuiManager;
 import Game.ui.animations.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -31,10 +32,12 @@ public class SlideAnimation extends Animation {
 
     @Override
     public void perform(boolean in, GuiComponent root) {
-        if (in) root.addChild(component);
-
         SimpleIntegerProperty toTravelXProperty = new SimpleIntegerProperty(in ? endX - beginX : beginX - endX);
         SimpleIntegerProperty toTravelYProperty = new SimpleIntegerProperty(in ? endY - beginY : beginY - endY);
+
+        System.out.println("Animation: ");
+        System.out.println("endX: " + endX + "; beginX: " + beginX);
+        System.out.println("endY: " + endY + "; beginY: " + beginY);
 
         Timeline timeline = getTimeline(in, toTravelXProperty, toTravelYProperty);
         timeline.setCycleCount(this.durationMs);
@@ -44,10 +47,13 @@ public class SlideAnimation extends Animation {
             if (in)
                 setElementCoordinates(component, endX, endY);
             else
-                root.removeChild(component);
+                if (root.removeChild(component)){
+                    System.out.println("Removed child!");
+                }
         });
         Timeline timeline2 = new Timeline(endKeyframe);
         timeline2.setCycleCount(1);
+
         timeline2.play();
     }
 
@@ -76,11 +82,10 @@ public class SlideAnimation extends Animation {
             return (int) boundsInScene.getMinX();
         }
 
-        Node node = component.getDrawableElement();
         if (this.direction == Direction.LEFT) {
             return (int) -boundsInScene.getWidth();
         } else if (this.direction == Direction.RIGHT) {
-            return (int) node.getScene().getWidth();
+            return GuiManager.STAGE_WIDTH;
         }
 
         return (int) boundsInScene.getMinX();
@@ -92,11 +97,10 @@ public class SlideAnimation extends Animation {
             return (int) boundsInScene.getMinY();
         }
 
-        Node node = component.getDrawableElement();
         if (this.direction == Direction.UP) {
             return (int) -boundsInScene.getHeight();
         } else if (this.direction == Direction.DOWN) {
-            return (int) node.getScene().getHeight();
+            return GuiManager.STAGE_HEIGHT;
         }
 
         return (int) boundsInScene.getMinY();

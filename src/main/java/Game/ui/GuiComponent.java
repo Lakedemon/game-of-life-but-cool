@@ -36,6 +36,9 @@ public abstract class GuiComponent {
     public GuiComponent getLastChild() {
         return children.getLast();
     }
+    public boolean hasChild(GuiComponent component) {
+        return this.children.contains(component);
+    }
 
     public abstract int getWidth();
     public abstract int getHeight();
