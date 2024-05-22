@@ -59,16 +59,16 @@ public class InputHandler {
 
         scene.addEventFilter(MouseEvent.MOUSE_PRESSED, e -> {
             if (!mouseOver.contains(collapsableMenu)) {
+                guiManager.toggleRightMenu(guiManager.collapsableMenuToggled);
                 guiManager.toggleCollapsableMenu(!guiManager.collapsableMenuToggled);
-                guiManager.toggleRightMenu();
             }
         });
     }
 
     private void handleMenuKeyboardBindings(KeyEvent keyEvent, GuiManager guiManager) {
         if (keyEvent.getCode() == ESCAPE_MENU_BIND) {
+            guiManager.toggleRightMenu(guiManager.collapsableMenuToggled);
             guiManager.toggleCollapsableMenu(!guiManager.collapsableMenuToggled);
-            guiManager.toggleRightMenu();
         }
     }
 

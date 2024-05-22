@@ -56,6 +56,11 @@ public class ZStackGuiComponent extends GuiComponent {
         return super.removeChild(child);
     }
 
+    @Override
+    public boolean hasChild(GuiComponent child) {
+        return this.drawableElement.getChildren().contains(child.getDrawableElement());
+    }
+
     public void setAlignment(Pos pos) {
 
         this.drawableElement.setAlignment(pos);

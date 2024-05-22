@@ -5,9 +5,10 @@ import Game.ui.GuiManager;
 import Game.ui.animations.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.geometry.Bounds;
-import javafx.scene.Node;
 import javafx.util.Duration;
 
 public class SlideAnimation extends Animation {
@@ -16,10 +17,13 @@ public class SlideAnimation extends Animation {
     private final int durationMs;
     private final GuiComponent component;
 
+    private final BooleanProperty isActiveProperty;
+
     final int beginX, beginY, endX, endY;
 
     public SlideAnimation(Direction outwardsDirection, GuiComponent component, int durationMs, Easing easing) {
         super(easing);
+        this.isActiveProperty = new SimpleBooleanProperty(false);
         this.direction = outwardsDirection;
         this.durationMs = durationMs;
         this.component = component;
@@ -46,15 +50,25 @@ public class SlideAnimation extends Animation {
         KeyFrame endKeyframe = new KeyFrame(Duration.millis(durationMs), e -> {
             if (in)
                 setElementCoordinates(component, endX, endY);
-            else
-                if (root.removeChild(component)){
+            else {
+                if (root.removeChild(component)) {
                     System.out.println("Removed child!");
                 }
+            }
+            this.isActiveProperty.set(false);
         });
         Timeline timeline2 = new Timeline(endKeyframe);
         timeline2.setCycleCount(1);
 
+        this.isActiveProperty.set(true);
+
         timeline2.play();
+
+    }
+
+    @Override
+    public boolean isActive() {
+        return this.isActiveProperty.get();
     }
 
     private Timeline getTimeline(boolean in, SimpleIntegerProperty toTravelXProperty, SimpleIntegerProperty toTravelYProperty) {

@@ -12,6 +12,8 @@ public abstract class Animation {
 
     public abstract void perform(boolean in, GuiComponent root);
 
+    public abstract boolean isActive();
+
     public enum Easing {
         LINEAR, CUBIC_EASE_OUT;
 

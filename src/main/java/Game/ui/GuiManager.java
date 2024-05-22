@@ -120,24 +120,26 @@ public class GuiManager {
             });
     }
 
-    public void toggleRightMenu() {
-        if (collapsableMenuToggled) {
-            if (!this.mainPanel.hasChild(this.rightComponent))
+    public void toggleRightMenu(boolean status) {
+        if (this.rightSlideAnimation.isActive())
+            return;
+
+        if (status) {
+            if (!this.mainPanel.hasChild(this.rightComponent)) {
                 this.mainPanel.addChild(this.rightComponent);
+            }
             this.rightSlideAnimation.perform(true, this.mainPanel);
-            collapsableMenuToggled = false;
             return;
         }
 
         this.rightSlideAnimation.perform(false, this.mainPanel);
-        collapsableMenuToggled = true;
     }
 
     private Optional<ImagedButtonGuiComponent> initializeSettingsMenuButton() {
         ClickEvent eventHandler = e -> {
              System.out.println("Toggling menu");
              this.toggleCollapsableMenu(true);
-             this.toggleRightMenu();
+             this.toggleRightMenu(false);
         };
 
         Optional<InputStream> optionalImageInput = getImageInputStream(SETTINGS_MENU_IMG_RESOURCE_PATH);
@@ -217,6 +219,9 @@ public class GuiManager {
     }
 
     public void toggleCollapsableMenu(boolean toggled) {
+        if (this.leftSlideAnimation.isActive())
+            return;
+
         if (toggled && !collapsableMenuToggled) {
             ((StackPane)this.root.getDrawableElement()).setAlignment(Pos.CENTER_LEFT);
 
