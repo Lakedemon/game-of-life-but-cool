@@ -61,8 +61,7 @@ public class InputHandler {
 
     private void handleMenuKeyboardBindings(KeyEvent keyEvent, GuiManager guiManager) {
         if (keyEvent.getCode() == ESCAPE_MENU_BIND) {
-            guiManager.toggleRightMenu(guiManager.collapsableMenuToggled);
-            guiManager.toggleCollapsableMenu(!guiManager.collapsableMenuToggled);
+            guiManager.switchPerspective(guiManager.collapsableMenuToggled);
         }
     }
 

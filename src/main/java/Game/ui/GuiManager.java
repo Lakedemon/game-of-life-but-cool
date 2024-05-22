@@ -4,6 +4,7 @@ import static Game.file.StaticFileHandler.*;
 
 import Game.ui.animations.Animation;
 import Game.ui.animations.impl.SlideAnimation;
+import Game.ui.animations.impl.SlideOnScreenAnimation;
 import Game.ui.clicking.ClickEvent;
 import Game.ui.impl.GameOfLifeGuiComponent;
 import Game.ui.impl.StructureSelectGuiComponent;
@@ -15,12 +16,16 @@ import Game.ui.impl.stack.HStackGuiComponent;
 import Game.ui.impl.shape.RectangleGuiComponent;
 import Game.ui.impl.stack.VStackGuiComponent;
 import Game.ui.impl.stack.ZStackGuiComponent;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.geometry.Pos;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
+import javafx.util.Duration;
 
 import java.io.InputStream;
 import java.util.Optional;
@@ -34,10 +39,13 @@ public class GuiManager {
     public boolean collapsableMenuToggled = false;
     private SlideAnimation leftSlideAnimation;
     private SlideAnimation rightSlideAnimation;
+    private SlideOnScreenAnimation golSlideAnimation;
+    private SimpleBooleanProperty animationsRunningProperty;
 
     private HStackGuiComponent mainPanel;
     private ZStackGuiComponent rightComponent;
     private VStackGuiComponent rightMenu;
+    private VStackGuiComponent gamePanel;
 
     public static final int STAGE_WIDTH = 1150;
     public static final int STAGE_HEIGHT = 700;
@@ -51,7 +59,7 @@ public class GuiManager {
         RectangleGuiComponent backgroundComponent = new RectangleGuiComponent(1150, 700, BG_COLOR);
 
         this.mainPanel = new HStackGuiComponent(5, BG_COLOR, 0);
-        VStackGuiComponent gamePanel = new VStackGuiComponent(3, BG_COLOR);
+        this.gamePanel = new VStackGuiComponent(3, BG_COLOR);
         this.gameOfLifeGuiComponent = new GameOfLifeGuiComponent(300);
         gamePanel.addChild(gameOfLifeGuiComponent);
 
@@ -77,6 +85,8 @@ public class GuiManager {
         Color rightBgColor = BG_COLOR.deriveColor(0, 0, 0.9, 1);
         this.rightComponent = new ZStackGuiComponent(450, 663);
         RectangleGuiComponent rightBackground = new RectangleGuiComponent(450, 663, rightBgColor);
+        rightBackground.setStroke(2, ACCENT);
+        rightBackground.setRadius(10);
         this.rightMenu = initializeRightMenu(rightBgColor);
 
         rightComponent.addChild(rightBackground);
@@ -92,8 +102,10 @@ public class GuiManager {
     }
 
     public void initializeAnimations() {
-        this.leftSlideAnimation = new SlideAnimation(SlideAnimation.Direction.LEFT, collapsableMenu, 700, Animation.Easing.CUBIC_EASE_OUT);
-        this.rightSlideAnimation = new SlideAnimation(SlideAnimation.Direction.RIGHT, this.rightComponent, 700, Animation.Easing.CUBIC_EASE_OUT);
+        this.animationsRunningProperty = new SimpleBooleanProperty(false);
+        this.leftSlideAnimation = new SlideAnimation(SlideAnimation.Direction.LEFT, collapsableMenu, 1000, Animation.Easing.CUBIC_EASE_OUT);
+        this.rightSlideAnimation = new SlideAnimation(SlideAnimation.Direction.RIGHT, this.rightComponent, 1000, Animation.Easing.CUBIC_EASE_OUT);
+        this.golSlideAnimation = new SlideOnScreenAnimation(469, 0, this.gamePanel, 1000, Animation.Easing.CUBIC_EASE_OUT);
     }
 
     private VStackGuiComponent initializeRightMenu(Color bgColor) {
@@ -120,7 +132,7 @@ public class GuiManager {
             });
     }
 
-    public void toggleRightMenu(boolean status) {
+    private void toggleRightMenu(boolean status) {
         if (this.rightSlideAnimation.isActive())
             return;
 
@@ -138,8 +150,7 @@ public class GuiManager {
     private Optional<ImagedButtonGuiComponent> initializeSettingsMenuButton() {
         ClickEvent eventHandler = e -> {
              System.out.println("Toggling menu");
-             this.toggleCollapsableMenu(!this.collapsableMenuToggled);
-             this.toggleRightMenu(!this.collapsableMenuToggled);
+             this.switchPerspective(this.collapsableMenuToggled);
         };
 
         Optional<InputStream> optionalImageInput = getImageInputStream(SETTINGS_MENU_IMG_RESOURCE_PATH);
@@ -218,7 +229,7 @@ public class GuiManager {
         return volumesSection;
     }
 
-    public void toggleCollapsableMenu(boolean toggled) {
+    private void toggleCollapsableMenu(boolean toggled) {
         if (this.leftSlideAnimation.isActive())
             return;
 
@@ -238,6 +249,11 @@ public class GuiManager {
         }
     }
 
+    private void runGameOfLifeSlideAnimation(boolean right) {
+        if (this.golSlideAnimation.isActive()) return;
+        this.golSlideAnimation.perform(right, this.root);
+    }
+
     private ZStackGuiComponent initializeCollapsableMenu() {
         Color bgColor = BG_COLOR.deriveColor(0, 0, 1.4, 0.95);
 
@@ -246,7 +262,7 @@ public class GuiManager {
         RectangleGuiComponent background = new RectangleGuiComponent(450, 663, bgColor);
         background.setStroke(2, ACCENT.deriveColor(0, 1, 1, 0.8));
 
-        VStackGuiComponent basicLayout = new VStackGuiComponent(30, Color.BLUE, 450, 550);
+        VStackGuiComponent basicLayout = new VStackGuiComponent(30, Color.TRANSPARENT, 450, 550);
         basicLayout.setAlignment(Pos.TOP_CENTER);
         basicLayout.addChild(new LabelGuiComponent("Rule Book", 40, "Helvetica", Color.WHITE));
 
@@ -254,6 +270,26 @@ public class GuiManager {
         menu.addChild(basicLayout);
 
         return menu;
+    }
+
+    public void switchPerspective(final boolean rightPerspective) {
+        if (golSlideAnimation.isActive() || leftSlideAnimation.isActive() || rightSlideAnimation.isActive()) return;
+        KeyFrame keyFrame1 = new KeyFrame(Duration.millis(rightPerspective ? 0 : 400),event -> toggleCollapsableMenu(!rightPerspective));
+        KeyFrame keyFrame2 = new KeyFrame(Duration.millis(rightPerspective ? 200 : 0),event -> toggleRightMenu(rightPerspective));
+        KeyFrame keyFrame3 = new KeyFrame(Duration.millis(rightPerspective ? 170 : 100),event -> runGameOfLifeSlideAnimation(!rightPerspective));
+
+        Timeline timeline = new Timeline();
+
+        timeline.getKeyFrames().add(keyFrame1);
+        timeline.getKeyFrames().add(keyFrame2);
+        timeline.getKeyFrames().add(keyFrame3);
+
+        timeline.setCycleCount(1);
+        timeline.play();
+        animationsRunningProperty.set(true);
+        timeline.setOnFinished(event -> {
+            animationsRunningProperty.set(false);
+        });
     }
 
     public GameOfLifeGuiComponent getGameOfLifeGuiComponent() {
