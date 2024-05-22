@@ -1,14 +1,13 @@
 package Game;
 import Game.input.InputHandler;
+import Game.paint.ColorPallet;
 import Game.paint.Painter;
 import Game.rules.Rule;
-import Game.rules.RuleBook;
 import Game.ui.GuiManager;
 import Game.ui.cursor.CursorGraphicsHandler;
 import Game.save_system.SaveHandler;
 import Game.rules.*;
 import Game.rules.Comparators.IntComparators;
-import Game.ui.impl.stack.VStackGuiComponent;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.scene.Scene;
@@ -24,7 +23,6 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage){
-
         int height = 300;
         int width = 300;
         CursorGraphicsHandler cursorGraphics = new CursorGraphicsHandler();
@@ -63,9 +61,8 @@ public class Main extends Application {
         // End testing
 
         // Init handlers
-        this.colorPallet = new ColorPallet();
-        //colorPallet.addColor(0, Color.BLACK);
-        //colorPallet.addColor(1, Color.WHITE);
+        this.guiManager.getGameOfLifeGuiComponent().getColorPallet().addColor(0, Color.BLACK);
+        this.guiManager.getGameOfLifeGuiComponent().getColorPallet().addColor(1, Color.DARKRED);
 
         Painter painter = new Painter(gameOfLife, cursorGraphics);
         InputHandler inputHandler = new InputHandler(painter);
@@ -80,8 +77,8 @@ public class Main extends Application {
             @Override
             public void handle(long l) {
                 gameOfLife.stepGen();
-                colorPallet.updatePallet(gameOfLife.getRuleBook().getValueSet());
 
+                guiManager.getGameOfLifeGuiComponent().getColorPallet().updatePallet(gameOfLife.getRuleBook().getValueSet());
                 guiManager.getGameOfLifeGuiComponent().refreshGameOfLifeCanvas(grid);
 
                 if (System.nanoTime() - currentNs > 1000000000) {

@@ -105,7 +105,8 @@ public class InputHandler {
             painter.attemptToggleBrushType();
         } else if (keyEvent.getCode() == TOGGLE_PAINT_MODE_BIND) {
             painter.togglePaintMode(true);
+        } else if (keyEvent.getCode() == RANDOM_BOARD_BIND){
+            painter.attemptResetBoard();
         }
     }
-
 }

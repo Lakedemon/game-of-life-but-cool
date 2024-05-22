@@ -52,6 +52,10 @@ public class Painter {
         this.gameOfLife.clearBoard();
     }
 
+    public void attemptResetBoard(){
+        this.gameOfLife.ranFill();
+    }
+
     public void attemptToggleBrushType() {
         this.brush.shape = this.brush.shape.next();
         this.cursorGraphicsHandler.setCursorShape(this.brush.shape);
