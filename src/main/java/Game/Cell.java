@@ -5,7 +5,7 @@ import java.util.function.Predicate;
 
 public class Cell {
     private final Cell[] neighbours;
-    public int registeredNeighbours = 0;
+    private int registeredNeighbours = 0;
     private int value;
     private int nextValue;
 
@@ -22,6 +22,15 @@ public class Cell {
         return Math.toIntExact(Arrays.stream(neighbours).filter(predicate).count());
     }
 
+    public Integer filteredCount(int requiredValue){
+        int count = 0;
+        for (Cell neighbour : neighbours) {
+            if(neighbour.value == requiredValue){
+                count ++;
+            }
+        }
+        return count;
+    }
 
     private void linkNeighbour(Cell neighbour, boolean firstRequest) {
         if(registeredNeighbours <= 8) {
@@ -44,6 +53,7 @@ public class Cell {
 
     public void setValue(int value) {
         this.value = value;
+        setNextValue();
     }
 
     public void setNextValue() {
@@ -53,7 +63,6 @@ public class Cell {
     public void setNextValue(int nextValue) {
         this.nextValue = nextValue;
     }
-
 
     public void stepValue(){
         this.value = nextValue;
