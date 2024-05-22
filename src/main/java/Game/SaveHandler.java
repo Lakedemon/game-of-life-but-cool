@@ -4,22 +4,43 @@ import de.ralleytn.simple.json.JSONArray;
 import de.ralleytn.simple.json.JSONObject;
 import de.ralleytn.simple.json.JSONParser;
 import de.ralleytn.simple.json.JSONParseException;
-import java.io.FileWriter;
+// import java.io.FileWriter;
 import java.io.FileReader;
 import java.io.IOException;
 
 public class SaveHandler {
+
+    DbHandler db;
+
+    SaveHandler() {
+        db = new DbHandler();
+    }
     
     public int[][] loadGrid(String identifier) {
         // The intention is to (for now) load a JSON file
         // Later load save from database
         int[][] grid = null;
-        try (FileReader file = new FileReader(identifier + ".json")) {
-            JSONObject jsonObject = (JSONObject) new JSONParser().parse(file);
+        String jsonGrid = db.getEntry("Game", identifier);
+        jsonGrid = jsonGrid.trim();
+        if (jsonGrid != null && !jsonGrid.isEmpty()) {
+            JSONObject jsonObject = null;
+            try {
+                System.out.println(jsonGrid);
+                JSONParser parser = new JSONParser();
+                jsonObject = (JSONObject) parser.parse(jsonGrid);
+            } catch (JSONParseException e) {
+                System.out.println("Error parsing JSON");
+                System.out.println(e.getMessage());
+            }
             grid = deserializeGrid(jsonObject);
-        } catch (IOException | JSONParseException e) {
-            e.printStackTrace();
         }
+        // Old system where it loads from json file, kept for testing
+        // try (FileReader file = new FileReader(identifier + ".json")) {
+        //     JSONObject jsonObject = (JSONObject) new JSONParser().parse(file);
+        //     grid = deserializeGrid(jsonObject);
+        // } catch (IOException | JSONParseException e) {
+        //     e.printStackTrace();
+        // }
         return grid;
     }
 
@@ -41,14 +62,8 @@ public class SaveHandler {
         // Define saveFile and put grid object in it under key 'grid'
         JSONObject saveFile = new JSONObject();
         saveFile.put("grid", new JSONArray(grid));
-        // Save GameOfLife grid to a json file with name identifier
-        // When database implemented, save to database entry with key identifier instead
-        try (FileWriter file = new FileWriter(identifier + ".json")) {
-            saveFile.write(file);
-            file.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        // Save GameOfLife grid to a database entry with name identifier
+        db.addGridEntry("Game", identifier, saveFile.toString());
     }
 
     /* public void saveStructure() {

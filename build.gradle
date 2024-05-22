@@ -20,6 +20,7 @@ dependencies {
     testImplementation platform('org.junit:junit-bom:5.10.0')
     testImplementation 'org.junit.jupiter:junit-jupiter'
     implementation files('libs/SimpleJSON-2.1.1.jar')
+    implementation files('libs/sqlite-jdbc-3.41.2.2.jar')
 }
 
 application {
