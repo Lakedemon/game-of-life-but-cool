@@ -12,7 +12,7 @@ public class SaveHandler {
 
     DbHandler db;
 
-    SaveHandler() {
+    public SaveHandler() {
         db = new DbHandler();
     }
     
