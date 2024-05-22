@@ -2,6 +2,7 @@ package Game.ui;
 
 import static Game.file.StaticFileHandler.*;
 
+import Game.rules.RulePane;
 import Game.ui.animations.Animation;
 import Game.ui.animations.impl.SlideAnimation;
 import Game.ui.clicking.ClickEvent;
@@ -31,6 +32,7 @@ public class GuiManager {
     private GameOfLifeGuiComponent gameOfLifeGuiComponent;
 
     private ZStackGuiComponent collapsableMenu;
+    private RulePane rulePane;
     private boolean collapsableMenuToggled = false;
     private SlideAnimation slideAnimation;
 
@@ -48,6 +50,11 @@ public class GuiManager {
 
         HStackGuiComponent mainPanel = new HStackGuiComponent(5, BG_COLOR, 0);
         VStackGuiComponent gamePanel = new VStackGuiComponent(3, BG_COLOR);
+
+        this.rulePane = new RulePane();
+        VStackGuiComponent rulePanel = new VStackGuiComponent(this.rulePane, 5, BG_COLOR);
+        collapsableMenu.addChild(rulePanel);
+
         this.gameOfLifeGuiComponent = new GameOfLifeGuiComponent(300);
         gamePanel.addChild(gameOfLifeGuiComponent);
 
@@ -97,6 +104,10 @@ public class GuiManager {
         root.addChild(structureSelectGuiComponent);
         root.setAlignment(Pos.TOP_CENTER);
         return root;
+    }
+
+    public RulePane getRulePane(){
+        return this.rulePane;
     }
 
     public VStackGuiComponent getRightMenu() {

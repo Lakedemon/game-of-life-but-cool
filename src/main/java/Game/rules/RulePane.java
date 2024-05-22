@@ -8,16 +8,22 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 
 public class RulePane extends VBox {
-    public RuleBook associatedRuleBook;
+    private final RuleBook associatedRuleBook;
 
-    public RulePane(RuleBook associatedRuleBook, int vGap) {
-        super(vGap);
+    public RulePane(RuleBook associatedRuleBook) {
+        super();
         this.associatedRuleBook = associatedRuleBook;
 
         for (Rule rule : associatedRuleBook.getRules()){
             addRuleHolder(rule);
         }
 
+        initAddButton();
+    }
+
+    public RulePane() {
+        super();
+        this.associatedRuleBook = new RuleBook();
         initAddButton();
     }
 
@@ -49,5 +55,9 @@ public class RulePane extends VBox {
 
         this.getChildren().add(addButton);
         VBox.setVgrow(addButton, Priority.ALWAYS);
+    }
+
+    public RuleBook getAssociatedRuleBook(){
+        return this.associatedRuleBook;
     }
 }

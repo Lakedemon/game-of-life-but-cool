@@ -130,7 +130,7 @@ public class GameOfLife {
     }
 
     private void attemptSetPixel(int x, int y, int val) {
-        grid[properModulo(x, gridWidth)][properModulo(y, gridHeight)].setValue(val);
+        grid[properModulo(y, gridHeight)][properModulo(x, gridWidth)].setValue(val);
     }
 
     /*private void attemptSetPixel(int x, int y, int val) {
