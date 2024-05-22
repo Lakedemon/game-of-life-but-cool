@@ -44,6 +44,10 @@ public class ZStackGuiComponent extends GuiComponent {
         return this.drawableElement;
     }
 
+    public void offsetX(int offsetX) {
+        this.drawableElement.setTranslateX(offsetX);
+    }
+
     @Override
     public void addChild(GuiComponent child) {
         super.addChild(child);

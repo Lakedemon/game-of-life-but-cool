@@ -138,8 +138,8 @@ public class GuiManager {
     private Optional<ImagedButtonGuiComponent> initializeSettingsMenuButton() {
         ClickEvent eventHandler = e -> {
              System.out.println("Toggling menu");
-             this.toggleCollapsableMenu(true);
-             this.toggleRightMenu(false);
+             this.toggleCollapsableMenu(!this.collapsableMenuToggled);
+             this.toggleRightMenu(!this.collapsableMenuToggled);
         };
 
         Optional<InputStream> optionalImageInput = getImageInputStream(SETTINGS_MENU_IMG_RESOURCE_PATH);
@@ -241,11 +241,12 @@ public class GuiManager {
     private ZStackGuiComponent initializeCollapsableMenu() {
         Color bgColor = BG_COLOR.deriveColor(0, 0, 1.4, 0.95);
 
-        ZStackGuiComponent menu = new ZStackGuiComponent(500, 663);
-        RectangleGuiComponent background = new RectangleGuiComponent(500, 663, bgColor);
+        ZStackGuiComponent menu = new ZStackGuiComponent(450, 663);
+        menu.offsetX(74);
+        RectangleGuiComponent background = new RectangleGuiComponent(450, 663, bgColor);
         background.setStroke(2, ACCENT.deriveColor(0, 1, 1, 0.8));
 
-        VStackGuiComponent basicLayout = new VStackGuiComponent(30, Color.BLUE, 500, 550);
+        VStackGuiComponent basicLayout = new VStackGuiComponent(30, Color.BLUE, 450, 550);
         basicLayout.setAlignment(Pos.TOP_CENTER);
         basicLayout.addChild(new LabelGuiComponent("Rule Book", 40, "Helvetica", Color.WHITE));
 
