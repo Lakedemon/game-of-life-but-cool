@@ -1,4 +1,4 @@
-package Game;
+package Game.save_system;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

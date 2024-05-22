@@ -1,12 +1,12 @@
-package Game;
+package Game.save_system;
 
+import Game.GameOfLife;
 import de.ralleytn.simple.json.JSONArray;
 import de.ralleytn.simple.json.JSONObject;
 import de.ralleytn.simple.json.JSONParser;
 import de.ralleytn.simple.json.JSONParseException;
 // import java.io.FileWriter;
-import java.io.FileReader;
-import java.io.IOException;
+
 
 public class SaveHandler {
 
