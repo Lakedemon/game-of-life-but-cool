@@ -1,44 +1,36 @@
 package Game;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
+
 import javafx.scene.paint.Color;
 
 public class ColorPallet {
-    private static class ValueColorPair {
-        private final double value;
-        private final Color color;
+    private final Map<Integer, Color> pallet = new HashMap<>();
 
-        public ValueColorPair(double value, Color color) {
-            this.value = value;
-            this.color = color;
-        }
-
-        public double getValue() {
-            return value;
-        }
-
-        public Color getColor() {
-            return color;
-        }
+    public ColorPallet(Set<Integer> vals) {
+        updatePallet(vals);
     }
 
-    private final List<ValueColorPair> pallet = new ArrayList<>();
+    public ColorPallet(){}
 
-    public ColorPallet() {}
-
-    public void addColor(double value, Color color) {
-        pallet.add(new ValueColorPair(value, color));
+    private Color randomColor(){
+        return new Color(Math.random(), Math.random(), Math.random(), 1.0);
     }
 
-    public Color getColor(double value) {
-        for (ValueColorPair pair : pallet) {
-            if (pair.getValue() == value) {
-                return pair.getColor();
+    public void updatePallet(Set<Integer> vals) {
+        for (Integer val : vals) {
+            if (!pallet.containsKey(val)) {
+                pallet.put(val, randomColor());
             }
         }
-        // Default color if value not found
-        return Color.BLACK;
+    }
+
+    public void addColor(Integer value, Color color) {
+        pallet.put(value, color);
+    }
+
+    public Color getColor(Integer value) {
+        return pallet.get(value);
     }
 }
 

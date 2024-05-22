@@ -1,6 +1,7 @@
 package Game.graphics;
 
 import Game.Cell;
+import Game.ColorPallet;
 import Game.InputHandler;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
@@ -14,12 +15,14 @@ import static Game.Main.CELL_SIZE;
 public class GraphicsHandler {
 
     private final GraphicsContext gameGraphics;
+    private final ColorPallet colorPallet;
 
     private DrawingCursor drawingCursor;
     private boolean cursorToggled;
 
-    public GraphicsHandler(Canvas gameOfLifeCanvas) {
+    public GraphicsHandler(Canvas gameOfLifeCanvas, ColorPallet colorPallet) {
         this.gameGraphics = gameOfLifeCanvas.getGraphicsContext2D();
+        this.colorPallet = colorPallet;
     }
 
     public void initCustomCursor(Scene scene, Pane root, InputHandler.Brush brush) {
@@ -74,11 +77,7 @@ public class GraphicsHandler {
     public void fillGameCanvas(int width, int height, Cell[][] grid) {
         for (int i = 0; i < width; i++) {
             for (int j = 0; j < height; j++) {
-                if (grid[i][j].getValue() == 0) {
-                    gameGraphics.setFill(javafx.scene.paint.Color.BLACK);
-                } else {
-                    gameGraphics.setFill(Color.WHITE);
-                }
+                gameGraphics.setFill(colorPallet.getColor(grid[i][j].getValue()));
                 gameGraphics.fillRect(j * CELL_SIZE, i * CELL_SIZE, CELL_SIZE, CELL_SIZE);
             }
         }

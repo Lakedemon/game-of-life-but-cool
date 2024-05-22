@@ -10,7 +10,6 @@ public class MyComboBox<T> extends ComboBox<T> {
 
     public MyComboBox() {
         super();
-        customizeCellFactory();
     }
 
     @Override
@@ -30,31 +29,5 @@ public class MyComboBox<T> extends ComboBox<T> {
             // Call again the super method to relayout with the new bounds.
             super.layoutChildren();
         }
-    }
-
-    private void customizeCellFactory(){
-        setCellFactory(param -> new ListCell<T>() {
-            @Override
-            protected void updateItem(T item, boolean empty) {
-                super.updateItem(item, empty);
-                if (empty || item == null) {
-                    setText(null);
-                } else {
-                    setText(item.toString());
-                }
-            }
-        });
-
-        setButtonCell(new ListCell<T>() {
-            @Override
-            protected void updateItem(T item, boolean empty) {
-                super.updateItem(item, empty);
-                if (empty || item == null) {
-                    setText(null);
-                } else {
-                    setText(item.toString());
-                }
-            }
-        });
     }
 }

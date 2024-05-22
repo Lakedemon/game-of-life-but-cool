@@ -3,7 +3,9 @@ package Game.rules;
 import Game.Cell;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class RuleBook {
     private final List<Rule> rules = new ArrayList<>();
@@ -29,5 +31,15 @@ public class RuleBook {
 
     public List<Rule> getRules() {
         return rules;
+    }
+
+    public Set<Integer> getValueSet(){
+        Set<Integer> valueSet = new HashSet<>();
+        for (Rule rule : rules) {
+            valueSet.add(rule.getAffectedState());
+            valueSet.add(rule.getAccountedCount());
+            valueSet.add(rule.getResultingState());
+        }
+        return valueSet;
     }
 }

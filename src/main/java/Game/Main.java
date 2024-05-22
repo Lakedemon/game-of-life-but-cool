@@ -15,6 +15,7 @@ public class Main extends Application {
 
     private GraphicsHandler graphicsHandler;
     private InputHandler inputHandler;
+    private ColorPallet colorPallet;
 
     public static final int CELL_SIZE = 2;
 
@@ -49,16 +50,22 @@ public class Main extends Application {
         root.setLeft(ruleBox);
 
         // Init handlers
-        this.graphicsHandler = new GraphicsHandler(canvas);
-        //this.inputHandler = new InputHandler(gameOfLife, graphicsHandler);
-        //this.graphicsHandler.initCustomCursor(scene, root, this.inputHandler.getBrush());
-        //this.inputHandler.registerKeyHandlers(scene, canvas);
+
+        this.colorPallet = new ColorPallet();
+        //colorPallet.addColor(0, Color.BLACK);
+        //colorPallet.addColor(1, Color.WHITE);
+
+        this.graphicsHandler = new GraphicsHandler(canvas, colorPallet);
+        this.inputHandler = new InputHandler(gameOfLife, graphicsHandler);
+        this.graphicsHandler.initCustomCursor(scene, root, this.inputHandler.getBrush());
+        this.inputHandler.registerKeyHandlers(scene, canvas);
 
         // Init main game of life loop
         AnimationTimer animationTimer = new AnimationTimer() {
             @Override
             public void handle(long l) {
                 gameOfLife.stepGen();
+                colorPallet.updatePallet(gameOfLife.getRuleBook().getValueSet());
                 graphicsHandler.fillGameCanvas(width, height, grid);
             }
         };
