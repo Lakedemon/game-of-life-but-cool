@@ -213,13 +213,19 @@ public class GuiManager {
 
     private ZStackGuiComponent initializeCollapsableMenu() {
         Color bgColor = BG_COLOR.deriveColor(0, 0, 1.4, 0.95);
+
         ZStackGuiComponent menu = new ZStackGuiComponent(700, 450);
         RectangleGuiComponent background = new RectangleGuiComponent(663, 663, bgColor);
         background.setStroke(2, ACCENT.deriveColor(0, 1, 1, 0.8));
-        System.out.println("--- Collapsable menu ---");
-        System.out.println("width: " + menu.getWidth() + ", height: " + menu.getHeight());
-        System.out.println("------------------------");
+
+        VStackGuiComponent basicLayout = new VStackGuiComponent(30, Color.TRANSPARENT, 650, 630);
+        basicLayout.setAlignment(Pos.TOP_CENTER);
+        basicLayout.addChild(new LabelGuiComponent("Rule Book", 40, "Helvetica", Color.WHITE));
+
+        // VStackGuiComponent rulesListing
+
         menu.addChild(background);
+        menu.addChild(basicLayout);
 
         return menu;
     }
