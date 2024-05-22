@@ -45,6 +45,19 @@ public class Main extends Application {
         GameOfLife gameOfLife = getGameOfLife(width, height);
         Cell[][] grid = gameOfLife.getGrid();
 
+        // Start testing
+        SaveHandler saveHandler = new SaveHandler();
+        // For testing, save immediately after creation
+        // saveHandler.saveGrid(gameOfLife, "TestSave");
+        //
+        // For testing, load immediately after creation
+        int[][] loadedGrid = saveHandler.loadGrid("TestSave");
+        gameOfLife.setGridValues(loadedGrid);
+        // As of right now the grid does not load unless explicitly drawn, however loading from the database works
+        // I suppose the grid should be explicitly drawn again once the load is complete somewhere
+        // fillCanvas(gc, width, height, loadedGrid, cell_size);
+        // End testing
+
         //Rules
         RulePane ruleBox = new RulePane(gameOfLife.getRuleBook(), 5);
         root.setLeft(ruleBox);

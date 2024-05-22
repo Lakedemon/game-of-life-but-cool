@@ -4,6 +4,7 @@ import Game.rules.RuleBook;
 
 public class GameOfLife {
     private final Cell[][] grid;
+
     private final int gridWidth;
     private final int gridHeight;
     private final int CLEAR_VALUE = 0;
@@ -23,10 +24,6 @@ public class GameOfLife {
 
     public RuleBook getRuleBook() {
         return ruleBook;
-    }
-
-    public Cell[][] getGrid() {
-        return grid;
     }
 
     public void clearBoard() {
@@ -124,6 +121,32 @@ public class GameOfLife {
 
     private int properModulo(int a, int b) {
         return (a + b) % b;
+    }
+
+
+    public int[][] getGridValues() {
+        int[][] gridValues = new int[gridWidth][gridHeight];
+
+        for (int i = 0; i < gridWidth; i++) {
+            for (int j = 0; j < gridHeight; j++) {
+                gridValues[i][j] = grid[i][j].getValue();
+            }
+        }
+
+        return gridValues;
+    }
+
+    public Cell[][] getGrid() {
+        return grid;
+    }
+
+    public void setGridValues(int[][] grid) {
+        for(int i = 0; i < gridWidth; i++) {
+            for (int j = 0; j < gridHeight; j++) {
+                this.grid[i][j].setValue(grid[i][j]);
+                this.grid[i][j].setNextValue(grid[i][j]);
+            }
+        }
     }
 
     private void attemptSetPixel(int x, int y, int val) {
