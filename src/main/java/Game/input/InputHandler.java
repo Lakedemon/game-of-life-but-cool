@@ -57,12 +57,6 @@ public class InputHandler {
             System.out.println("Mouse exited");
         });
 
-        scene.addEventFilter(MouseEvent.MOUSE_PRESSED, e -> {
-            if (!mouseOver.contains(collapsableMenu)) {
-                guiManager.toggleRightMenu(guiManager.collapsableMenuToggled);
-                guiManager.toggleCollapsableMenu(!guiManager.collapsableMenuToggled);
-            }
-        });
     }
 
     private void handleMenuKeyboardBindings(KeyEvent keyEvent, GuiManager guiManager) {
