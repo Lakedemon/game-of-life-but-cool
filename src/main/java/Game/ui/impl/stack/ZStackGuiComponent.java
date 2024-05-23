@@ -44,6 +44,10 @@ public class ZStackGuiComponent extends GuiComponent {
         return this.drawableElement;
     }
 
+    public void offsetX(int offsetX) {
+        this.drawableElement.setTranslateX(offsetX);
+    }
+
     @Override
     public void addChild(GuiComponent child) {
         super.addChild(child);
@@ -54,6 +58,11 @@ public class ZStackGuiComponent extends GuiComponent {
     public boolean removeChild(GuiComponent child) {
         this.drawableElement.getChildren().remove(child.getDrawableElement());
         return super.removeChild(child);
+    }
+
+    @Override
+    public boolean hasChild(GuiComponent child) {
+        return this.drawableElement.getChildren().contains(child.getDrawableElement());
     }
 
     public void setAlignment(Pos pos) {

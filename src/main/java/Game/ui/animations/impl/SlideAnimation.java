@@ -1,40 +1,48 @@
 package Game.ui.animations.impl;
 
 import Game.ui.GuiComponent;
+import Game.ui.GuiManager;
 import Game.ui.animations.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.geometry.Bounds;
-import javafx.scene.Node;
 import javafx.util.Duration;
 
 public class SlideAnimation extends Animation {
 
     private final Direction direction;
-    private final int durationMs;
-    private final GuiComponent component;
+    protected final int durationMs;
+    protected final GuiComponent component;
 
-    final int beginX, beginY, endX, endY;
+    protected final BooleanProperty isActiveProperty;
+
+    protected int beginX, beginY, endX, endY;
 
     public SlideAnimation(Direction outwardsDirection, GuiComponent component, int durationMs, Easing easing) {
         super(easing);
+        this.isActiveProperty = new SimpleBooleanProperty(false);
         this.direction = outwardsDirection;
         this.durationMs = durationMs;
         this.component = component;
 
-        this.beginX = calculateBeginX(component);
-        this.beginY = calculateBeginY(component);
         this.endX = calculateEndX(component);
         this.endY = calculateEndY(component);
+        this.beginX = calculateBeginX(component);
+        this.beginY = calculateBeginY(component);
     }
 
     @Override
     public void perform(boolean in, GuiComponent root) {
-        if (in) root.addChild(component);
-
         SimpleIntegerProperty toTravelXProperty = new SimpleIntegerProperty(in ? endX - beginX : beginX - endX);
         SimpleIntegerProperty toTravelYProperty = new SimpleIntegerProperty(in ? endY - beginY : beginY - endY);
+
+        if (this instanceof SlideOnScreenAnimation) {
+            System.out.println("to travel x: "+ toTravelXProperty.get());
+            System.out.println("to travel y: "+ toTravelYProperty.get());
+        }
 
         Timeline timeline = getTimeline(in, toTravelXProperty, toTravelYProperty);
         timeline.setCycleCount(this.durationMs);
@@ -43,16 +51,28 @@ public class SlideAnimation extends Animation {
         KeyFrame endKeyframe = new KeyFrame(Duration.millis(durationMs), e -> {
             if (in)
                 setElementCoordinates(component, endX, endY);
-            else
+            else {
                 root.removeChild(component);
+            }
+            this.isActiveProperty.set(false);
         });
         Timeline timeline2 = new Timeline(endKeyframe);
         timeline2.setCycleCount(1);
+
+        this.isActiveProperty.set(true);
+
         timeline2.play();
+
+    }
+
+    @Override
+    public boolean isActive() {
+        return this.isActiveProperty.get();
     }
 
     private Timeline getTimeline(boolean in, SimpleIntegerProperty toTravelXProperty, SimpleIntegerProperty toTravelYProperty) {
         SimpleIntegerProperty currentFrameProperty = new SimpleIntegerProperty(0);
+
         KeyFrame onMsChange = new KeyFrame(Duration.millis(1), e -> {
             double t = this.easing.calculateEasedT(currentFrameProperty.get(), durationMs);
 
@@ -65,49 +85,47 @@ public class SlideAnimation extends Animation {
         return new Timeline(onMsChange);
     }
 
-    private void setElementCoordinates(GuiComponent component, double x, double y) {
+    protected void setElementCoordinates(GuiComponent component, double x, double y) {
         component.getDrawableElement().setTranslateX(x);
         component.getDrawableElement().setTranslateY(y);
     }
 
-    private int calculateBeginX(GuiComponent component) {
+    protected int calculateBeginX(GuiComponent component) {
         Bounds boundsInScene = component.getDrawableElement().localToScene(component.getDrawableElement().getBoundsInLocal());
         if (!direction.isHorizontal()) {
             return (int) boundsInScene.getMinX();
         }
 
-        Node node = component.getDrawableElement();
         if (this.direction == Direction.LEFT) {
             return (int) -boundsInScene.getWidth();
         } else if (this.direction == Direction.RIGHT) {
-            return (int) node.getScene().getWidth();
+            return GuiManager.STAGE_WIDTH;
         }
 
         return (int) boundsInScene.getMinX();
     }
 
-    private int calculateBeginY(GuiComponent component) {
+    protected int calculateBeginY(GuiComponent component) {
         Bounds boundsInScene = component.getDrawableElement().localToScene(component.getDrawableElement().getBoundsInLocal());
         if (!direction.isVertical()) {
             return (int) boundsInScene.getMinY();
         }
 
-        Node node = component.getDrawableElement();
         if (this.direction == Direction.UP) {
             return (int) -boundsInScene.getHeight();
         } else if (this.direction == Direction.DOWN) {
-            return (int) node.getScene().getHeight();
+            return GuiManager.STAGE_HEIGHT;
         }
 
         return (int) boundsInScene.getMinY();
     }
 
-    private int calculateEndX(GuiComponent component) {
+    protected int calculateEndX(GuiComponent component) {
         Bounds boundsInScene = component.getDrawableElement().localToScene(component.getDrawableElement().getBoundsInLocal());
         return (int) boundsInScene.getMinX();
     }
 
-    private int calculateEndY(GuiComponent component) {
+    protected int calculateEndY(GuiComponent component) {
         Bounds boundsInScene = component.getDrawableElement().localToScene(component.getDrawableElement().getBoundsInLocal());
         return (int) boundsInScene.getMinY();
     }

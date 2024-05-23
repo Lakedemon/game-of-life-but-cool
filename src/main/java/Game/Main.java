@@ -35,7 +35,10 @@ public class Main extends Application {
         StackPane root = new StackPane(this.guiManager.getRoot().getDrawableElement());
 
         // Init scene
-        Scene scene = new Scene(root);
+        Scene scene = new Scene(root, GuiManager.STAGE_WIDTH, GuiManager.STAGE_HEIGHT);
+        this.guiManager.initializeAnimations();
+
+        System.out.println("Scene width: " + scene.getWidth());
 
         // Set window properties
         primaryStage.setTitle("Game of life - but cool");

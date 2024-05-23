@@ -65,7 +65,6 @@ public class CursorGraphicsHandler {
         this.drawingCursor.setWidth(currentWidth);
         this.drawingCursor.setColor(currentColor);
         this.drawingCursor.setStrokeWidth(currentStrokeWidth);
-
     }
 
     public void reloadCursorPosition(int x, int y) {

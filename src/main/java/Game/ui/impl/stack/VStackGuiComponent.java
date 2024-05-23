@@ -49,6 +49,11 @@ public class VStackGuiComponent extends GuiComponent {
     }
 
     @Override
+    public boolean hasChild(GuiComponent child) {
+        return this.drawableElement.getChildren().contains(child.getDrawableElement());
+    }
+
+    @Override
     public int getWidth() {
         return this.width;
     }
