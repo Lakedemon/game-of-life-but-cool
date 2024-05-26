@@ -34,23 +34,31 @@ public class SlideAnimation extends Animation {
         this.beginY = calculateBeginY(component);
     }
 
+    public SlideAnimation(int startX, int endX, int startY, int endY, GuiComponent component, int durationMs, Easing easing) {
+        super(easing);
+        this.isActiveProperty = new SimpleBooleanProperty(false);
+        this.direction = Direction.UP;
+        this.beginX = startX;
+        this.beginY = startY;
+        this.endX = endX;
+        this.endY = endY;
+        this.durationMs = durationMs;
+        this.component = component;
+    }
+
     @Override
     public void perform(boolean in, GuiComponent root) {
         SimpleIntegerProperty toTravelXProperty = new SimpleIntegerProperty(in ? endX - beginX : beginX - endX);
         SimpleIntegerProperty toTravelYProperty = new SimpleIntegerProperty(in ? endY - beginY : beginY - endY);
-
-        if (this instanceof SlideOnScreenAnimation) {
-            System.out.println("to travel x: "+ toTravelXProperty.get());
-            System.out.println("to travel y: "+ toTravelYProperty.get());
-        }
 
         Timeline timeline = getTimeline(in, toTravelXProperty, toTravelYProperty);
         timeline.setCycleCount(this.durationMs);
         timeline.play();
 
         KeyFrame endKeyframe = new KeyFrame(Duration.millis(durationMs), e -> {
-            if (in)
+            if (in) {
                 setElementCoordinates(component, endX, endY);
+            }
             else {
                 root.removeChild(component);
             }

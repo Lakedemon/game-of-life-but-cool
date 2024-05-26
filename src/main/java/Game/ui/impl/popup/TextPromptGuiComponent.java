@@ -13,9 +13,6 @@ import Game.ui.impl.stack.ZStackGuiComponent;
 import javafx.geometry.Pos;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
-import org.w3c.dom.css.Rect;
-
-import java.awt.*;
 
 public class TextPromptGuiComponent extends ZStackGuiComponent {
 
@@ -28,7 +25,7 @@ public class TextPromptGuiComponent extends ZStackGuiComponent {
         super(300, 150);
         this.setAlignment(Pos.CENTER);
 
-        this.animation = new SlideAnimation(SlideAnimation.Direction.UP, this, 200, Animation.Easing.CUBIC_EASE_OUT);
+        this.animation = new SlideAnimation(0, 0, -getHeight()*3, 0, this, 200, Animation.Easing.CUBIC_EASE_OUT);
 
         RectangleGuiComponent background = new RectangleGuiComponent(300, 150, new Color(0.2, 0.2, 0.2, 0.8));
         background.setRadius(5);

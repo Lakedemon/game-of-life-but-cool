@@ -6,9 +6,6 @@ import Game.rules.Rule;
 import Game.ui.GuiManager;
 import Game.ui.cursor.CursorGraphicsHandler;
 import Game.save_system.SaveHandler;
-import Game.rules.*;
-import Game.rules.Comparators.IntComparators;
-import Game.ui.impl.rule.RulesGuiComponent;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.scene.Scene;
@@ -55,7 +52,7 @@ public class Main extends Application {
         // Init canvas
 
         // Register canvas to root
-        StackPane root = new StackPane(this.guiManager.getRoot().getDrawableElement());
+        StackPane root = new StackPane(this.guiManager.getSuperRoot().getDrawableElement());
 
         // Init scene
         Scene scene = new Scene(root, GuiManager.STAGE_WIDTH, GuiManager.STAGE_HEIGHT);

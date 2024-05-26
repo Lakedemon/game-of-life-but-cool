@@ -40,6 +40,7 @@ import java.util.Optional;
 
 public class GuiManager {
 
+    private GuiComponent superRoot; // Only passed to main function, used to draw pop-ups correctly always
     private GuiComponent root;
     private GameOfLifeGuiComponent gameOfLifeGuiComponent;
 
@@ -73,6 +74,8 @@ public class GuiManager {
     }
 
     public void initializeGuiComponents() {
+        this.superRoot = new ZStackGuiComponent();
+
         this.collapsableMenu = initializeCollapsableMenu();
         RectangleGuiComponent backgroundComponent = new RectangleGuiComponent(1150, 700, BG_COLOR);
 
@@ -127,14 +130,17 @@ public class GuiManager {
         this.root = new ZStackGuiComponent();
         this.root.addChild(backgroundComponent);
         this.root.addChild(mainPanel);
+        this.superRoot.addChild(root);
     }
 
     public void openLoadGridPrompt(TextPromptSubmitAction action) {
-        this.loadPrompt.attemptOpen(this.root, action);
+        if (this.loadPrompt.isOpen() || this.savePrompt.isOpen()) return;
+        this.loadPrompt.attemptOpen(this.superRoot, action);
     }
 
     public void openSaveGridPrompt(TextPromptSubmitAction action) {
-        this.savePrompt.attemptOpen(this.root, action);
+        if (this.loadPrompt.isOpen() || this.savePrompt.isOpen()) return;
+        this.savePrompt.attemptOpen(this.superRoot, action);
     }
 
     public void initializeAnimations() {
@@ -357,6 +363,10 @@ public class GuiManager {
 
     public GuiComponent getRoot() {
         return root;
+    }
+
+    public GuiComponent getSuperRoot() {
+        return superRoot;
     }
 
     public Canvas getGameOfLifeCanvas() {
