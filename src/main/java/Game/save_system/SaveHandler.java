@@ -11,12 +11,14 @@ import de.ralleytn.simple.json.JSONParseException;
 public class SaveHandler {
 
     DbHandler db;
+    private final GameOfLife gameOfLife;
 
-    public SaveHandler() {
+    public SaveHandler(GameOfLife gameOfLife) {
         db = new DbHandler();
+        this.gameOfLife = gameOfLife;
     }
     
-    public int[][] loadGrid(String identifier) {
+    public void loadGrid(String identifier) {
         // The intention is to (for now) load a JSON file
         // Later load save from database
         int[][] grid = null;
@@ -41,7 +43,7 @@ public class SaveHandler {
         // } catch (IOException | JSONParseException e) {
         //     e.printStackTrace();
         // }
-        return grid;
+        this.gameOfLife.setGridValues(grid);
     }
 
     public static int[][] deserializeGrid(JSONObject jsonObject) {
@@ -57,8 +59,8 @@ public class SaveHandler {
         return grid;
     }
 
-    public void saveGrid(GameOfLife game, String identifier) {
-        int[][] grid = game.getGridValues();
+    public void saveGrid(String identifier) {
+        int[][] grid = this.gameOfLife.getGridValues();
         // Define saveFile and put grid object in it under key 'grid'
         JSONObject saveFile = new JSONObject();
         saveFile.put("grid", new JSONArray(grid));

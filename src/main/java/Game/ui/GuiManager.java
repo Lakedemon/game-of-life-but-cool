@@ -2,17 +2,22 @@ package Game.ui;
 
 import static Game.file.StaticFileHandler.*;
 
+import Game.Main;
 import Game.rules.RuleBook;
 import Game.rules.RulePane;
+import Game.save_system.SaveHandler;
 import Game.ui.animations.Animation;
 import Game.ui.animations.impl.SlideAnimation;
 import Game.ui.animations.impl.SlideOnScreenAnimation;
 import Game.ui.clicking.ClickEvent;
 import Game.ui.impl.GameOfLifeGuiComponent;
 import Game.ui.impl.StructureSelectGuiComponent;
+import Game.ui.impl.TextInputGuiComponent;
 import Game.ui.impl.button.ImagedButtonGuiComponent;
 import Game.ui.impl.LabelGuiComponent;
 import Game.ui.impl.button.LabeledButtonGuiComponent;
+import Game.ui.impl.popup.TextPromptGuiComponent;
+import Game.ui.impl.popup.TextPromptSubmitAction;
 import Game.ui.impl.rule.RulesGuiComponent;
 import Game.ui.impl.slider.SliderGuiComponent;
 import Game.ui.impl.stack.HStackGuiComponent;
@@ -38,6 +43,11 @@ public class GuiManager {
     private GuiComponent root;
     private GameOfLifeGuiComponent gameOfLifeGuiComponent;
 
+    private final SaveHandler saveHandler;
+
+    private TextPromptGuiComponent savePrompt;
+    private TextPromptGuiComponent loadPrompt;
+
     private ZStackGuiComponent collapsableMenu;
     private RulesGuiComponent rulePane;
     public boolean collapsableMenuToggled = false;
@@ -58,9 +68,16 @@ public class GuiManager {
     public static final Color SETTINGS_BG = BG_COLOR.deriveColor(0, 0, 1.3, 1);
     public static final Color ACCENT = Color.web("#4d62ff", 0.7);
 
+    public GuiManager(SaveHandler saveHandler) {
+        this.saveHandler = saveHandler;
+    }
+
     public void initializeGuiComponents() {
         this.collapsableMenu = initializeCollapsableMenu();
         RectangleGuiComponent backgroundComponent = new RectangleGuiComponent(1150, 700, BG_COLOR);
+
+        this.savePrompt = new TextPromptGuiComponent("Save grid", "Grid name");
+        this.loadPrompt = new TextPromptGuiComponent("Load grid", "Grid name");
 
         this.mainPanel = new HStackGuiComponent(5, BG_COLOR, 0);
         this.gamePanel = new VStackGuiComponent(3, BG_COLOR);
@@ -110,6 +127,14 @@ public class GuiManager {
         this.root = new ZStackGuiComponent();
         this.root.addChild(backgroundComponent);
         this.root.addChild(mainPanel);
+    }
+
+    public void openLoadGridPrompt(TextPromptSubmitAction action) {
+        this.loadPrompt.attemptOpen(this.root, action);
+    }
+
+    public void openSaveGridPrompt(TextPromptSubmitAction action) {
+        this.savePrompt.attemptOpen(this.root, action);
     }
 
     public void initializeAnimations() {
@@ -197,9 +222,27 @@ public class GuiManager {
 
         Font gridOperationsFont = Font.font("Helvetica", FontWeight.NORMAL, 18);
         LabeledButtonGuiComponent saveGridButton = new LabeledButtonGuiComponent("Save Grid", gridOperationsFont, Color.WHITE, 120, 25,
-                settingsBG, ACCENT, 5, 1, e -> System.out.println("Saving grid"));
+                settingsBG, ACCENT, 5, 1, e -> {
+            this.openSaveGridPrompt((input, proceed) -> {
+                if (proceed) {
+                    System.out.println("Saving grid to name " + input);
+                    this.saveHandler.saveGrid(input);
+                } else {
+                    System.out.println("Cancelling save grid");
+                }
+            });
+        });
         LabeledButtonGuiComponent loadGridButton = new LabeledButtonGuiComponent("Load Grid", gridOperationsFont, Color.WHITE, 120, 25,
-                settingsBG, ACCENT, 5, 1, e -> System.out.println("Loading grid"));
+                settingsBG, ACCENT, 5, 1, e -> {
+            this.openLoadGridPrompt((input, proceed) -> {
+                if (proceed) {
+                    System.out.println("Loading grid with name " + input);
+                    this.saveHandler.loadGrid(input);
+                } else {
+                    System.out.println("Cancelling load grid");
+                }
+            });
+        });
 
         gridOperationsPanel.addChild(saveGridButton);
         gridOperationsPanel.addChild(loadGridButton);

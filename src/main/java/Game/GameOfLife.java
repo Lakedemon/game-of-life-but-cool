@@ -1,6 +1,9 @@
 package Game;
 
+import Game.rules.Comparators.IntComparators;
+import Game.rules.Rule;
 import Game.rules.RuleBook;
+import Game.ui.impl.rule.RulesGuiComponent;
 
 public class GameOfLife {
     private final Cell[][] grid;
@@ -11,10 +14,9 @@ public class GameOfLife {
 
     private RuleBook ruleBook;
 
-    public GameOfLife(int gridWidth, int gridHeight, RuleBook ruleBook) {
+    public GameOfLife(int gridWidth, int gridHeight) {
         this.gridWidth = gridWidth;
         this.gridHeight = gridHeight;
-        this.ruleBook = ruleBook;
 
         this.grid = new Cell[gridWidth][gridHeight];
         initCellGrid(gridWidth, gridHeight, CLEAR_VALUE);
@@ -131,6 +133,13 @@ public class GameOfLife {
 
     private void attemptSetPixel(int x, int y, int val) {
         grid[properModulo(y, gridHeight)][properModulo(x, gridWidth)].setValue(val);
+    }
+
+    public void setRulePane(RulesGuiComponent rulesGuiComponent) {
+        rulesGuiComponent.newRuleHolder(new Rule(1, 1, 2, 0, IntComparators.LESS_THAN));
+        rulesGuiComponent.newRuleHolder(new Rule(1, 1, 3, 0, IntComparators.GREATER_THAN));
+        rulesGuiComponent.newRuleHolder(new Rule(0, 1, 3, 1, IntComparators.EQUAL_TO));
+        this.ruleBook = rulesGuiComponent.getAssociatedRuleBook();
     }
 
     /*private void attemptSetPixel(int x, int y, int val) {

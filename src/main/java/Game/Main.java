@@ -17,8 +17,10 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 public class Main extends Application {
+
     private ColorPallet colorPallet;
     private GuiManager guiManager;
+    private SaveHandler saveHandler;
 
     public static final int CELL_SIZE = 2;
 
@@ -26,10 +28,30 @@ public class Main extends Application {
     public void start(Stage primaryStage){
         int height = 300;
         int width = 300;
+
+        // Init game of life
+        GameOfLife gameOfLife = getGameOfLife(width, height);
+        this.saveHandler = new SaveHandler(gameOfLife);
+        this.guiManager = new GuiManager(saveHandler);
+        this.guiManager.initializeGuiComponents();
+
+        gameOfLife.setRulePane(this.guiManager.getRulePane());
+
+        Cell[][] grid = gameOfLife.getGrid();
+
+        // Start testing
+        // For testing, save immediately after creation
+        saveHandler.saveGrid("TestSave");
+
+        // For testing, load immediately after creation
+        saveHandler.loadGrid("TestSave");
+        // As of right now the grid does not load unless explicitly drawn, however loading from the database works
+        // I suppose the grid should be explicitly drawn again once the load is complete somewhere
+        // fillCanvas(gc, width, height, loadedGrid, cell_size);
+        // End testing
+
         CursorGraphicsHandler cursorGraphics = new CursorGraphicsHandler();
 
-        this.guiManager = new GuiManager();
-        this.guiManager.initializeGuiComponents();
         // Init canvas
 
         // Register canvas to root
@@ -47,22 +69,6 @@ public class Main extends Application {
         primaryStage.setResizable(false);
         primaryStage.show();
 
-        // Init game of life
-        GameOfLife gameOfLife = getGameOfLife(width, height, guiManager.getRulePane());
-        Cell[][] grid = gameOfLife.getGrid();
-
-        // Start testing
-        SaveHandler saveHandler = new SaveHandler();
-        // For testing, save immediately after creation
-        saveHandler.saveGrid(gameOfLife, "TestSave");
-        //
-        // For testing, load immediately after creation
-        int[][] loadedGrid = saveHandler.loadGrid("TestSave");
-        gameOfLife.setGridValues(loadedGrid);
-        // As of right now the grid does not load unless explicitly drawn, however loading from the database works
-        // I suppose the grid should be explicitly drawn again once the load is complete somewhere
-        // fillCanvas(gc, width, height, loadedGrid, cell_size);
-        // End testing
 
         // Init handlers
         this.guiManager.getGameOfLifeGuiComponent().getColorPallet().addColor(0, Color.BLACK);
@@ -99,12 +105,8 @@ public class Main extends Application {
         animationTimer.start();
     }
 
-    private static GameOfLife getGameOfLife(int width, int height, RulesGuiComponent ruleBook) {
-        ruleBook.newRuleHolder(new Rule(1, 1, 2, 0, IntComparators.LESS_THAN));
-        ruleBook.newRuleHolder(new Rule(1, 1, 3, 0, IntComparators.GREATER_THAN));
-        ruleBook.newRuleHolder(new Rule(0, 1, 3, 1, IntComparators.EQUAL_TO));
-
-        return new GameOfLife(width, height, ruleBook.getAssociatedRuleBook());
+    private static GameOfLife getGameOfLife(int width, int height) {
+        return new GameOfLife(width, height);
     }
 }
 
