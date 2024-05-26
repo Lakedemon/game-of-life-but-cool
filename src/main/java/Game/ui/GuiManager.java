@@ -65,8 +65,9 @@ public class GuiManager {
         this.mainPanel = new HStackGuiComponent(5, BG_COLOR, 0);
         this.gamePanel = new VStackGuiComponent(3, BG_COLOR);
 
-        this.rulePane = new RulesGuiComponent(new RuleBook(), 300, 400, 5);
+        this.rulePane = new RulesGuiComponent(new RuleBook(), 400, 400, 5);
         VStackGuiComponent rulePanel = new VStackGuiComponent(5, BG_COLOR);
+        rulePanel.setAlignment(Pos.TOP_CENTER);
         rulePanel.addChild(rulePane);
         collapsableMenu.addChild(rulePanel);
 
@@ -270,13 +271,13 @@ public class GuiManager {
     }
 
     private ZStackGuiComponent initializeCollapsableMenu() {
-        Color bgColor = BG_COLOR.deriveColor(0, 0, 1.4, 0.95);
+        Color bgColor = BG_COLOR.deriveColor(0, 0, 0.9, 1);
 
         ZStackGuiComponent menu = new ZStackGuiComponent(450, 663);
         menu.offsetX(74);
         RectangleGuiComponent background = new RectangleGuiComponent(450, 663, bgColor);
-        background.setStroke(2, ACCENT.deriveColor(0, 1, 1, 0.8));
-
+        background.setStroke(5, ACCENT.deriveColor(0, 1, 1, 0.8));
+        background.setRadius(10);
         VStackGuiComponent basicLayout = new VStackGuiComponent(30, Color.TRANSPARENT, 450, 550);
         basicLayout.setAlignment(Pos.TOP_CENTER);
         basicLayout.addChild(new LabelGuiComponent("Rule Book", 40, "Helvetica", Color.WHITE));

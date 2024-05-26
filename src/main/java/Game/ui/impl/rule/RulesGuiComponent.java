@@ -21,6 +21,7 @@ public class RulesGuiComponent extends VStackGuiComponent {
     public RulesGuiComponent(RuleBook associatedRuleBook, int width, int height, int spacing) {
         super(spacing, Color.TRANSPARENT, width, height);
         this.setAlignment(Pos.TOP_CENTER);
+        this.addChild(new RectangleGuiComponent(2, 40, Color.TRANSPARENT));
         this.associatedRuleBook = associatedRuleBook;
 
         associatedRuleBook.getRules().forEach(this::addRuleHolder);
@@ -28,10 +29,10 @@ public class RulesGuiComponent extends VStackGuiComponent {
     }
 
     private void addRuleHolder(Rule rule){
-        HStackGuiComponent ruleBox = new HStackGuiComponent(2, GuiManager.SETTINGS_BG, 0);
-
+        HStackGuiComponent ruleBox = new HStackGuiComponent(10, GuiManager.SETTINGS_BG, 0);
+        ruleBox.setAlignment(Pos.CENTER);
         RuleHolderGuiComponent ruleHolder = new RuleHolderGuiComponent(rule);
-        LabeledButtonGuiComponent removeButton = new LabeledButtonGuiComponent("-", Font.getDefault(), Color.WHITE, 20, 20, GuiManager.SETTINGS_BG, GuiManager.ACCENT, 5, 2, (e) -> {
+        LabeledButtonGuiComponent removeButton = new LabeledButtonGuiComponent("-", new Font(30), Color.WHITE, 40, 40, GuiManager.SETTINGS_BG, Color.INDIANRED, 5, 2, (e) -> {
             removeRuleHolder(ruleBox, ruleHolder);
         });
 
@@ -54,13 +55,14 @@ public class RulesGuiComponent extends VStackGuiComponent {
     }
 
     private void initAddButton() {
-        LabeledButtonGuiComponent addButton = new LabeledButtonGuiComponent("+", Font.getDefault(), Color.WHITE, 20, 20, GuiManager.SETTINGS_BG, GuiManager.ACCENT, 5, 2, (e) -> {
+        LabeledButtonGuiComponent addButton = new LabeledButtonGuiComponent("+", new Font(30), Color.WHITE, 60, 30, Color.CORNFLOWERBLUE.darker(), GuiManager.ACCENT.darker().darker().darker(), 5, 2, (e) -> {
             newRuleHolder(new Rule(10,10,10,10, IntComparators.EQUAL_TO));
             //addButton.toFront();
         });
 
         // TODO: REPLACE WITH COMPONENTS
         this.addChild(addButton);
+        this.addChild(new RectangleGuiComponent(4, 20, Color.TRANSPARENT));
         //VBox.setVgrow(addButton, Priority.ALWAYS);
     }
 

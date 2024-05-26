@@ -4,10 +4,14 @@ import Game.MyComboBox;
 import Game.rules.Comparators.IntComparators;
 import Game.rules.Rule;
 import Game.ui.GuiComponent;
+import Game.ui.GuiManager;
+import javafx.application.Platform;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.control.Spinner;
+import javafx.scene.layout.Background;
 import javafx.scene.layout.FlowPane;
+import javafx.scene.paint.Color;
 
 public class RuleHolderGuiComponent extends GuiComponent {
 
@@ -22,6 +26,11 @@ public class RuleHolderGuiComponent extends GuiComponent {
         Label label2 = new Label("has:");
         Label label3 = new Label("neighbours of value:");
         Label label4 = new Label("then set the cell value to:");
+
+        label1.setTextFill(Color.WHITE);
+        label2.setTextFill(Color.WHITE);
+        label3.setTextFill(Color.WHITE);
+        label4.setTextFill(Color.WHITE);
 
         Spinner<Integer> affectedState = createSpinner(0, 100, associatedRule.getAffectedState());
         Spinner<Integer> accountedCount = createSpinner(0, 8, associatedRule.getAccountedCount());
@@ -44,6 +53,7 @@ public class RuleHolderGuiComponent extends GuiComponent {
         Spinner<Integer> spinner = new Spinner<>(min, max, initialValue);
         int maxWidth = 60;
         spinner.setMaxWidth(maxWidth);
+
         return spinner;
     }
 
@@ -59,7 +69,7 @@ public class RuleHolderGuiComponent extends GuiComponent {
     }
 
     private void setStyle(){
-        this.drawableElement.setStyle("-fx-background-color: #f0f0f0; -fx-border-color: black; -fx-border-width: 2; -fx-border-style: solid;");
+        this.drawableElement.setBackground(Background.EMPTY);
         this.drawableElement.setHgap(2);
     }
 
