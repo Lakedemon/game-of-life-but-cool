@@ -332,7 +332,7 @@ public class GuiManager {
     }
 
     public void switchPerspective(final boolean rightPerspective) {
-        if (golSlideAnimation.isActive() || leftSlideAnimation.isActive() || rightSlideAnimation.isActive()) return;
+        if (golSlideAnimation.isActive() || leftSlideAnimation.isActive() || rightSlideAnimation.isActive() || this.savePrompt.isOpen() || this.loadPrompt.isOpen()) return;
         KeyFrame keyFrame1 = new KeyFrame(Duration.millis(rightPerspective ? 0 : 400),event -> toggleCollapsableMenu(!rightPerspective));
         KeyFrame keyFrame2 = new KeyFrame(Duration.millis(rightPerspective ? 200 : 0),event -> toggleRightMenu(rightPerspective));
         KeyFrame keyFrame3 = new KeyFrame(Duration.millis(rightPerspective ? 170 : 100),event -> runGameOfLifeSlideAnimation(!rightPerspective));

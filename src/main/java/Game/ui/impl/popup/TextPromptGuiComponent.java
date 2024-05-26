@@ -64,10 +64,16 @@ public class TextPromptGuiComponent extends ZStackGuiComponent {
         this.setAction((input, proceeded) -> {
             additionalAction.actionPerformed(input, proceeded);
             this.performAnimation(false, root);
+            this.open = false;
         });
 
         root.addChild(this);
         this.performAnimation(true, root);
+        this.open = true;
+    }
+
+    public boolean isOpen() {
+        return open;
     }
 
     public void performAnimation(boolean in, GuiComponent root) {
