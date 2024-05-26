@@ -8,6 +8,7 @@ import Game.ui.cursor.CursorGraphicsHandler;
 import Game.save_system.SaveHandler;
 import Game.rules.*;
 import Game.rules.Comparators.IntComparators;
+import Game.ui.impl.rule.RulesGuiComponent;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.scene.Scene;
@@ -98,7 +99,7 @@ public class Main extends Application {
         animationTimer.start();
     }
 
-    private static GameOfLife getGameOfLife(int width, int height, RulePane ruleBook) {
+    private static GameOfLife getGameOfLife(int width, int height, RulesGuiComponent ruleBook) {
         ruleBook.newRuleHolder(new Rule(1, 1, 2, 0, IntComparators.LESS_THAN));
         ruleBook.newRuleHolder(new Rule(1, 1, 3, 0, IntComparators.GREATER_THAN));
         ruleBook.newRuleHolder(new Rule(0, 1, 3, 1, IntComparators.EQUAL_TO));

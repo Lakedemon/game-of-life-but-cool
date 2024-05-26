@@ -39,7 +39,7 @@ public class GuiManager {
     private GameOfLifeGuiComponent gameOfLifeGuiComponent;
 
     private ZStackGuiComponent collapsableMenu;
-    private RulePane rulePane;
+    private RulesGuiComponent rulePane;
     public boolean collapsableMenuToggled = false;
     private SlideAnimation leftSlideAnimation;
     private SlideAnimation rightSlideAnimation;
@@ -65,9 +65,9 @@ public class GuiManager {
         this.mainPanel = new HStackGuiComponent(5, BG_COLOR, 0);
         this.gamePanel = new VStackGuiComponent(3, BG_COLOR);
 
-        this.rulePane = new RulePane();
+        this.rulePane = new RulesGuiComponent(new RuleBook(), 300, 400, 5);
         VStackGuiComponent rulePanel = new VStackGuiComponent(5, BG_COLOR);
-        rulePanel.addChild(new RulesGuiComponent(new RuleBook(), 300, 400, 5));
+        rulePanel.addChild(rulePane);
         collapsableMenu.addChild(rulePanel);
 
         this.gameOfLifeGuiComponent = new GameOfLifeGuiComponent(300);
@@ -131,7 +131,7 @@ public class GuiManager {
         return root;
     }
 
-    public RulePane getRulePane(){
+    public RulesGuiComponent getRulePane(){
         return this.rulePane;
     }
 
