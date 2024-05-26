@@ -2,6 +2,7 @@ package Game.ui;
 
 import static Game.file.StaticFileHandler.*;
 
+import Game.rules.RuleBook;
 import Game.rules.RulePane;
 import Game.ui.animations.Animation;
 import Game.ui.animations.impl.SlideAnimation;
@@ -12,6 +13,7 @@ import Game.ui.impl.StructureSelectGuiComponent;
 import Game.ui.impl.button.ImagedButtonGuiComponent;
 import Game.ui.impl.LabelGuiComponent;
 import Game.ui.impl.button.LabeledButtonGuiComponent;
+import Game.ui.impl.rule.RulesGuiComponent;
 import Game.ui.impl.slider.SliderGuiComponent;
 import Game.ui.impl.stack.HStackGuiComponent;
 import Game.ui.impl.shape.RectangleGuiComponent;
@@ -64,7 +66,8 @@ public class GuiManager {
         this.gamePanel = new VStackGuiComponent(3, BG_COLOR);
 
         this.rulePane = new RulePane();
-        VStackGuiComponent rulePanel = new VStackGuiComponent(this.rulePane, 5, BG_COLOR);
+        VStackGuiComponent rulePanel = new VStackGuiComponent(5, BG_COLOR);
+        rulePanel.addChild(new RulesGuiComponent(new RuleBook(), 300, 400, 5));
         collapsableMenu.addChild(rulePanel);
 
         this.gameOfLifeGuiComponent = new GameOfLifeGuiComponent(300);
@@ -120,6 +123,7 @@ public class GuiManager {
         LabelGuiComponent title = new LabelGuiComponent("Structures", 50, "Helvetica", Color.WHITE);
 
         StructureSelectGuiComponent structureSelectGuiComponent = new StructureSelectGuiComponent(300, 450, bgColor, this);
+        root.setAlignment(Pos.TOP_CENTER);
 
         root.addChild(title);
         root.addChild(structureSelectGuiComponent);

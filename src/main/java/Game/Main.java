@@ -53,7 +53,7 @@ public class Main extends Application {
         // Start testing
         SaveHandler saveHandler = new SaveHandler();
         // For testing, save immediately after creation
-        // saveHandler.saveGrid(gameOfLife, "TestSave");
+        saveHandler.saveGrid(gameOfLife, "TestSave");
         //
         // For testing, load immediately after creation
         int[][] loadedGrid = saveHandler.loadGrid("TestSave");
