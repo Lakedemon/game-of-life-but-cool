@@ -26,6 +26,10 @@ public class GameOfLife {
         return ruleBook;
     }
 
+    public void setRuleBook(RuleBook rulebook) {
+        this.ruleBook = rulebook;
+    }
+
     public void clearBoard() {
         for (int i = 0; i < this.gridWidth; i++) {
             for (int j = 0; j < this.gridHeight; j++) {

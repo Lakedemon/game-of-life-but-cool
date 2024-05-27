@@ -1,6 +1,12 @@
 package Game.save_system;
 
+import java.util.List;
+import java.util.HashMap;
 import Game.GameOfLife;
+import Game.rules.RuleBook;
+import Game.rules.Comparators.IntComparator;
+import Game.rules.Comparators.IntComparators;
+import Game.rules.Rule;
 import de.ralleytn.simple.json.JSONArray;
 import de.ralleytn.simple.json.JSONObject;
 import de.ralleytn.simple.json.JSONParser;
@@ -11,16 +17,16 @@ import de.ralleytn.simple.json.JSONParseException;
 public class SaveHandler {
 
     DbHandler db;
+    private final GameOfLife gameOfLife;
 
-    public SaveHandler() {
+    public SaveHandler(GameOfLife gameOfLife) {
         db = new DbHandler();
+        this.gameOfLife = gameOfLife;
     }
     
-    public int[][] loadGrid(String identifier) {
-        // The intention is to (for now) load a JSON file
-        // Later load save from database
+    public void loadGrid(String identifier) {
         int[][] grid = null;
-        String jsonGrid = db.getEntry("Game", identifier);
+        String jsonGrid = db.getEntry("Game", identifier, "Grid");
         jsonGrid = jsonGrid.trim();
         if (jsonGrid != null && !jsonGrid.isEmpty()) {
             JSONObject jsonObject = null;
@@ -34,14 +40,7 @@ public class SaveHandler {
             }
             grid = deserializeGrid(jsonObject);
         }
-        // Old system where it loads from json file, kept for testing
-        // try (FileReader file = new FileReader(identifier + ".json")) {
-        //     JSONObject jsonObject = (JSONObject) new JSONParser().parse(file);
-        //     grid = deserializeGrid(jsonObject);
-        // } catch (IOException | JSONParseException e) {
-        //     e.printStackTrace();
-        // }
-        return grid;
+        gameOfLife.setGridValues(grid);
     }
 
     public static int[][] deserializeGrid(JSONObject jsonObject) {
@@ -57,8 +56,8 @@ public class SaveHandler {
         return grid;
     }
 
-    public void saveGrid(GameOfLife game, String identifier) {
-        int[][] grid = game.getGridValues();
+    public void saveGrid(String identifier) {
+        int[][] grid = gameOfLife.getGridValues();
         // Define saveFile and put grid object in it under key 'grid'
         JSONObject saveFile = new JSONObject();
         saveFile.put("grid", new JSONArray(grid));
@@ -77,5 +76,49 @@ public class SaveHandler {
      * Load a structure from JSON 
      * 
     } */
+
+    public void saveRulebook(String identifier) {
+        RuleBook ruleBook = gameOfLife.getRuleBook();
+        List<Rule> rules = ruleBook.getRules();
+        Integer i = Integer.valueOf(1);
+        HashMap<Integer, HashMap<String, String>> bookAsMap = new HashMap<Integer, HashMap<String, String>>();  
+        for (Rule rule : rules) {
+            HashMap<String, String> ruleAsMap = new HashMap<String, String>();
+            ruleAsMap.put("affectedState", String.valueOf(rule.getAffectedState()));
+            ruleAsMap.put("accountedNeighbours", String.valueOf(rule.getAccountedNeighbours()));
+            ruleAsMap.put("accountedCount", String.valueOf(rule.getAccountedCount()));
+            ruleAsMap.put("resultingState", String.valueOf(rule.getResultingState()));
+            ruleAsMap.put("comparator", rule.getComparator().getSymbol());
+
+            bookAsMap.put(i, ruleAsMap);
+            i++;
+        }
+        JSONObject bookAsJson = new JSONObject(bookAsMap);
+        // System.out.println(bookAsJson);
+        db.addRulebookEntry(identifier, bookAsJson.toString());
+    }
+
+    public void loadRulebook(String identifier) {
+        String jsonString = db.getEntry("Rulebooks", identifier, "Content");
+        JSONObject jsonObject = null;
+        RuleBook ruleBook = new RuleBook();
+        try {
+            jsonObject = new JSONObject(jsonString);
+        } catch (JSONParseException e) {
+            System.out.println("Error parsing JSON"); 
+            System.out.println(e.getMessage());
+        }
+        for (Object ruleObj : jsonObject.values()) {
+            JSONObject ruleJson = (JSONObject) ruleObj;
+            IntComparator comparator = IntComparators.comparatorMap.get(ruleJson.get("comparator"));
+            int accountedCount = Integer.valueOf((String) ruleJson.get("accountedCount"));
+            int accountedNeighbours = Integer.valueOf((String) ruleJson.get("accountedNeighbours"));
+            int resultingState = Integer.valueOf((String) ruleJson.get("resultingState"));
+            int affectedState = Integer.valueOf((String) ruleJson.get("affectedState"));
+            Rule rule = new Rule(affectedState, accountedNeighbours, accountedCount, resultingState, comparator);
+            ruleBook.addRule(rule);
+        }
+        gameOfLife.setRuleBook(ruleBook);
+    }
 
 }

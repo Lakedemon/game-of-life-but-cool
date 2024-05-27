@@ -55,11 +55,17 @@ public class DbHandler {
                 + "    Grid TEXT\n"
                 + ");";
 
+        String sql3 = "CREATE TABLE IF NOT EXISTS Rulebooks (\n"
+                + "    Name TEXT PRIMARY KEY,\n"
+                + "    Content TEXT\n"
+                + ");";
+
         try (Connection conn = DriverManager.getConnection(url);
             Statement stmt = conn.createStatement()) {
             // Create tables if they dont already exist
             stmt.execute(sql1);
             stmt.execute(sql2);
+            stmt.execute(sql3);
             System.out.println("Tables created successfully.");
         } catch (SQLException e) {
             System.out.println("Error in SQL initialization");
@@ -83,10 +89,22 @@ public class DbHandler {
         }
     }
 
-    // Currently empty function, this should be able to add RuleBooks to the database too
-    public void addRulebookEntry(){}
+    public void addRulebookEntry(String name, String content){
+        String sql = "INSERT INTO Rulebooks (Name, Content) VALUES (?, ?)";
 
-    public String getEntry(String tableName, String name) {
+        try (Connection conn = DriverManager.getConnection(url);
+        PreparedStatement pstmt = conn.prepareStatement(sql)) {
+        pstmt.setString(1, name);
+        pstmt.setString(2, content);
+        pstmt.executeUpdate();
+        System.out.println("Entry added successfully to Rulebooks table.");
+        } catch (SQLException e) {
+            System.out.println("Error in SQL when adding grid entry");
+            System.out.println(e.getMessage());
+        }
+    }
+
+    public String getEntry(String tableName, String name, String column) {
         String sql = "SELECT * FROM " + tableName + " WHERE Name = ?";
         String result = "";
     
@@ -97,7 +115,7 @@ public class DbHandler {
     
             // Check if the ResultSet has any rows
             if (rs.next()) {
-                result = rs.getString("Grid");
+                result = rs.getString(column);
             } else {
                 System.out.println("No entry found with the name '" + name + "' in the table '" + tableName + "'.");
             }

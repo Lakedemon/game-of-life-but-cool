@@ -47,16 +47,20 @@ public class Main extends Application {
         Cell[][] grid = gameOfLife.getGrid();
 
         // Start testing
-        SaveHandler saveHandler = new SaveHandler();
+        SaveHandler saveHandler = new SaveHandler(gameOfLife);
+        // For testing, save rulebook immediately after creation
+        saveHandler.saveRulebook("TEST2");
+        // 
+        // For testing, load rulebook immediately after creation
+        // RuleBook loadedRuleBook = saveHandler.loadRulebook("TEST");
+        // gameOfLife.setRuleBook(loadedRuleBook);
+        //
         // For testing, save immediately after creation
-        // saveHandler.saveGrid(gameOfLife, "TestSave");
+        // saveHandler.saveGrid("TestSave");
         //
         // For testing, load immediately after creation
-        int[][] loadedGrid = saveHandler.loadGrid("TestSave");
-        gameOfLife.setGridValues(loadedGrid);
-        // As of right now the grid does not load unless explicitly drawn, however loading from the database works
-        // I suppose the grid should be explicitly drawn again once the load is complete somewhere
-        // fillCanvas(gc, width, height, loadedGrid, cell_size);
+        // saveHandler.loadGrid("TestSave");
+        // graphicsHandler.fillGameCanvas(width, height, grid);
         // End testing
 
         //Rules
