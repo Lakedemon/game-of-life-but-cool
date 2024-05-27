@@ -1,6 +1,9 @@
 package Game;
 
+import Game.rules.Comparators.IntComparators;
+import Game.rules.Rule;
 import Game.rules.RuleBook;
+import Game.ui.impl.rule.RulesGuiComponent;
 
 public class GameOfLife {
     private final Cell[][] grid;
@@ -11,10 +14,9 @@ public class GameOfLife {
 
     private RuleBook ruleBook;
 
-    public GameOfLife(int gridWidth, int gridHeight, RuleBook ruleBook) {
+    public GameOfLife(int gridWidth, int gridHeight) {
         this.gridWidth = gridWidth;
         this.gridHeight = gridHeight;
-        this.ruleBook = ruleBook;
 
         this.grid = new Cell[gridWidth][gridHeight];
         initCellGrid(gridWidth, gridHeight, CLEAR_VALUE);
@@ -44,37 +46,17 @@ public class GameOfLife {
                 int newX = x + i-width/2;
                 int newY = y + j-width/2;
 
-                attemptSetPixel(newY, newX, white ? 1 : 0);
+                attemptSetPixel(newX, newY, white ? 1 : 0);
             }
         }
     }
 
     public void setCircle(int x, int y, int radius, boolean white) {
-        int x1 = radius;
-        int y1 = 0;
-        int dx = 1;
-        int dy = 1;
-        int err = dx - (radius << 1);
-
-        while (x1 >= y1) {
-            attemptSetPixel(y + y1,x + x1, white ? 1 : 0);
-            attemptSetPixel(y + x1,x + y1, white ? 1 : 0);
-            attemptSetPixel(y + x1,x - y1, white ? 1 : 0);
-            attemptSetPixel(y + y1,x - x1, white ? 1 : 0);
-            attemptSetPixel(y - y1,x - x1, white ? 1 : 0);
-            attemptSetPixel(y - x1,x - y1, white ? 1 : 0);
-            attemptSetPixel(y - x1,x + y1, white ? 1 : 0);
-            attemptSetPixel(y - y1,x + x1, white ? 1 : 0);
-
-            if (err <= 0) {
-                y1++;
-                err += dy;
-                dy += 2;
-            }
-            if (err > 0) {
-                x1--;
-                dx += 2;
-                err += dx - (radius << 1);
+        for (int offsetX = -radius; offsetX < radius; offsetX++) {
+            for (int offsetY = -radius; offsetY < radius; offsetY++) {
+                if (Math.sqrt(Math.pow(offsetX, 2) + Math.pow(offsetY, 2)) <= radius) {
+                    attemptSetPixel(x + offsetX, y + offsetY, white ? 1 : 0);
+                }
             }
         }
     }
@@ -154,7 +136,14 @@ public class GameOfLife {
     }
 
     private void attemptSetPixel(int x, int y, int val) {
-        grid[properModulo(x, gridWidth)][properModulo(y, gridHeight)].setValue(val);
+        grid[properModulo(y, gridHeight)][properModulo(x, gridWidth)].setValue(val);
+    }
+
+    public void setRulePane(RulesGuiComponent rulesGuiComponent) {
+        rulesGuiComponent.newRuleHolder(new Rule(1, 1, 2, 0, IntComparators.LESS_THAN));
+        rulesGuiComponent.newRuleHolder(new Rule(1, 1, 3, 0, IntComparators.GREATER_THAN));
+        rulesGuiComponent.newRuleHolder(new Rule(0, 1, 3, 1, IntComparators.EQUAL_TO));
+        this.ruleBook = rulesGuiComponent.getAssociatedRuleBook();
     }
 
     /*private void attemptSetPixel(int x, int y, int val) {

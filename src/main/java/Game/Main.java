@@ -1,22 +1,23 @@
 package Game;
+import Game.input.InputHandler;
+import Game.paint.ColorPallet;
+import Game.paint.Painter;
+import Game.rules.Rule;
+import Game.ui.GuiManager;
+import Game.ui.cursor.CursorGraphicsHandler;
 import Game.save_system.SaveHandler;
-import Game.graphics.GraphicsHandler;
-import Game.rules.*;
-import Game.rules.Comparators.IntComparators;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.scene.Scene;
-import javafx.scene.canvas.Canvas;
-import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
-import javafx.scene.layout.*;
 
 public class Main extends Application {
 
-    private GraphicsHandler graphicsHandler;
-    private InputHandler inputHandler;
     private ColorPallet colorPallet;
+    private GuiManager guiManager;
+    private SaveHandler saveHandler;
 
     public static final int CELL_SIZE = 2;
 
@@ -25,31 +26,20 @@ public class Main extends Application {
         int height = 300;
         int width = 300;
 
-        // Init canvas
-        Canvas canvas = new Canvas(width * CELL_SIZE, height * CELL_SIZE);
-        GraphicsContext gc = canvas.getGraphicsContext2D();
-        gc.setFill(Color.BLACK);
-
-        // Register canvas to root
-        BorderPane root = new BorderPane();
-        root.setCenter(canvas);
-
-        // Init scene
-        Scene scene = new Scene(root, width * CELL_SIZE + 400, height * CELL_SIZE);
-
-        // Set window properties
-        primaryStage.setTitle("Game of life - but cool");
-        primaryStage.setScene(scene);
-        primaryStage.show();
-
         // Init game of life
         GameOfLife gameOfLife = getGameOfLife(width, height);
+        this.saveHandler = new SaveHandler(gameOfLife);
+        this.guiManager = new GuiManager(saveHandler);
+        this.guiManager.initializeGuiComponents();
+
+        gameOfLife.setRulePane(this.guiManager.getRulePane());
+
         Cell[][] grid = gameOfLife.getGrid();
 
         // Start testing
         SaveHandler saveHandler = new SaveHandler(gameOfLife);
         // For testing, save rulebook immediately after creation
-        saveHandler.saveRulebook("TEST2");
+        // saveHandler.saveRulebook("TEST2");
         // 
         // For testing, load rulebook immediately after creation
         // RuleBook loadedRuleBook = saveHandler.loadRulebook("TEST");
@@ -63,28 +53,54 @@ public class Main extends Application {
         // graphicsHandler.fillGameCanvas(width, height, grid);
         // End testing
 
-        //Rules
-        RulePane ruleBox = new RulePane(gameOfLife.getRuleBook(), 5);
-        root.setLeft(ruleBox);
+        CursorGraphicsHandler cursorGraphics = new CursorGraphicsHandler();
+
+        // Init canvas
+
+        // Register canvas to root
+        StackPane root = new StackPane(this.guiManager.getSuperRoot().getDrawableElement());
+
+        // Init scene
+        Scene scene = new Scene(root, GuiManager.STAGE_WIDTH, GuiManager.STAGE_HEIGHT);
+        this.guiManager.initializeAnimations();
+
+        System.out.println("Scene width: " + scene.getWidth());
+
+        // Set window properties
+        primaryStage.setTitle("Game of life - but cool");
+        primaryStage.setScene(scene);
+        primaryStage.setResizable(false);
+        primaryStage.show();
+
 
         // Init handlers
+        this.guiManager.getGameOfLifeGuiComponent().getColorPallet().addColor(0, Color.BLACK);
+        this.guiManager.getGameOfLifeGuiComponent().getColorPallet().addColor(1, Color.DARKRED);
 
-        this.colorPallet = new ColorPallet();
-        //colorPallet.addColor(0, Color.BLACK);
-        //colorPallet.addColor(1, Color.WHITE);
+        Painter painter = new Painter(gameOfLife, cursorGraphics);
+        InputHandler inputHandler = new InputHandler(painter);
 
-        this.graphicsHandler = new GraphicsHandler(canvas, colorPallet);
-        this.inputHandler = new InputHandler(gameOfLife, graphicsHandler);
-        this.graphicsHandler.initCustomCursor(scene, root, this.inputHandler.getBrush());
-        this.inputHandler.registerKeyHandlers(scene, canvas);
+        cursorGraphics.initCustomCursor(this.guiManager.getGameOfLifeCanvas(), (StackPane) this.guiManager.getGameOfLifeGuiComponent().getDrawableElement(), painter.getBrush());
+        inputHandler.registerKeyHandlers(scene, this.guiManager);
 
         // Init main game of life loop
         AnimationTimer animationTimer = new AnimationTimer() {
+            int count = 0;
+            long currentNs = System.nanoTime();
             @Override
             public void handle(long l) {
                 gameOfLife.stepGen();
-                colorPallet.updatePallet(gameOfLife.getRuleBook().getValueSet());
-                graphicsHandler.fillGameCanvas(width, height, grid);
+
+                guiManager.getGameOfLifeGuiComponent().getColorPallet().updatePallet(gameOfLife.getRuleBook().getValueSet());
+                guiManager.getGameOfLifeGuiComponent().refreshGameOfLifeCanvas(grid);
+
+                if (System.nanoTime() - currentNs > 1000000000) {
+                    System.out.println("TPS/FPS: " + count);
+                    currentNs = System.nanoTime();
+                    count = 0;
+                }
+
+                count++;
             }
         };
 
@@ -93,13 +109,7 @@ public class Main extends Application {
     }
 
     private static GameOfLife getGameOfLife(int width, int height) {
-        RuleBook ruleBook = new RuleBook();
-
-        ruleBook.addRule(new Rule(1, 1, 2, 0, IntComparators.LESS_THAN));
-        ruleBook.addRule(new Rule(1, 1, 3, 0, IntComparators.GREATER_THAN));
-        ruleBook.addRule(new Rule(0, 1, 3, 1, IntComparators.EQUAL_TO));
-
-        return new GameOfLife(width, height, ruleBook);
+        return new GameOfLife(width, height);
     }
 }
 
