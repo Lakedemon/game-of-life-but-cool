@@ -51,6 +51,16 @@ public class Main extends Application {
         // For testing, load immediately after creation
         // saveHandler.loadGrid("TestSave");
         // graphicsHandler.fillGameCanvas(width, height, grid);
+        // Test structure
+        // int[][] structureGrid = {
+        //     {1, 1},
+        //     {1, 1}
+        // };
+        // Structure testStructure = new Structure(structureGrid);
+        // For testing, save structure
+        // saveHandler.saveStructure(testStructure, "testStructure1");
+        // For testing, load structure as testStructure1
+        // Structure testStructure1 = saveHandler.loadStructure("testStructure1");
         // End testing
 
         CursorGraphicsHandler cursorGraphics = new CursorGraphicsHandler();
@@ -90,6 +100,11 @@ public class Main extends Application {
             @Override
             public void handle(long l) {
                 gameOfLife.stepGen();
+                
+                // Place structure every frame to ensure it works
+                // This is only necessary in order for the structure to ignore the standard rules 
+                // and persist, just to show it works
+                // gameOfLife.placeStructure(testStructure, 10, 0);
 
                 guiManager.getGameOfLifeGuiComponent().getColorPallet().updatePallet(gameOfLife.getRuleBook().getValueSet());
                 guiManager.getGameOfLifeGuiComponent().refreshGameOfLifeCanvas(grid);
@@ -99,7 +114,6 @@ public class Main extends Application {
                     currentNs = System.nanoTime();
                     count = 0;
                 }
-
                 count++;
             }
         };

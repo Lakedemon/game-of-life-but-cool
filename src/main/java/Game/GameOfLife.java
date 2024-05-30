@@ -135,6 +135,15 @@ public class GameOfLife {
         }
     }
 
+    public void placeStructure(Structure structure, int x, int y) {
+        Cell[][] structureGrid = structure.getGrid();
+        for (int i = 0; i < structureGrid.length; i++) {
+            for (int j = 0; j < structureGrid[0].length; j++) {
+                attemptSetPixel(x + i,y + j, structureGrid[i][j].getValue());
+            }
+        }
+    }
+
     private void attemptSetPixel(int x, int y, int val) {
         grid[properModulo(y, gridHeight)][properModulo(x, gridWidth)].setValue(val);
     }

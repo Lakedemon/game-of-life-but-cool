@@ -3,6 +3,7 @@ package Game.save_system;
 import java.util.List;
 import java.util.HashMap;
 import Game.GameOfLife;
+import Game.Structure;
 import Game.rules.RuleBook;
 import Game.rules.Comparators.IntComparator;
 import Game.rules.Comparators.IntComparators;
@@ -65,17 +66,33 @@ public class SaveHandler {
         db.addGridEntry("Game", identifier, saveFile.toString());
     }
 
-    /* public void saveStructure() {
-     * 
-     * Save a structure to JSON
-     * 
-    } */ 
+    public void saveStructure(Structure structure, String identifier) { 
+        int[][] grid = structure.getGridValues();
+        // Define structure and put grid object in it under key 'grid'
+        JSONObject structureJson = new JSONObject();
+        structureJson.put("grid", new JSONArray(grid));
+        // Save structure grid grid to a database entry with name identifier
+        db.addGridEntry("Structures", identifier, structureJson.toString());
+    }
 
-    /* public void loadStructure() {
-     * 
-     * Load a structure from JSON 
-     * 
-    } */
+    public Structure loadStructure(String identifier) { 
+        int[][] grid = null;
+        String jsonGrid = db.getEntry("Structures", identifier, "Grid");
+        jsonGrid = jsonGrid.trim();
+        if (jsonGrid != null && !jsonGrid.isEmpty()) {
+            JSONObject jsonObject = null;
+            try {
+                System.out.println(jsonGrid);
+                JSONParser parser = new JSONParser();
+                jsonObject = (JSONObject) parser.parse(jsonGrid);
+            } catch (JSONParseException e) {
+                System.out.println("Error parsing JSON");
+                System.out.println(e.getMessage());
+            }
+            grid = deserializeGrid(jsonObject);
+        }
+        return new Structure(grid);
+    }
 
     public void saveRulebook(String identifier) {
         RuleBook ruleBook = gameOfLife.getRuleBook();
