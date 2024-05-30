@@ -48,6 +48,8 @@ public class GuiManager {
 
     private TextPromptGuiComponent savePrompt;
     private TextPromptGuiComponent loadPrompt;
+    private TextPromptGuiComponent saveRulebookPrompt;
+    private TextPromptGuiComponent loadRulebookPrompt;
 
     private ZStackGuiComponent collapsableMenu;
     private RulesGuiComponent rulePane;
@@ -81,6 +83,9 @@ public class GuiManager {
 
         this.savePrompt = new TextPromptGuiComponent("Save grid", "Grid name");
         this.loadPrompt = new TextPromptGuiComponent("Load grid", "Grid name");
+
+        this.saveRulebookPrompt = new TextPromptGuiComponent("Save rulebook", "Rulebook name");
+        this.loadRulebookPrompt = new TextPromptGuiComponent("Load rulebook", "Rulebook name");
 
         this.mainPanel = new HStackGuiComponent(5, BG_COLOR, 0);
         this.gamePanel = new VStackGuiComponent(3, BG_COLOR);
@@ -141,6 +146,16 @@ public class GuiManager {
     public void openSaveGridPrompt(TextPromptSubmitAction action) {
         if (this.loadPrompt.isOpen() || this.savePrompt.isOpen()) return;
         this.savePrompt.attemptOpen(this.superRoot, action);
+    }
+
+    public void openLoadRulebookPrompt(TextPromptSubmitAction action) {
+        if (this.loadRulebookPrompt.isOpen() || this.saveRulebookPrompt.isOpen()) return;
+        this.loadRulebookPrompt.attemptOpen(this.superRoot, action);
+    }
+
+    public void openSaveRulebookPrompt(TextPromptSubmitAction action) {
+        if (this.loadRulebookPrompt.isOpen() || this.saveRulebookPrompt.isOpen()) return;
+        this.saveRulebookPrompt.attemptOpen(this.superRoot, action);
     }
 
     public void initializeAnimations() {
@@ -220,11 +235,14 @@ public class GuiManager {
     }
 
     public HStackGuiComponent initializeSettingsComponent(Color settingsBG) {
-        HStackGuiComponent settingsComponent = new HStackGuiComponent(60, settingsBG, 600, 60, 30);
+        HStackGuiComponent settingsComponent = new HStackGuiComponent(30, settingsBG, 600, 60, 30);
         settingsComponent.setAlignment(Pos.CENTER_LEFT);
 
         VStackGuiComponent gridOperationsPanel = new VStackGuiComponent(4, settingsBG);
         gridOperationsPanel.setAlignment(Pos.CENTER);
+
+        VStackGuiComponent rulebookOperationsPanel = new VStackGuiComponent(4, settingsBG);
+        rulebookOperationsPanel.setAlignment(Pos.CENTER);
 
         Font gridOperationsFont = Font.font("Helvetica", FontWeight.NORMAL, 18);
         LabeledButtonGuiComponent saveGridButton = new LabeledButtonGuiComponent("Save Grid", gridOperationsFont, Color.WHITE, 120, 25,
@@ -249,17 +267,50 @@ public class GuiManager {
                 }
             });
         });
+        Font rulebookOperationsFont = Font.font("Helvetica", FontWeight.NORMAL, 18);
+        LabeledButtonGuiComponent saveRulebookButton = new LabeledButtonGuiComponent("Save Rules", rulebookOperationsFont, Color.WHITE, 120, 25,
+                settingsBG, ACCENT, 5, 1, e -> {
+            this.openSaveRulebookPrompt((input, proceed) -> {
+                if (proceed) {
+                    System.out.println("Saving rules to name " + input);
+                    this.saveHandler.saveRulebook(input);
+                } else {
+                    System.out.println("Cancelling save rulebook");
+                }
+            });
+        });
+        LabeledButtonGuiComponent loadRulebookButton = new LabeledButtonGuiComponent("Load Rules", rulebookOperationsFont, Color.WHITE, 120, 25,
+                settingsBG, ACCENT, 5, 1, e -> {
+            this.openLoadRulebookPrompt((input, proceed) -> {
+                if (proceed) {
+                    System.out.println("Loading rules with name " + input);
+                    RuleBook newBook = this.saveHandler.loadRulebook(input);
+
+                    this.rulePane = new RulesGuiComponent(newBook, 400, 400, 5);
+                    VStackGuiComponent rulePanel = new VStackGuiComponent(5, BG_COLOR);
+                    rulePanel.setAlignment(Pos.TOP_CENTER);
+                    rulePanel.addChild(rulePane);
+                    collapsableMenu.addChild(rulePanel);
+                } else {
+                    System.out.println("Cancelling load rules");
+                }
+            });
+        });
 
         gridOperationsPanel.addChild(saveGridButton);
         gridOperationsPanel.addChild(loadGridButton);
 
+        rulebookOperationsPanel.addChild(saveRulebookButton);
+        rulebookOperationsPanel.addChild(loadRulebookButton);
+
         settingsComponent.addChild(gridOperationsPanel);
+        settingsComponent.addChild(rulebookOperationsPanel);
 
         HStackGuiComponent volumesComponent = initializeVolumesSection();
         settingsComponent.addChild(volumesComponent);
 
-        RectangleGuiComponent exitComponent = new RectangleGuiComponent(44, 44, Color.RED, (e) -> System.exit(0));
-        settingsComponent.addChild(exitComponent);
+        // RectangleGuiComponent exitComponent = new RectangleGuiComponent(44, 44, Color.RED, (e) -> System.exit(0));
+        // settingsComponent.addChild(exitComponent);
 
         return settingsComponent;
     }

@@ -71,7 +71,7 @@ public class DrawingCursor {
 
     private void addMoveToFrontListener(ObservableList<Node> observable) {
         observable.addListener((Observable osb) -> {
-            if (content.getParent() != null && observable.getLast() != content) {
+            if (content.getParent() != null && observable.get(observable.size()-1) != content) {
                 // move the cursor on the top
                 Platform.runLater(content::toFront);
             }

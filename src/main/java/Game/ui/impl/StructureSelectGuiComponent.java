@@ -62,7 +62,7 @@ public class StructureSelectGuiComponent extends GuiComponent {
             addElement();
         }
 
-        this.addChild(this.pageElements.getFirst());
+        this.addChild(this.pageElements.get(0));
         this.addChild(initializePager());
     }
 
@@ -137,7 +137,7 @@ public class StructureSelectGuiComponent extends GuiComponent {
         tempElement.setStroke(3, Color.GREEN.darker());
         tempElement.setRadius(15);
         makeRoom();
-        this.pageElements.getLast().getLastChild().addChild(tempElement);
+        this.pageElements.get(pageElements.size()-1).getLastChild().addChild(tempElement);
     }
 
     public void goToPage(int pageIndex) {
@@ -150,7 +150,7 @@ public class StructureSelectGuiComponent extends GuiComponent {
             createNewPage();
         }
 
-        VStackGuiComponent lastPage = pageElements.getLast();
+        VStackGuiComponent lastPage = pageElements.get(pageElements.size()-1);
         if (lastPage.getNumberOfChildren() == 0 || lastPage.getLastChild().getNumberOfChildren() == ITEMS_PER_ROW) {
             createNewRow(lastPage);
         }
@@ -161,7 +161,7 @@ public class StructureSelectGuiComponent extends GuiComponent {
             createNewPage();
         }
 
-        page = pageElements.getLast();
+        page = pageElements.get(pageElements.size()-1);
         HStackGuiComponent newChild = new HStackGuiComponent(HORIZONTAL_SPACING, backgroundColor, 0);
         newChild.setAlignment(Pos.TOP_CENTER);
         page.addChild(newChild);

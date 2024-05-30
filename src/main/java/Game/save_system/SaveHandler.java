@@ -98,7 +98,7 @@ public class SaveHandler {
         db.addRulebookEntry(identifier, bookAsJson.toString());
     }
 
-    public void loadRulebook(String identifier) {
+    public RuleBook loadRulebook(String identifier) {
         String jsonString = db.getEntry("Rulebooks", identifier, "Content");
         JSONObject jsonObject = null;
         RuleBook ruleBook = new RuleBook();
@@ -119,6 +119,7 @@ public class SaveHandler {
             ruleBook.addRule(rule);
         }
         gameOfLife.setRuleBook(ruleBook);
+        return ruleBook;
     }
 
 }

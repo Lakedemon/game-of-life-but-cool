@@ -34,7 +34,7 @@ public abstract class GuiComponent {
     }
 
     public GuiComponent getLastChild() {
-        return children.getLast();
+        return children.get(children.size()-1);
     }
     public boolean hasChild(GuiComponent component) {
         return this.children.contains(component);
