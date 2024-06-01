@@ -91,6 +91,8 @@ public class Main extends Application {
         this.guiManager.getGameOfLifeGuiComponent().getColorPallet().addColor(1, Color.DARKRED);
 
         Painter painter = new Painter(gameOfLife, cursorGraphics);
+        structureManager.setPainter(painter);
+
         InputHandler inputHandler = new InputHandler(painter);
 
         cursorGraphics.initCustomCursor(this.guiManager.getGameOfLifeCanvas(), (StackPane) this.guiManager.getGameOfLifeGuiComponent().getDrawableElement(), painter.getBrush());

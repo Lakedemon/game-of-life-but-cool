@@ -21,7 +21,7 @@ public class CanvasGuiComponent extends GuiComponent {
         this.drawableElement.getGraphicsContext2D().setFill(color);
     }
 
-    public void drawRect(int x, int y, int width, int height) {
+    public void drawRect(double x, double y, double width, double height) {
         drawableElement.getGraphicsContext2D().fillRect(x, y, width, height);
     }
 

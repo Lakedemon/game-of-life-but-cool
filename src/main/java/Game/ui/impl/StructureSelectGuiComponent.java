@@ -37,8 +37,8 @@ public class StructureSelectGuiComponent extends GuiComponent {
     private final int PAGE_HEIGHT, PAGE_WIDTH;
     private final int itemWidth;
     private final Color backgroundColor;
-    private final Color unselectedColor = Color.GREEN.darker();
-    private final Color selectedColor = Color.BLUE.darker();
+    private final Color unselectedColor = Color.LIGHTSLATEGRAY.brighter();
+    private final Color selectedColor = Color.YELLOW;
 
     private final GuiManager guiManager;
     private final StructureManager structureManager;
@@ -181,7 +181,7 @@ public class StructureSelectGuiComponent extends GuiComponent {
 
     private CanvasGuiComponent getCanvasGuiComponent(Structure structure) {
         CanvasGuiComponent actual = new CanvasGuiComponent(itemWidth, itemWidth);
-        int dotSize = (itemWidth-1) / structure.getGrid().length;
+        double dotSize = ((double)itemWidth) / (double)structure.getGrid().length;
         actual.setFill(Color.DARKGRAY);
         for (int i = 0; i < structure.getGrid().length; i++) {
             for (int j = 0; j < structure.getGrid()[i].length; j++) {

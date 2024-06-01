@@ -106,6 +106,11 @@ public class DrawingCursor {
         content.setLayoutY(event.getY() - hotSpotY.get());
     }
 
+    public void reloadPosition() {
+        content.setLayoutX(mouseX - hotSpotX.get());
+        content.setLayoutY(mouseY - hotSpotY.get());
+    }
+
     void setContentLocation(int x, int y) {
         content.setLayoutX(x - hotSpotX.get());
         content.setLayoutY(y - hotSpotY.get());

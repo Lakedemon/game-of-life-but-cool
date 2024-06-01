@@ -136,11 +136,19 @@ public class GameOfLife {
         }
     }
 
-    public void placeStructure(Structure structure, int x, int y) {
+    public void placeStructure(Structure structure, int centerX, int centerY, boolean remove) {
         Cell[][] structureGrid = structure.getGrid();
         for (int i = 0; i < structureGrid.length; i++) {
             for (int j = 0; j < structureGrid[0].length; j++) {
-                attemptSetPixel(x + i,y + j, structureGrid[i][j].getValue());
+                if (remove) {
+                    if (structureGrid[i][j].getValue() == 0) {
+                        attemptSetPixel(centerX + i- structureGrid.length/2,centerY + j - structureGrid[0].length/2, 1);
+                    } else {
+                        attemptSetPixel(centerX + i - structureGrid.length/2, centerY + j - structureGrid[0].length/2, 0);
+                    }
+                } else {
+                    attemptSetPixel(centerX + i- structureGrid.length/2, centerY + j - structureGrid[0].length/2, structureGrid[i][j].getValue());
+                }
             }
         }
     }

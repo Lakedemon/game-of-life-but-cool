@@ -13,8 +13,8 @@ public class CursorGraphicsHandler {
     private DrawingCursor drawingCursor;
     private boolean cursorToggled;
 
-    private final Color cursorColor = Color.DARKRED;
-    private static final double STROKE_WIDTH = 3;
+    private final Color cursorColor = Color.AQUA;
+    private static final double STROKE_WIDTH = 1;
 
     public void initCustomCursor(Canvas gameOfLifeCanvas, Pane root, Brush brush) {
         this.drawingCursor = new DrawingCursor(gameOfLifeCanvas, root, brush.getWidth(), brush.getWidth());
@@ -46,6 +46,14 @@ public class CursorGraphicsHandler {
             this.drawingCursor.reRegister();
             cursorToggled = true;
         }
+    }
+
+    public void setSize(int newEdgeLength) {
+        this.drawingCursor.setWidth(newEdgeLength);
+        this.drawingCursor.setHotSpotX(newEdgeLength);
+        this.drawingCursor.setHotSpotY(newEdgeLength);
+
+        this.drawingCursor.reloadPosition();
     }
 
     public void setCursorShape(BrushShape cursorShape) {

@@ -1,5 +1,6 @@
 package Game.structures;
 
+import Game.paint.Painter;
 import Game.ui.impl.StructureSelectGuiComponent;
 
 import java.util.ArrayList;
@@ -8,6 +9,8 @@ import java.util.List;
 public class StructureManager {
 
     private StructureSelectGuiComponent component;
+    private Painter painter;
+
     private final List<Structure> availableStructures;
     private int selectedStructure;
 
@@ -21,10 +24,19 @@ public class StructureManager {
         this.component = component;
     }
 
+    public void setPainter(Painter painter) {
+        this.painter = painter;
+    }
+
     private void initStructures() {
-        int[][] grid1 = {{1, 0, 1, 0, 1, 0, 1, 0},{0, 1, 0, 1, 0, 1, 0, 1},{1, 0, 1, 0, 1, 0, 1, 0},{0, 1, 0, 1, 0, 1, 0, 1},
-                        {1, 0, 1, 0, 1, 0, 1, 0},{0, 1, 0, 1, 0, 1, 0, 1},{1, 0, 1, 0, 1, 0, 1, 0},{0, 1, 0, 1, 0, 1, 0, 1}};
-        this.availableStructures.add(new Structure(grid1));
+        int[][] checkerboard = new int[32][32];
+
+        for (int i = 0; i < 32; i++) {
+            for (int j = 0; j < 32; j++) {
+                checkerboard[i][j] = (i + j) % 2;
+            }
+        }
+        this.availableStructures.add(new Structure(checkerboard));
         int[][] grid2 = {{1, 0, 0, 1}, {0, 1, 1, 0}, {0, 1, 1, 0}, {1, 0, 0, 1}};
         this.availableStructures.add(new Structure(grid2));
     }
@@ -47,5 +59,6 @@ public class StructureManager {
 
     private void notifyPartiesOfSelectionUpdate(int indexOfStructure) {
         component.updateSelectionGraphics(indexOfStructure);
+        painter.handleStructureSelect(indexOfStructure >= 0 ? this.availableStructures.get(indexOfStructure) : null);
     }
 }

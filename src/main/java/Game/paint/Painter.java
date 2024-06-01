@@ -2,6 +2,7 @@ package Game.paint;
 
 import Game.GameOfLife;
 import Game.Main;
+import Game.structures.Structure;
 import Game.ui.cursor.CursorGraphicsHandler;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
@@ -19,11 +20,18 @@ public class Painter {
     private boolean manuallyDisabled = false;
     private boolean unfocused = false;
 
+    private int manualSize;
+    private BrushShape manualShape;
+
+    private Structure structureSelected = null;
+
     public Painter(GameOfLife gameOfLife, CursorGraphicsHandler cursorGraphicsHandler) {
         this.brush = new Brush(DEFAULT_WIDTH, DEFAULT_BRUSH_SHAPE);
 
         this.gameOfLife = gameOfLife;
         this.cursorGraphicsHandler = cursorGraphicsHandler;
+        this.manualSize = DEFAULT_WIDTH;
+        this.manualShape = DEFAULT_BRUSH_SHAPE;
     }
 
     public void handleBrushResize(ScrollEvent event) {
@@ -32,7 +40,23 @@ public class Painter {
         this.brush.width += (int) event.getDeltaY() / 10;
         this.brush.clampWidth();
 
+        this.manualSize = this.brush.width;
+
         cursorGraphicsHandler.resizeCustomCursor(this.brush.width, event);
+
+    }
+
+    public void handleStructureSelect(Structure structure) {
+        this.structureSelected = structure;
+
+        if (structure != null) {
+            int newSize = structure.getGrid().length;
+            cursorGraphicsHandler.setCursorShape(BrushShape.SQUARE);
+            cursorGraphicsHandler.setSize(newSize);
+        } else {
+            cursorGraphicsHandler.setCursorShape(this.manualShape);
+            cursorGraphicsHandler.setSize(manualSize);
+        }
 
     }
 
@@ -41,6 +65,12 @@ public class Painter {
 
         x /= Main.CELL_SIZE;
         y /= Main.CELL_SIZE;
+
+        if (structureSelected != null) {
+            // Paint structure
+            gameOfLife.placeStructure(this.structureSelected, (int) x, (int) y, remove);
+            return;
+        }
 
         if (this.brush.shape.equals(BrushShape.CIRCLE))
             gameOfLife.setCircle((int) x, (int) y, brush.width / 2, !remove);
@@ -59,6 +89,7 @@ public class Painter {
     public void attemptToggleBrushType() {
         this.brush.shape = this.brush.shape.next();
         this.cursorGraphicsHandler.setCursorShape(this.brush.shape);
+        this.manualShape = this.brush.shape;
     }
 
     public void togglePaintMode(boolean manually) {
