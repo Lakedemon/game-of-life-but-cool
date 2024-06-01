@@ -6,6 +6,7 @@ import Game.Main;
 import Game.rules.RuleBook;
 import Game.rules.RulePane;
 import Game.save_system.SaveHandler;
+import Game.structures.StructureManager;
 import Game.ui.animations.Animation;
 import Game.ui.animations.impl.SlideAnimation;
 import Game.ui.animations.impl.SlideOnScreenAnimation;
@@ -43,6 +44,7 @@ public class GuiManager {
     private GuiComponent superRoot; // Only passed to main function, used to draw pop-ups correctly always
     private GuiComponent root;
     private GameOfLifeGuiComponent gameOfLifeGuiComponent;
+    private StructureSelectGuiComponent structureSelectGuiComponent;
 
     private final SaveHandler saveHandler;
 
@@ -75,7 +77,7 @@ public class GuiManager {
         this.saveHandler = saveHandler;
     }
 
-    public void initializeGuiComponents() {
+    public void initializeGuiComponents(StructureManager structureManager) {
         this.superRoot = new ZStackGuiComponent();
 
         this.collapsableMenu = initializeCollapsableMenu();
@@ -123,7 +125,7 @@ public class GuiManager {
         RectangleGuiComponent rightBackground = new RectangleGuiComponent(450, 663, rightBgColor);
         rightBackground.setStroke(2, ACCENT);
         rightBackground.setRadius(10);
-        this.rightMenu = initializeRightMenu(rightBgColor);
+        this.rightMenu = initializeRightMenu(structureManager, rightBgColor);
 
         rightComponent.addChild(rightBackground);
         rightComponent.addChild(rightMenu);
@@ -136,6 +138,10 @@ public class GuiManager {
         this.root.addChild(backgroundComponent);
         this.root.addChild(mainPanel);
         this.superRoot.addChild(root);
+    }
+
+    public StructureSelectGuiComponent getStructureSelectGuiComponent() {
+        return this.structureSelectGuiComponent;
     }
 
     public void openLoadGridPrompt(TextPromptSubmitAction action) {
@@ -165,16 +171,18 @@ public class GuiManager {
         this.golSlideAnimation = new SlideOnScreenAnimation(469, 0, this.gamePanel, 1000, Animation.Easing.CUBIC_EASE_OUT);
     }
 
-    private VStackGuiComponent initializeRightMenu(Color bgColor) {
+    private VStackGuiComponent initializeRightMenu(StructureManager structureManager, Color bgColor) {
         VStackGuiComponent root = new VStackGuiComponent(10, bgColor, 300, 550);
         LabelGuiComponent title = new LabelGuiComponent("Structures", 50, "Helvetica", Color.WHITE);
 
-        StructureSelectGuiComponent structureSelectGuiComponent = new StructureSelectGuiComponent(300, 450, bgColor, this);
+        StructureSelectGuiComponent structureSelectGuiComponent = new StructureSelectGuiComponent(300, 450, bgColor, this, structureManager);
         root.setAlignment(Pos.TOP_CENTER);
 
         root.addChild(title);
         root.addChild(structureSelectGuiComponent);
         root.setAlignment(Pos.TOP_CENTER);
+
+        this.structureSelectGuiComponent = structureSelectGuiComponent;
         return root;
     }
 

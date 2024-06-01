@@ -3,7 +3,7 @@ package Game.save_system;
 import java.util.List;
 import java.util.HashMap;
 import Game.GameOfLife;
-import Game.Structure;
+import Game.structures.Structure;
 import Game.rules.RuleBook;
 import Game.rules.Comparators.IntComparator;
 import Game.rules.Comparators.IntComparators;

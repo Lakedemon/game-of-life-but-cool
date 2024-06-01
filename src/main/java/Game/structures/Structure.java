@@ -1,4 +1,6 @@
-package Game;
+package Game.structures;
+
+import Game.Cell;
 
 public class Structure {
     private Cell[][] grid;

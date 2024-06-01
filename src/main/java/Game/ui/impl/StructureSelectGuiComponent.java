@@ -1,5 +1,7 @@
 package Game.ui.impl;
 
+import Game.structures.Structure;
+import Game.structures.StructureManager;
 import Game.ui.GuiComponent;
 import Game.ui.GuiManager;
 import Game.ui.clicking.ClickEvent;
@@ -7,11 +9,14 @@ import Game.ui.impl.button.ImagedButtonGuiComponent;
 import Game.ui.impl.shape.RectangleGuiComponent;
 import Game.ui.impl.stack.HStackGuiComponent;
 import Game.ui.impl.stack.VStackGuiComponent;
+import Game.ui.impl.stack.ZStackGuiComponent;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
+import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 
@@ -32,15 +37,20 @@ public class StructureSelectGuiComponent extends GuiComponent {
     private final int PAGE_HEIGHT, PAGE_WIDTH;
     private final int itemWidth;
     private final Color backgroundColor;
+    private final Color unselectedColor = Color.GREEN.darker();
+    private final Color selectedColor = Color.BLUE.darker();
 
     private final GuiManager guiManager;
+    private final StructureManager structureManager;
+
+    private ZStackGuiComponent currentlySelected;
 
     private VBox drawableElement;
 
     private SimpleIntegerProperty selectedPageIndex;
     private ArrayList<VStackGuiComponent> pageElements;
 
-    public StructureSelectGuiComponent(int pageWidth, int pageHeight, Color backgroundColor, GuiManager guiManager) {
+    public StructureSelectGuiComponent(int pageWidth, int pageHeight, Color backgroundColor, GuiManager guiManager, StructureManager structureManager) {
         this.selectedPageIndex = new SimpleIntegerProperty(0);
         this.drawableElement = new VBox();
         this.drawableElement.setAlignment(Pos.BOTTOM_CENTER);
@@ -49,6 +59,7 @@ public class StructureSelectGuiComponent extends GuiComponent {
         this.drawableElement.setMinHeight(pageHeight);
         this.drawableElement.setMinWidth(pageWidth);
 
+        this.structureManager = structureManager;
         this.guiManager = guiManager;
         this.PAGE_WIDTH = pageWidth;
         this.PAGE_HEIGHT = pageHeight;
@@ -57,9 +68,8 @@ public class StructureSelectGuiComponent extends GuiComponent {
         this.itemWidth = Math.min(pageWidth - MIN_SIDE_ROOM*2 - HORIZONTAL_SPACING * (ITEMS_PER_ROW-1), pageHeight - MIN_TB_ROOM*2 - VERTICAL_SPACING*(ROWS_PER_PAGE - 1));
         this.pageElements = new ArrayList<>();
 
-        // TEmp
-        for (int i = 0; i < 21; i++) {
-            addElement();
+        for (int i = 0; i < this.structureManager.getAvailableStructures().size(); i++) {
+            this.addElement(i, this.structureManager.getAvailableStructures().get(i));
         }
 
         this.addChild(this.pageElements.get(0));
@@ -132,12 +142,55 @@ public class StructureSelectGuiComponent extends GuiComponent {
         return Optional.of(component);
     }
 
-    public void addElement(/* Element element */) {
-        RectangleGuiComponent tempElement = new RectangleGuiComponent(itemWidth, itemWidth, Color.BLACK.brighter().brighter().brighter());
-        tempElement.setStroke(3, Color.GREEN.darker());
-        tempElement.setRadius(15);
+    public void addElement(int index, Structure structure) {
+        ZStackGuiComponent element = new ZStackGuiComponent(itemWidth, itemWidth);
+        RectangleGuiComponent background = new RectangleGuiComponent(itemWidth, itemWidth, Color.BLACK.brighter().brighter().brighter());
+        background.setStroke(3, this.unselectedColor);
+        background.setRadius(15);
+        element.addChild(background);
+
+        CanvasGuiComponent actual = getCanvasGuiComponent(structure);
+        element.addChild(actual);
+        element.setAlignment(Pos.CENTER);
+
         makeRoom();
-        this.pageElements.get(pageElements.size()-1).getLastChild().addChild(tempElement);
+        element.getDrawableElement().setOnMouseClicked(e -> this.structureManager.attemptChangeSelectedStructure(index));
+        this.pageElements.get(pageElements.size()-1).getLastChild().addChild(element);
+    }
+
+    public void updateSelectionGraphics(int newSelectedIndex) {
+        if (newSelectedIndex == -1 || this.currentlySelected != null) {
+            ((RectangleGuiComponent)this.currentlySelected.getChild(0)).setStroke(3, this.unselectedColor);
+            this.currentlySelected = null;
+        }
+        if (newSelectedIndex == -1) return;
+
+        int pageNum = newSelectedIndex / (this.ROWS_PER_PAGE * this.ITEMS_PER_ROW);
+        int rowNum = (newSelectedIndex % (this.ROWS_PER_PAGE * this.ITEMS_PER_ROW)) / this.ITEMS_PER_ROW;
+        int elementNum = newSelectedIndex % this.ITEMS_PER_ROW;
+        ZStackGuiComponent element = (ZStackGuiComponent) ((HStackGuiComponent)
+                this.pageElements.get(pageNum) // Page
+                .getChild(rowNum)) // Row
+                .getChild(elementNum); // Element
+
+        if (element != null && element != this.currentlySelected) {
+            ((RectangleGuiComponent)element.getChild(0)).setStroke(3, this.selectedColor);
+            this.currentlySelected = element;
+        }
+    }
+
+    private CanvasGuiComponent getCanvasGuiComponent(Structure structure) {
+        CanvasGuiComponent actual = new CanvasGuiComponent(itemWidth, itemWidth);
+        int dotSize = (itemWidth-1) / structure.getGrid().length;
+        actual.setFill(Color.DARKGRAY);
+        for (int i = 0; i < structure.getGrid().length; i++) {
+            for (int j = 0; j < structure.getGrid()[i].length; j++) {
+                if (structure.getGrid()[i][j].getValue() == 1) {
+                    actual.drawRect(3+i*dotSize, 3+j*dotSize, dotSize, dotSize);
+                }
+            }
+        }
+        return actual;
     }
 
     public void goToPage(int pageIndex) {

@@ -30,6 +30,10 @@ public class ZStackGuiComponent extends GuiComponent {
         this.drawableElement.setMaxHeight(height);
     }
 
+    public GuiComponent getChild(int index) {
+        return this.children.get(index);
+    }
+
     @Override
     public int getWidth() {
         return this.width;

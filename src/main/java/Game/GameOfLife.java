@@ -3,6 +3,7 @@ package Game;
 import Game.rules.Comparators.IntComparators;
 import Game.rules.Rule;
 import Game.rules.RuleBook;
+import Game.structures.Structure;
 import Game.ui.impl.rule.RulesGuiComponent;
 
 public class GameOfLife {

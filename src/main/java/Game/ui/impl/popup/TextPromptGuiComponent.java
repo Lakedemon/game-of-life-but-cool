@@ -25,7 +25,7 @@ public class TextPromptGuiComponent extends ZStackGuiComponent {
         super(300, 150);
         this.setAlignment(Pos.CENTER);
 
-        this.animation = new SlideAnimation(0, 0, -getHeight()*3, 0, this, 200, Animation.Easing.CUBIC_EASE_OUT);
+        this.animation = new SlideAnimation(0, 0, -getHeight()*3, 0, this, 300, Animation.Easing.CUBIC_EASE_OUT);
 
         RectangleGuiComponent background = new RectangleGuiComponent(300, 150, new Color(0.2, 0.2, 0.2, 0.8));
         background.setRadius(5);

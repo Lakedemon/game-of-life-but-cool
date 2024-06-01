@@ -3,6 +3,7 @@ import Game.input.InputHandler;
 import Game.paint.ColorPallet;
 import Game.paint.Painter;
 import Game.rules.Rule;
+import Game.structures.StructureManager;
 import Game.ui.GuiManager;
 import Game.ui.cursor.CursorGraphicsHandler;
 import Game.save_system.SaveHandler;
@@ -30,7 +31,9 @@ public class Main extends Application {
         GameOfLife gameOfLife = getGameOfLife(width, height);
         this.saveHandler = new SaveHandler(gameOfLife);
         this.guiManager = new GuiManager(saveHandler);
-        this.guiManager.initializeGuiComponents();
+        StructureManager structureManager = new StructureManager();
+        this.guiManager.initializeGuiComponents(structureManager);
+        structureManager.setStructureSelectGuiComponent(this.guiManager.getStructureSelectGuiComponent());
 
         gameOfLife.setRulePane(this.guiManager.getRulePane());
 

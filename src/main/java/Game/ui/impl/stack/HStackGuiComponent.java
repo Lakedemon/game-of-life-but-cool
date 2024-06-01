@@ -72,6 +72,10 @@ public class HStackGuiComponent extends GuiComponent {
         return this.drawableElement.getChildren().contains(child.getDrawableElement());
     }
 
+    public GuiComponent getChild(int index) {
+        return this.children.get(index);
+    }
+
     @Override
     public int getWidth() {
         return this.width;
