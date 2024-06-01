@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.sql.ResultSet;
 import java.sql.PreparedStatement;
 
@@ -125,5 +126,24 @@ public class DbHandler {
         }
     
         return result;
-    }    
+    }
+    
+    public ArrayList<String> getStructureNames() {
+        String sql = "SELECT Name FROM Structures";
+        ArrayList<String> result = new ArrayList<String>();
+        try (Connection conn = DriverManager.getConnection(url);
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            ResultSet rs = pstmt.executeQuery();
+            // Iterate through the ResultSet
+            while (rs.next()) {
+                // Add each "Name" entry to the ArrayList
+                String name = rs.getString("Name");
+                result.add(name);
+            }
+        } catch (SQLException e) {
+            System.out.println("Error in SQL when getting entry");
+            System.out.println(e.getMessage());
+        }
+        return result;
+    }
 }

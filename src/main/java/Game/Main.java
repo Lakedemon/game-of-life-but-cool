@@ -1,8 +1,11 @@
 package Game;
+import java.util.ArrayList;
+
 import Game.input.InputHandler;
 import Game.paint.ColorPallet;
 import Game.paint.Painter;
 import Game.rules.Rule;
+import Game.structures.Structure;
 import Game.structures.StructureManager;
 import Game.ui.GuiManager;
 import Game.ui.cursor.CursorGraphicsHandler;
@@ -31,7 +34,8 @@ public class Main extends Application {
         GameOfLife gameOfLife = getGameOfLife(width, height);
         this.saveHandler = new SaveHandler(gameOfLife);
         this.guiManager = new GuiManager(saveHandler);
-        StructureManager structureManager = new StructureManager();
+        ArrayList<Structure> loadedStructures = saveHandler.loadAllStructures();
+        StructureManager structureManager = new StructureManager(loadedStructures);
         this.guiManager.initializeGuiComponents(structureManager);
         structureManager.setStructureSelectGuiComponent(this.guiManager.getStructureSelectGuiComponent());
 

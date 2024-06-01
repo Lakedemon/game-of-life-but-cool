@@ -1,6 +1,7 @@
 package Game.save_system;
 
 import java.util.List;
+import java.util.ArrayList;
 import java.util.HashMap;
 import Game.GameOfLife;
 import Game.structures.Structure;
@@ -92,6 +93,16 @@ public class SaveHandler {
             grid = deserializeGrid(jsonObject);
         }
         return new Structure(grid);
+    }
+
+    public ArrayList<Structure> loadAllStructures() {
+        ArrayList<String> structureNames = db.getStructureNames();
+        ArrayList<Structure> structures = new ArrayList<Structure>();
+        for (String structureName : structureNames) {
+            Structure struct = loadStructure(structureName);
+            structures.add(struct);
+        }
+        return structures;
     }
 
     public void saveRulebook(String identifier) {

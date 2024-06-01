@@ -20,6 +20,16 @@ public class StructureManager {
         initStructures();
     }
 
+    public StructureManager(ArrayList<Structure> structures) {
+        if (!structures.isEmpty()) {
+            availableStructures = structures;
+        } else {
+            availableStructures = new ArrayList<>();
+            initStructures(); // Failsafe incase structures not in database
+        }
+        selectedStructure = -1;
+    }
+
     public void setStructureSelectGuiComponent(StructureSelectGuiComponent component) {
         this.component = component;
     }
