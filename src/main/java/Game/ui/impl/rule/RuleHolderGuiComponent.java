@@ -23,9 +23,9 @@ public class RuleHolderGuiComponent extends GuiComponent {
         this.associatedRule = associatedRule;
 
         Label label1 = new Label("If cell of value:");
-        Label label2 = new Label("has:");
-        Label label3 = new Label("neighbours of value:");
-        Label label4 = new Label("then set the cell value to:");
+        Label label2 = new Label("borders:");
+        Label label3 = new Label("cells of value:");
+        Label label4 = new Label(", set cell value to:");
 
         label1.setTextFill(Color.WHITE);
         label2.setTextFill(Color.WHITE);
@@ -53,6 +53,7 @@ public class RuleHolderGuiComponent extends GuiComponent {
         Spinner<Integer> spinner = new Spinner<>(min, max, initialValue);
         int maxWidth = 60;
         spinner.setMaxWidth(maxWidth);
+        spinner.setStyle("-fx-base: #283457");
 
         return spinner;
     }
@@ -64,6 +65,7 @@ public class RuleHolderGuiComponent extends GuiComponent {
                 .mapToDouble(item -> comboBox.getLayoutBounds().getWidth())
                 .max().orElse(0);
         comboBox.setMaxWidth(width);
+        comboBox.setStyle("-fx-base: #4d6096");
 
         return comboBox;
     }

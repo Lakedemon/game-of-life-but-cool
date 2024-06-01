@@ -3,8 +3,6 @@ package Game.ui.impl.rule;
 import Game.rules.Comparators.IntComparators;
 import Game.rules.Rule;
 import Game.rules.RuleBook;
-import Game.rules.RuleHolder;
-import Game.ui.GuiComponent;
 import Game.ui.GuiManager;
 import Game.ui.impl.button.LabeledButtonGuiComponent;
 import Game.ui.impl.shape.RectangleGuiComponent;
@@ -36,7 +34,6 @@ public class RulesGuiComponent extends VStackGuiComponent {
             removeRuleHolder(ruleBox, ruleHolder);
         });
 
-        // TODO: REPLACE WITH COMPONENTS
         ruleBox.addChild(ruleHolder);
         ruleBox.addChild(removeButton);
 
@@ -49,21 +46,18 @@ public class RulesGuiComponent extends VStackGuiComponent {
     }
 
     private void removeRuleHolder(HStackGuiComponent ruleBox, RuleHolderGuiComponent ruleHolder) {
-        // TODO: REPLACE WITH COMPONENTS
         this.removeChild(ruleBox);
         associatedRuleBook.getRules().remove(ruleHolder.getAssociatedRule());
     }
 
     private void initAddButton() {
         LabeledButtonGuiComponent addButton = new LabeledButtonGuiComponent("+", new Font(30), Color.WHITE, 60, 30, Color.CORNFLOWERBLUE.darker(), GuiManager.ACCENT.darker().darker().darker(), 5, 2, (e) -> {
+            if (associatedRuleBook.getRules().size() >= 10) return;
             newRuleHolder(new Rule(10,10,10,10, IntComparators.EQUAL_TO));
-            //addButton.toFront();
         });
 
-        // TODO: REPLACE WITH COMPONENTS
         this.addChild(addButton);
         this.addChild(new RectangleGuiComponent(4, 20, Color.TRANSPARENT));
-        //VBox.setVgrow(addButton, Priority.ALWAYS);
     }
 
     public RuleBook getAssociatedRuleBook(){

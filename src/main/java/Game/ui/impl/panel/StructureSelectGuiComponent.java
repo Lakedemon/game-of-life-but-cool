@@ -1,10 +1,12 @@
-package Game.ui.impl;
+package Game.ui.impl.panel;
 
 import Game.structures.Structure;
 import Game.structures.StructureManager;
 import Game.ui.GuiComponent;
 import Game.ui.GuiManager;
 import Game.ui.clicking.ClickEvent;
+import Game.ui.impl.CanvasGuiComponent;
+import Game.ui.impl.LabelGuiComponent;
 import Game.ui.impl.button.ImagedButtonGuiComponent;
 import Game.ui.impl.shape.RectangleGuiComponent;
 import Game.ui.impl.stack.HStackGuiComponent;
@@ -15,8 +17,6 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
-import javafx.scene.canvas.Canvas;
-import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 

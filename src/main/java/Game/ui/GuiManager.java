@@ -2,18 +2,15 @@ package Game.ui;
 
 import static Game.file.StaticFileHandler.*;
 
-import Game.Main;
 import Game.rules.RuleBook;
-import Game.rules.RulePane;
 import Game.save_system.SaveHandler;
 import Game.structures.StructureManager;
 import Game.ui.animations.Animation;
 import Game.ui.animations.impl.SlideAnimation;
 import Game.ui.animations.impl.SlideOnScreenAnimation;
 import Game.ui.clicking.ClickEvent;
-import Game.ui.impl.GameOfLifeGuiComponent;
-import Game.ui.impl.StructureSelectGuiComponent;
-import Game.ui.impl.TextInputGuiComponent;
+import Game.ui.impl.panel.GameOfLifeGuiComponent;
+import Game.ui.impl.panel.StructureSelectGuiComponent;
 import Game.ui.impl.button.ImagedButtonGuiComponent;
 import Game.ui.impl.LabelGuiComponent;
 import Game.ui.impl.button.LabeledButtonGuiComponent;

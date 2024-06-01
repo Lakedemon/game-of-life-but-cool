@@ -1,7 +1,7 @@
 package Game.structures;
 
 import Game.paint.Painter;
-import Game.ui.impl.StructureSelectGuiComponent;
+import Game.ui.impl.panel.StructureSelectGuiComponent;
 
 import java.util.ArrayList;
 import java.util.List;

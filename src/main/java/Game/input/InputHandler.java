@@ -3,19 +3,17 @@ package Game.input;
 import Game.paint.Painter;
 import Game.ui.GuiComponent;
 import Game.ui.GuiManager;
-import Game.ui.impl.GameOfLifeGuiComponent;
+import Game.ui.impl.panel.GameOfLifeGuiComponent;
 import Game.ui.impl.stack.ZStackGuiComponent;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
-import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
 
 import java.util.HashSet;
 import java.util.Set;
-import java.util.Stack;
 
 import static Game.input.Keybindings.*;
 

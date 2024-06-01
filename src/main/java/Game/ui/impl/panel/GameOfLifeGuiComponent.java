@@ -1,4 +1,4 @@
-package Game.ui.impl;
+package Game.ui.impl.panel;
 
 import Game.Cell;
 import Game.paint.ColorPallet;
